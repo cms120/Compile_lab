@@ -2,10 +2,10 @@ import string
 
 
 class FA:
-    def __init__(self, k: list[str], letters: list[str], f: [[str]], s: str, z: list[str]):
+    def __init__(self, k: list[str], letters: list[str], f: [tuple[tuple[str, str], list[str]]], s: str, z: list[str]):
         self.k = k  # 状态集
         self.letters = letters  # 字母表
-        self.f = f  # 转换函数
+        self.f = f  # 转换函数集 示例 f(S,0)={V,Q} 那么在list中存入的是 ( (S,0) , [V,Q] )
         self.s = s  # 唯一初态
         self.z = z  # 终态集
 

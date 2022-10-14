@@ -32,7 +32,7 @@ class FA:
         return True
 
 
-def get_fa_c_minus() -> FA:  # 获得c--的fa 手动构造
+def get_fa_c_minus() -> FA:  # 获得c--的fa 手动构造 TODO
     return FA(k=None,
               letters=get_fa_c_minus_letters(),
               f=None,

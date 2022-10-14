@@ -6,9 +6,10 @@ class DFA(FA):
     def __init__(self, k: list[int], letters: list[str], f: [[str]], s: int, z: int):
         super().__init__(k, letters, f, s, z)
 
-        fa = FA(k, letters, f, s, z)
+        dfa_min = dfa_minimize(
+            fa_2_dfa(
+                FA(k, letters, f, s, z)))
 
-        dfa_min = dfa_minimize(fa_2_dfa(fa))
         self.k = dfa_min.k
         self.letters = dfa_min.letters
         self.f = dfa_min.f

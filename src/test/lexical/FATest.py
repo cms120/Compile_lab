@@ -1,14 +1,22 @@
 import unittest
+
+from lexical import TestCases
 from src.main.lexical.FA import *
 
 
-class MyTestCase(unittest.TestCase):
-    def test_something(self):
-        self.assertEqual(True, False)  # add assertion here
+
+
+class FATest(unittest.TestCase):
 
     def test_get_fa_c_minus(self):
+        self.assertTrue(True)
         fa = get_fa_c_minus()
         print(fa)
+
+
+    def test_fa_s(self):
+        for fa in TestCases.fa_s:
+            self.assertTrue(fa.k_and_letters())
 
 
 if __name__ == '__main__':

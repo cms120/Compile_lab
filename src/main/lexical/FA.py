@@ -16,8 +16,23 @@ class FA:
                's:\t' + str(self.s) + '\n' + \
                'z:\t' + str(self.z) + '\n'
 
+    def k_and_letters(self) -> bool:  # 检查初态 终态 和转换函数中的状态及输入字符是否在状态集和字符集中
+        for z in self.z:
+            if z not in self.k:
+                return False
+        if self.s not in self.k:
+            return False
 
-def get_fa_c_minus() -> FA:
+        for f in self.f:
+            if f[0][0] not in self.k or f[0][1] not in self.letters:
+                return False
+            for k in f[1]:
+                if k not in self.k:
+                    return False
+        return True
+
+
+def get_fa_c_minus() -> FA:  # 获得c--的fa 手动构造
     return FA(k=None,
               letters=get_fa_c_minus_letters(),
               f=None,

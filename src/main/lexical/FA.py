@@ -2,7 +2,7 @@ import string
 
 
 class FA:
-    def __init__(self, k: list[int], letters: list[str], f: [[str]], s: int, z: int):
+    def __init__(self, k: list[str], letters: list[str], f: [[str]], s: str, z: list[str]):
         self.k = k  # 状态集
         self.letters = letters  # 字母表
         self.f = f  # 转换函数

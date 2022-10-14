@@ -3,7 +3,7 @@ from src.main.lexical.FA import FA
 
 class DFA(FA):
 
-    def __init__(self, k: list[str], letters: list[str], f: [tuple[tuple[str, str], list[str]]], s: str, z: list[str]):
+    def __init__(self, k: list[str], letters: list[str], f: list[tuple[tuple[str, str], list[str]]], s: str, z: list[str]):
         super().__init__(k, letters, f, s, z)
 
         dfa_min = dfa_minimize(

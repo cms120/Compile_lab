@@ -4,15 +4,12 @@ from lexical import TestCases
 from src.main.lexical.FA import *
 
 
-
-
 class FATest(unittest.TestCase):
 
     def test_get_fa_c_minus(self):
         self.assertTrue(True)
         fa = get_fa_c_minus()
         print(fa)
-
 
     def test_fa_s(self):
         for fa in TestCases.fa_s:

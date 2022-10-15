@@ -1,15 +1,12 @@
-from lexical.Regex import Regex
 from src.main.lexical.FA import FA
 
 
 class DFA(FA):
 
-    @classmethod
-    def init_by_fa(cls, fa: FA):  # 根据FA构造最小DFA
+    @staticmethod
+    def init_by_fa(fa: FA):  # 根据FA构造最小DFA
         return dfa_minimize(
             fa_2_dfa(fa))
-
-
 
 
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化

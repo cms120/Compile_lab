@@ -36,8 +36,8 @@ class FA:
                     return False
         return True
 
-    @classmethod
-    def init_by_regex_pofix(cls, regex_pofix: str):  # TODO
+    @staticmethod
+    def init_by_regex_pofix(regex_pofix: str):  # TODO
         fa = FA()
         if regex_pofix == '':
             fa.f = Rules.epsilon_rules()

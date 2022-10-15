@@ -34,12 +34,12 @@ class Rules:
     @staticmethod
     def get_single_letters_rules(letter):
         start, end = Rules.letter_rules(letter)
-        return Rules(start,end)
+        return Rules(start, end)
 
     @staticmethod
     def get_concat_rules(pre_rules, next_rules):
         Rules.epsilon_transition(pre_rules.end, next_rules.start)
-        pre_rules.end.isEnd = False
+        pre_rules.end.is_end = False
 
         return Rules(pre_rules.start, next_rules.end)
 
@@ -51,11 +51,11 @@ class Rules:
 
         end = State(True)
         Rules.epsilon_transition(pre_rules.end, end)
-        pre_rules.end.isEnd = False
+        pre_rules.end.is_end = False
         Rules.epsilon_transition(next_rules.end, end)
-        next_rules.end.isEnd = False
+        next_rules.end.is_end = False
 
-        return Rules(start,end)
+        return Rules(start, end)
 
     @staticmethod
     def closure(rules):
@@ -68,6 +68,6 @@ class Rules:
         Rules.epsilon_transition(rules.end, end)
         Rules.epsilon_transition(rules.end, rules.start)
 
-        rules.end.isEnd = False
+        rules.end.is_end = False
 
         return Rules(start, end)

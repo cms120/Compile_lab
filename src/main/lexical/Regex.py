@@ -34,6 +34,6 @@ class Regex:
 
         return pofix
 
-    @classmethod
-    def init_by_fa(cls, fa: FA):
+    @staticmethod
+    def init_by_fa(fa: FA):
         pass

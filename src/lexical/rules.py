@@ -1,4 +1,4 @@
-from src.lexical.State import State
+from src.lexical.state import State
 
 
 class Rules:

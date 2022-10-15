@@ -1,5 +1,5 @@
-from src.lexical.DFA import DFA
-from src.lexical.FA import FA
+from src.lexical.dfa import DFA
+from src.lexical.fa import FA
 
 fa_s = [  # TODO
     FA(  # on ppt 3_2 page22

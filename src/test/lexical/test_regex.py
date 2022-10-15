@@ -1,6 +1,6 @@
 import unittest
-from lexical import TestCases
-from src.lexical.FA import FA
+from lexical import test_cases
+from src.lexical.fa import FA
 
 
 class RegexTest(unittest.TestCase):

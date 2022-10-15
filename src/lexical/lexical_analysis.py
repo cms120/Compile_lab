@@ -1,4 +1,4 @@
-from src.lexical import DFA
+from src.lexical import dfa
 
 
 class LexicalAnaLysis:

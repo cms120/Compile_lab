@@ -1,7 +1,7 @@
 import unittest
 
-from lexical import TestCases
-from src.lexical.DFA import *
+from lexical import test_cases
+from src.lexical.dfa import *
 
 
 class MyTestCase(unittest.TestCase):

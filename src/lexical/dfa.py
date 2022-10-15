@@ -1,4 +1,4 @@
-from src.main.lexical.FA import FA
+from lexical.fa import FA
 
 
 class DFA(FA):

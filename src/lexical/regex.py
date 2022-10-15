@@ -1,4 +1,4 @@
-from src.lexical.FA import FA
+from src.lexical.fa import FA
 
 
 class Regex:

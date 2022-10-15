@@ -1,7 +1,12 @@
 import string
 
+from lexical.state import State
 from src.lexical.regex import Regex
 from src.lexical.rules import Rules
+
+
+def print_rules(rules):
+    print(rules.start.flag,rules.end.flag)
 
 
 class FA:
@@ -44,7 +49,7 @@ class FA:
     @staticmethod
     def get_f_by_regex(regex_pofix: str):  # TODO
         if regex_pofix == '':
-            return Rules.epsilon_rules()  # fa 的转换函数
+            return Rules.get_epsilon_rules()  # fa 的转换函数
         stack = []
         for c in regex_pofix:
             if c == '.':

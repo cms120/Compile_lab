@@ -1,9 +1,12 @@
 import string
 
+from lexical.Rules import Rules
+from src.main.lexical.Regex import Regex
+
 
 class FA:
-    def __init__(self, k: list[str], letters: list[str], f: list[tuple[tuple[str, str], list[str]]], s: str,
-                 z: list[str]):
+    def __init__(self, k: list[int], letters: list[str], f: list[tuple[tuple[int, str], list[int]]], s: int,
+                 z: list[int]):
         self.k = k  # 状态集
         self.letters = letters  # 字母表
         self.f = f  # 转换函数集 示例 f(S,0)={V,Q} 那么在list中存入的是 ( (S,0) , [V,Q] )
@@ -11,6 +14,7 @@ class FA:
         self.z = z  # 终态集
 
     def __str__(self):
+
         return 'k:\t' + str(self.k) + '\n' + \
                'letters:\t' + str(self.letters) + '\n' + \
                'f:\t' + str(self.f) + '\n' + \
@@ -32,18 +36,44 @@ class FA:
                     return False
         return True
 
+    @classmethod
+    def init_by_regex_pofix(cls, regex_pofix: str):  # TODO
+        fa = FA()
+        if regex_pofix == '':
+            fa.f = Rules.epsilon_rules()
+        stack = []
+        for c in regex_pofix:
+            if c == '.':
+                nfa2 = stack.pop()
+                nfa1 = stack.pop()
+                new_nfa = Rules.get_concat_rules(nfa1, nfa2)
+                stack.append(new_nfa)
+            elif c == '|':
+                nfa2 = stack.pop()
+                nfa1 = stack.pop()
+                new_nfa = Rules.get_union_rules(nfa1, nfa2)
+                stack.append(new_nfa)
+            elif c == '*':
+                nfa = stack.pop()
+                new_nfa = Rules.closure(nfa)
+                stack.append(new_nfa)
+            else:
+                nfa = Rules.get_single_letters_rules(c)
+                stack.append(nfa)
 
-def get_fa_c_minus() -> FA:  # 获得c--的fa 手动构造 TODO
-    return FA(k=None,
-              letters=get_fa_c_minus_letters(),
-              f=None,
-              s=None,
-              z=None)
+        return stack.pop()
+
+
+def get_fa_c_minus() -> FA:
+    return FA.init_by_regex_pofix(Regex(Regex.RegexExpression).get_regex_pofix())
 
 
 def get_fa_c_minus_letters() -> list[str]:
     letters = ['+', '-', '*', '/', '%', '=', '<', '>', '!', '&', '|',  # 运算符
-               '(', ')', '{', '}', ',', ';', '_', ]  # 界符
+               '(', ')', '{', '}', ',', ';',  # 界符
+               ' ',  # 空格
+               '.',  # 浮点数
+               '_', ]  # 命名符
 
     for letter in string.ascii_lowercase:
         letters.append(letter)

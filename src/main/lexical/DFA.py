@@ -9,9 +9,7 @@ class DFA(FA):
         return dfa_minimize(
             fa_2_dfa(fa))
 
-    @classmethod
-    def init_by_regex(cls, re: Regex):
-        pass
+
 
 
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化

@@ -1,9 +1,9 @@
-from lexical.State import State
+from src.lexical.State import State
 
 
 class Rules:
 
-    def __int__(self, start, end):
+    def __init__(self, start: State, end: State):
         self.start = start
         self.end = end
 
@@ -34,7 +34,7 @@ class Rules:
     @staticmethod
     def get_single_letters_rules(letter):
         start, end = Rules.letter_rules(letter)
-        return Rules(start,end)
+        return Rules(start, end)
 
     @staticmethod
     def get_concat_rules(pre_rules, next_rules):
@@ -55,7 +55,7 @@ class Rules:
         Rules.epsilon_transition(next_rules.end, end)
         next_rules.end.isEnd = False
 
-        return Rules(start,end)
+        return Rules(start, end)
 
     @staticmethod
     def closure(rules):

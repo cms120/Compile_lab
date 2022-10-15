@@ -1,5 +1,5 @@
-from lexical.DFA import DFA
-from lexical.FA import FA
+from src.lexical.DFA import DFA
+from src.lexical.FA import FA
 
 fa_s = [  # TODO
     FA(  # on ppt 3_2 page22
@@ -31,3 +31,10 @@ dfa_s = [  # TODO
     DFA(
 
     )]  # 用来测试最小化
+
+re_s=[
+    'a.b.c.d',
+    '(a|b)*',
+    '(a|b).c',
+    ''
+]

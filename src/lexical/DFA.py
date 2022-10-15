@@ -1,5 +1,4 @@
-from lexical.Regex import Regex
-from src.main.lexical.FA import FA
+from src.lexical.FA import FA
 
 
 class DFA(FA):

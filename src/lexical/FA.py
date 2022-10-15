@@ -1,7 +1,7 @@
 import string
 
-from lexical.Rules import Rules
-from src.main.lexical.Regex import Regex
+from src.lexical.Rules import Rules
+from src.lexical.Regex import Regex
 
 
 class FA:
@@ -36,11 +36,15 @@ class FA:
                     return False
         return True
 
-    @classmethod
-    def init_by_regex_pofix(cls, regex_pofix: str):  # TODO
-        fa = FA()
+    @staticmethod
+    def init_by_regex_pofix(regex_pofix: str):  # TODO
+
+        return FA(f=FA.get_f_by_regex())
+
+    @staticmethod
+    def get_f_by_regex(regex_pofix: str):  # TODO
         if regex_pofix == '':
-            fa.f = Rules.epsilon_rules()
+            return Rules.epsilon_rules()  # fa 的转换函数
         stack = []
         for c in regex_pofix:
             if c == '.':
@@ -60,12 +64,11 @@ class FA:
             else:
                 nfa = Rules.get_single_letters_rules(c)
                 stack.append(nfa)
-
         return stack.pop()
 
 
 def get_fa_c_minus() -> FA:
-    return FA.init_by_regex_pofix(Regex(Regex.RegexExpression).get_regex_pofix())
+    return FA.init_by_regex_pofix(Regex(Regex.re_c_minus).get_regex_pofix())
 
 
 def get_fa_c_minus_letters() -> list[str]:

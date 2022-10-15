@@ -1,0 +1,2 @@
+class SyntaxBottomUpAnalysis:
+    pass

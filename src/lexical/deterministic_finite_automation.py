@@ -1,4 +1,4 @@
-from lexical.finite_automation import FA
+from src.lexical.finite_automation import FA
 
 
 class DFA(FA):

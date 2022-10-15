@@ -1,3 +1,6 @@
+from src.lexical.deterministic_finite_automation import DFA
+
+
 class LexicalAnaLysis:
     def __init__(self, dfa: DFA):
         self.DFA = DFA

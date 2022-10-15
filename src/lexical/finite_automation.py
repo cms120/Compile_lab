@@ -48,22 +48,22 @@ class FA:
         stack = []
         for c in regex_pofix:
             if c == '.':
-                nfa2 = stack.pop()
-                nfa1 = stack.pop()
-                new_nfa = Rules.get_concat_rules(nfa1, nfa2)
-                stack.append(new_nfa)
+                rules1 = stack.pop()
+                rules2 = stack.pop()
+                new_rules = Rules.get_concat_rules(rules2, rules1)
+                stack.append(new_rules)
             elif c == '|':
-                nfa2 = stack.pop()
-                nfa1 = stack.pop()
-                new_nfa = Rules.get_union_rules(nfa1, nfa2)
-                stack.append(new_nfa)
+                rules1 = stack.pop()
+                rules2 = stack.pop()
+                new_rules = Rules.get_union_rules(rules2, rules1)
+                stack.append(new_rules)
             elif c == '*':
-                nfa = stack.pop()
-                new_nfa = Rules.closure(nfa)
-                stack.append(new_nfa)
+                rules = stack.pop()
+                new_rules = Rules.closure(rules)
+                stack.append(new_rules)
             else:
-                nfa = Rules.get_single_letters_rules(c)
-                stack.append(nfa)
+                rules = Rules.get_single_letters_rules(c)
+                stack.append(rules)
         return stack.pop()
 
 

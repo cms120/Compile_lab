@@ -1,8 +1,8 @@
 import unittest
 
-from src.lexical.dfa import DFA
-from src.lexical.fa import *
-from src.lexical.fa import FA
+from src.lexical.deterministic_finite_automation import DFA
+from src.lexical.finite_automation import *
+from src.lexical.finite_automation import FA
 
 fa_s = [  # TODO
     FA(  # on ppt 3_2 page22

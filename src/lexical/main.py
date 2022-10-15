@@ -1,4 +1,4 @@
-from fa import get_fa_c_minus
+from finite_automation import get_fa_c_minus
 from lexical_analysis import LexicalAnaLysis
 
 dfa_c_minus = get_fa_c_minus()  # 获得c--的最小dfa

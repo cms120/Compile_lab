@@ -1,6 +1,3 @@
-from src.lexical.fa import FA
-
-
 class Regex:
     re_c_minus = '(a|b)*c'  # Regex :c-- TODO
 
@@ -33,7 +30,3 @@ class Regex:
             pofix, stack = pofix + stack[-1], stack[:-1]
 
         return pofix
-
-    @staticmethod
-    def init_by_fa(fa: FA):
-        pass

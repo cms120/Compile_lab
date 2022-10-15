@@ -1,6 +1,6 @@
 import unittest
 
-from src.lexical.fa import FA
+from src.lexical.finite_automation import FA
 
 re_s = [
     'a.b.c.d',

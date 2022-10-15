@@ -1,6 +1,3 @@
-from src.lexical import dfa
-
-
 class LexicalAnaLysis:
     def __init__(self, dfa: DFA):
         self.DFA = DFA

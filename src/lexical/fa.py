@@ -1,7 +1,7 @@
 import string
 
-from lexical.regex import Regex
-from lexical.rules import Rules
+from src.lexical.regex import Regex
+from src.lexical.rules import Rules
 
 
 class FA:

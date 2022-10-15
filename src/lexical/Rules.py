@@ -1,9 +1,9 @@
-from lexical.State import State
+from src.lexical.State import State
 
 
 class Rules:
 
-    def __int__(self, start, end):
+    def __init__(self, start: State, end: State):
         self.start = start
         self.end = end
 

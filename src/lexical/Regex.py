@@ -1,8 +1,8 @@
-from lexical.FA import FA
+from src.lexical.FA import FA
 
 
 class Regex:
-    RegexExpression = '(a|b)*c'
+    re_c_minus = '(a|b)*c'  # Regex :c-- TODO
 
     def __init__(self, re: str):
         self.re = re

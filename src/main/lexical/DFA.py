@@ -1,3 +1,4 @@
+from lexical.Regex import Regex
 from src.main.lexical.FA import FA
 
 
@@ -7,6 +8,10 @@ class DFA(FA):
     def init_by_fa(cls, fa: FA):  # 根据FA构造最小DFA
         return dfa_minimize(
             fa_2_dfa(fa))
+
+    @classmethod
+    def init_by_regex(cls, re: Regex):
+        pass
 
 
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化

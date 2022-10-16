@@ -1,8 +1,6 @@
 import string
 
-from src.lexical.regex import Regex, get_re_postfix_c_minus
 from src.lexical.rules import Rules
-from src.lexical.state import State
 
 
 def print_rules(rules):
@@ -42,38 +40,16 @@ class FA:
         return True
 
     @staticmethod
-    def init_by_re_postfix(re_postfix: str):  # TODO
-        return FA(f=FA.get_f_by_re_postfix(re_postfix))
+    def init_by_rules(rules: Rules):  # TODO 通过rules构造fa
+        return FA(f=FA.get_f_by_rules(rules))
 
     @staticmethod
-    def get_f_by_re_postfix(re_postfix: str):  # TODO
-        State.reset_flag()
-        if re_postfix == '':
-            return Rules.get_epsilon_rules()  # fa 的转换函数
-        stack = []
-        for c in re_postfix:
-            if c == '.':
-                rules1 = stack.pop()
-                rules2 = stack.pop()
-                new_rules = Rules.get_concat_rules(rules2, rules1)
-                stack.append(new_rules)
-            elif c == '|':
-                rules1 = stack.pop()
-                rules2 = stack.pop()
-                new_rules = Rules.get_union_rules(rules2, rules1)
-                stack.append(new_rules)
-            elif c == '*':
-                rules = stack.pop()
-                new_rules = Rules.closure(rules)
-                stack.append(new_rules)
-            else:
-                rules = Rules.get_single_letters_rules(c)
-                stack.append(rules)
-        return stack.pop()
+    def get_f_by_rules(rules: Rules) -> list[tuple[tuple[str, str], list[str]]]:  # TODO 通过rules构造f
+        pass
 
 
-def get_fa_c_minus() -> FA:
-    return FA.init_by_re_postfix(get_re_postfix_c_minus())
+def get_fa_c_minus() -> FA:  # 获得c--的fa
+    return FA.init_by_rules()
 
 
 def get_fa_c_minus_letters() -> list[str]:

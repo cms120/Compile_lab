@@ -1,3 +1,6 @@
+from collections import deque
+
+from src.lexical.regex import get_re_postfix_c_minus
 from src.lexical.state import State
 
 
@@ -8,46 +11,46 @@ class Rules:
         self.end = end
 
     def __str__(self):
-        return 'state0:\t' + str(self.start.flag) + '\n' + \
-               'state1:\t' + str(self.end.flag) + '\n'
+        return 'Rules:{start:\t' + str(self.start) + '\n' + \
+               'end:\t' + str(self.end) + '}\n'
 
     @staticmethod
-    def epsilon_transition(pre: State, nxt: State):  # 创建 epsilon transition
+    def __epsilon_transition(pre: State, nxt: State):  # 创建 epsilon transition
         pre.epsilonTransitions.append(nxt)
 
     @staticmethod
-    def letter_transition(pre_state: State, next_state: State, letter: str):  # 创建 普通 transition
+    def __letter_transition(pre_state: State, next_state: State, letter: str):  # 创建 普通 transition
         pre_state.transition[letter] = next_state
 
     @staticmethod
-    def epsilon_rules() -> tuple[State, State]:  # 创建 epsilon 规则
+    def __epsilon_rules() -> tuple[State, State]:  # 创建 epsilon 规则
         start = State(False)
         end = State(True)
-        Rules.epsilon_transition(start, end)
+        Rules.__epsilon_transition(start, end)
 
         return start, end
 
     @staticmethod
-    def letter_rules(letter) -> tuple[State, State]:  # 创建普通规则
+    def __letter_rules(letter) -> tuple[State, State]:  # 创建普通规则
         start = State(False)
         end = State(True)
-        Rules.letter_transition(start, end, letter)
+        Rules.__letter_transition(start, end, letter)
 
         return start, end
 
     @staticmethod
     def get_epsilon_rules():
-        start, end = Rules.epsilon_rules()
+        start, end = Rules.__epsilon_rules()
         return Rules(start, end)
 
     @staticmethod
     def get_single_letters_rules(letter):
-        start, end = Rules.letter_rules(letter)
+        start, end = Rules.__letter_rules(letter)
         return Rules(start, end)
 
     @staticmethod
     def get_concat_rules(pre_rules, next_rules):
-        Rules.epsilon_transition(pre_rules.end, next_rules.start)
+        Rules.__epsilon_transition(pre_rules.end, next_rules.start)
         pre_rules.end.is_end = False
 
         return Rules(pre_rules.start, next_rules.end)
@@ -55,13 +58,13 @@ class Rules:
     @staticmethod
     def get_union_rules(pre_rules, next_rules):
         start = State(False)
-        Rules.epsilon_transition(start, pre_rules.start)
-        Rules.epsilon_transition(start, next_rules.start)
+        Rules.__epsilon_transition(start, pre_rules.start)
+        Rules.__epsilon_transition(start, next_rules.start)
 
         end = State(True)
-        Rules.epsilon_transition(pre_rules.end, end)
+        Rules.__epsilon_transition(pre_rules.end, end)
         pre_rules.end.is_end = False
-        Rules.epsilon_transition(next_rules.end, end)
+        Rules.__epsilon_transition(next_rules.end, end)
         next_rules.end.is_end = False
 
         return Rules(start, end)
@@ -71,12 +74,42 @@ class Rules:
         start = State(False)
         end = State(True)
 
-        Rules.epsilon_transition(start, end)
-        Rules.epsilon_transition(start, rules.start)
+        Rules.__epsilon_transition(start, end)
+        Rules.__epsilon_transition(start, rules.start)
 
-        Rules.epsilon_transition(rules.end, end)
-        Rules.epsilon_transition(rules.end, rules.start)
+        Rules.__epsilon_transition(rules.end, end)
+        Rules.__epsilon_transition(rules.end, rules.start)
 
         rules.end.is_end = False
 
         return Rules(start, end)
+
+    @staticmethod
+    def init_by_re_postfix(re_postfix):
+        State.reset_flag()
+        if re_postfix == '':
+            return Rules.get_epsilon_rules()  # fa 的转换函数
+        stack = deque()
+        for c in re_postfix:
+            if c == '.':
+                rules_nxt = stack.pop()
+                rules_pre = stack.pop()
+                new_rules = Rules.get_concat_rules(rules_pre, rules_nxt)
+                stack.append(new_rules)
+            elif c == '|':
+                rules_nxt = stack.pop()
+                rules_pre = stack.pop()
+                new_rules = Rules.get_union_rules(rules_pre, rules_nxt)
+                stack.append(new_rules)
+            elif c == '*':
+                rules = stack.pop()
+                new_rules = Rules.closure(rules)
+                stack.append(new_rules)
+            else:
+                rules = Rules.get_single_letters_rules(c)
+                stack.append(rules)
+        return stack.pop()
+
+
+def get_rules_c_minus(re_postfix: str) -> Rules:  # 获得c--的rules
+    return Rules.init_by_re_postfix(get_re_postfix_c_minus())

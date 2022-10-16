@@ -3,7 +3,7 @@ import unittest
 from src.lexical.state import State
 
 
-class TestState(unittest.TestCase):
+class StateTest(unittest.TestCase):
     def test_reset_flag(self):
         State.reset_flag()
         self.assertEqual(State.get_flag(), 0)

@@ -18,14 +18,16 @@ class FATest(unittest.TestCase):
             fa = FA(k, letters, f, s, z)
             self.assertTrue(fa.k_and_letters())
 
-    def test_get_f_by_regex(self):
+    def test_init_by_rules(self):
         self.assertTrue(True)
         for re in re_s:
+            print(re)
             re_postfix = Regex.get_re_postfix(re)
             print(re_postfix)
             rules = Rules.init_by_re_postfix(re_postfix)
-            print(rules)
-            print(FA.get_f_by_rules(rules))
+            # print(rules)
+            fa = FA.init_by_rules(rules)
+            print(fa)
 
 
 if __name__ == '__main__':

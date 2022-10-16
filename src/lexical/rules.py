@@ -20,7 +20,7 @@ class Rules:
 
     @staticmethod
     def __letter_transition(pre_state: State, next_state: State, letter: str):  # 创建 普通 transition
-        pre_state.transition[letter] = next_state
+        pre_state.transitions[letter] = next_state
 
     @staticmethod
     def __epsilon_rules() -> tuple[State, State]:  # 创建 epsilon 规则
@@ -57,6 +57,8 @@ class Rules:
 
     @staticmethod
     def get_union_rules(pre_rules, next_rules):
+        state_all=State.get_state_all()
+
         start = State(False)
         Rules.__epsilon_transition(start, pre_rules.start)
         Rules.__epsilon_transition(start, next_rules.start)

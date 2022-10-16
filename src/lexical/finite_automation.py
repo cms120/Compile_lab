@@ -1,15 +1,19 @@
 import string
+from collections import deque
 
-from src.lexical.rules import Rules
-
+from src.lexical.rules import Rules, get_rules_c_minus
+from src.lexical.state import State
 
 def print_rules(rules):
     print(rules.start.flag, rules.end.flag)
 
 
 class FA:
-    def __init__(self, k: list[str], letters: list[str], f: list[tuple[tuple[str, str], list[str]]], s: str,
-                 z: list[str]):
+    def __init__(self, k: set[str],
+                 letters: set[str],
+                 f: dict[tuple[str, str], set[str]],  # 转换函数 存储start letter ends
+                 s: str,
+                 z: set[str]):
         self.k = k  # 状态集
         self.letters = letters  # 字母表
         self.f = f  # 转换函数集 示例 f(S,0)={V,Q} 那么在list中存入的是 ( (S,0) , [V,Q] )
@@ -24,7 +28,7 @@ class FA:
                's:\t' + str(self.s) + '\n' + \
                'z:\t' + str(self.z) + '\n'
 
-    def k_and_letters(self) -> bool:  # 检查初态 终态 和转换函数中的状态及输入字符是否在状态集和字符集中
+    def k_and_letters(self) -> bool:  # 检查初态 终态 和转换函数中的状态及输入字符是否在状态集和字符集中 TODO
         for z in self.z:
             if z not in self.k:
                 return False
@@ -41,15 +45,43 @@ class FA:
 
     @staticmethod
     def init_by_rules(rules: Rules):  # TODO 通过rules构造fa
-        return FA(f=FA.get_f_by_rules(rules))
+        fa = FA(set(), set(), dict(), '', set())
 
-    @staticmethod
-    def get_f_by_rules(rules: Rules) -> list[tuple[tuple[str, str], list[str]]]:  # TODO 通过rules构造f
-        pass
+        stack = deque()
+        stack.append(rules.start)
+        fa.s = rules.start.flag
+        while stack:
+            now = stack.pop()
+            fa.k.add(now.flag)
+
+            if now.is_end:  # 是终态
+                fa.z.add(now.flag)
+                break
+
+            for state in now.epsilonTransitions:  # epsilon
+                stack.append(state)
+                key = (now.flag, 'epsilon')  # key 为起始state letter
+
+                if key not in fa.f.keys():
+                    fa.f[key] = set()
+
+                fa.f[key].add(str(state.flag))
+
+            for letter, state in now.transitions.items():
+                stack.append(state)
+                key = (now.flag, letter)  # key 为起始state letter
+
+                if key not in fa.f.keys():
+                    fa.f[key] = set()
+
+                fa.f[key].add(str(state.flag))
+                fa.letters.add(letter)
+
+        return fa
 
 
 def get_fa_c_minus() -> FA:  # 获得c--的fa
-    return FA.init_by_rules()
+    return FA.init_by_rules(get_rules_c_minus())
 
 
 def get_fa_c_minus_letters() -> list[str]:

@@ -14,6 +14,7 @@ class Regex:
 
         # Loop through the string one character at a time
         for ch in re:
+
             if ch == '(':
                 stack.append(ch)
             elif ch == ')':
@@ -25,6 +26,9 @@ class Regex:
                 while stack and Regex.__keyword[ch] <= Regex.__keyword.get(stack[-1], 0):
                     postfix.append((stack.pop()))
                 stack.append(ch)
+            elif ch == '\\':#TODO 转义字符
+                pass
+
             else:
                 postfix.append(ch)
 
@@ -37,7 +41,7 @@ class Regex:
         return res
 
 
-re_c_minus = '()*'  # Regex :c-- TODO
+re_c_minus = '()*'  # Regex :c-- TODO 换行未识别
 
 
 def get_re_postfix_c_minus() -> str:  # 获得c--的后缀表达式

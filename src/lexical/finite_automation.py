@@ -42,16 +42,16 @@ class FA:
         return True
 
     @staticmethod
-    def init_by_re_postfix(regex_pofix: str):  # TODO
-        return FA(f=FA.get_f_by_regex())
+    def init_by_re_postfix(re_postfix: str):  # TODO
+        return FA(f=FA.get_f_by_re_postfix(re_postfix))
 
     @staticmethod
-    def get_f_by_regex(regex_pofix: str):  # TODO
+    def get_f_by_re_postfix(re_postfix: str):  # TODO
         State.reset_flag()
-        if regex_pofix == '':
+        if re_postfix == '':
             return Rules.get_epsilon_rules()  # fa 的转换函数
         stack = []
-        for c in regex_pofix:
+        for c in re_postfix:
             if c == '.':
                 rules1 = stack.pop()
                 rules2 = stack.pop()

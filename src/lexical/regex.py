@@ -37,7 +37,7 @@ class Regex:
         return res
 
 
-re_c_minus = ''  # Regex :c-- TODO
+re_c_minus = '()*'  # Regex :c-- TODO
 
 
 def get_re_postfix_c_minus() -> str:  # 获得c--的后缀表达式

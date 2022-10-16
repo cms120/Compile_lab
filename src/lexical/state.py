@@ -53,6 +53,6 @@ class State:
         cls.__FLAG = str(int(cls.__FLAG) + 1)
 
     @classmethod
-    def reset_flag(cls):
-
+    def reset(cls):
+        cls.__STATE_ALL.clear()
         cls.__FLAG = '0'

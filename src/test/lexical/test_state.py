@@ -5,15 +5,15 @@ from src.lexical.state import State
 
 class StateTest(unittest.TestCase):
     def test_reset_flag(self):
-        State.reset_flag()
+        State.reset()
         self.assertEqual(State.get_flag(), 0)
 
     def test_flag_plus(self):
-        State.reset_flag()
+        State.reset()
         for i in range(100):
             State.flag_plus()
         self.assertEqual(State.get_flag(), 100)
-        State.reset_flag()
+        State.reset()
         self.assertEqual(State.get_flag(), 0)
 
 

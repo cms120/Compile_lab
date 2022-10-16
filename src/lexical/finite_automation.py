@@ -2,7 +2,7 @@ import string
 from collections import deque
 
 from src.lexical.rules import Rules, get_rules_c_minus
-from src.lexical.state import State
+
 
 def print_rules(rules):
     print(rules.start.flag, rules.end.flag)
@@ -47,19 +47,25 @@ class FA:
     def init_by_rules(rules: Rules):  # TODO 通过rules构造fa
         fa = FA(set(), set(), dict(), '', set())
 
-        stack = deque()
-        stack.append(rules.start)
+        state_live = deque()  # 需要遍历的state
+        state_dead = set()  # 已遍历过的state
+        state_live.append(rules.start)
         fa.s = rules.start.flag
-        while stack:
-            now = stack.pop()
+        while state_live:
+            now = state_live.pop()
+            if now in state_dead:  # live 中可能有重复
+                continue
+
+            state_dead.add(now)
             fa.k.add(now.flag)
 
             if now.is_end:  # 是终态
                 fa.z.add(now.flag)
-                break
+                continue
 
             for state in now.epsilonTransitions:  # epsilon
-                stack.append(state)
+                if state not in state_dead:
+                    state_live.append(state)
                 key = (now.flag, 'epsilon')  # key 为起始state letter
 
                 if key not in fa.f.keys():
@@ -68,7 +74,8 @@ class FA:
                 fa.f[key].add(str(state.flag))
 
             for letter, state in now.transitions.items():
-                stack.append(state)
+                if state not in state_dead:
+                    state_live.append(state)
                 key = (now.flag, letter)  # key 为起始state letter
 
                 if key not in fa.f.keys():

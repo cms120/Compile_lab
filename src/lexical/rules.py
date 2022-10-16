@@ -88,7 +88,7 @@ class Rules:
 
     @staticmethod
     def init_by_re_postfix(re_postfix):
-        State.reset_flag()
+        State.reset()
         if re_postfix == '':
             return Rules.get_epsilon_rules()  # fa 的转换函数
         stack = deque()

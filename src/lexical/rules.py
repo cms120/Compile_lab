@@ -12,22 +12,23 @@ class Rules:
                'state1:\t' + str(self.end.flag) + '\n'
 
     @staticmethod
-    def epsilon_transition(pre_state, next_state):
-        pre_state.epsilonTransitions.append(next_state)
+    def epsilon_transition(pre: State, nxt: State):  # 创建 epsilon transition
+        pre.epsilonTransitions.append(nxt)
 
     @staticmethod
-    def letter_transition(pre_state, next_state, letter):
+    def letter_transition(pre_state: State, next_state: State, letter: str):  # 创建 普通 transition
         pre_state.transition[letter] = next_state
 
     @staticmethod
-    def epsilon_rules():
+    def epsilon_rules() -> tuple[State, State]:  # 创建 epsilon 规则
         start = State(False)
         end = State(True)
         Rules.epsilon_transition(start, end)
+
         return start, end
 
     @staticmethod
-    def letter_rules(letter):
+    def letter_rules(letter) -> tuple[State, State]:  # 创建普通规则
         start = State(False)
         end = State(True)
         Rules.letter_transition(start, end, letter)

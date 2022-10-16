@@ -1,37 +1,43 @@
+from collections import deque
+
+
 class Regex:
-    __regex_keyword = {'*': 50,  # 闭包
-                       '.': 40,  # 连接
-                       '|': 30  # 或
-                       }  # 正则表达式的关键字
+    __keyword = {'*': 50,  # 闭包
+                 '.': 40,  # 连接
+                 '|': 30  # 或
+                 }  # 正则表达式的关键字
 
     @staticmethod
     def get_re_postfix(re: str) -> str:  # 得到后缀表达式 a.b -> ab.
-        postfix = ""
-        stack = ""
+        postfix = deque()
+        stack = deque()
 
         # Loop through the string one character at a time
         for ch in re:
             if ch == '(':
-                stack = stack + ch
+                stack.append(ch)
             elif ch == ')':
                 while stack[-1] != '(':
-                    postfix, stack = postfix + stack[-1], stack[:-1]
+                    postfix.append((stack.pop()))
                 # Remove '(' from stack
-                stack = stack[:-1]
-            elif ch in Regex.__regex_keyword:
-                while stack and Regex.__regex_keyword.get(ch, 0) <= Regex.__regex_keyword.get(stack[-1], 0):
-                    postfix, stack = postfix + stack[-1], stack[:-1]
-                stack = stack + ch
+                stack.pop()
+            elif ch in Regex.__keyword:  # ch is keyword
+                while stack and Regex.__keyword[ch] <= Regex.__keyword.get(stack[-1], 0):
+                    postfix.append((stack.pop()))
+                stack.append(ch)
             else:
-                postfix = postfix + ch
+                postfix.append(ch)
 
         while stack:
-            postfix, stack = postfix + stack[-1], stack[:-1]
+            postfix += (stack.pop())
 
-        return postfix
+        res = ''
+        while postfix:
+            res += postfix.popleft()
+        return res
 
 
-re_c_minus = '(a|b)*c'  # Regex :c-- TODO
+re_c_minus = ''  # Regex :c-- TODO
 
 
 def get_re_postfix_c_minus() -> str:  # 获得c--的后缀表达式

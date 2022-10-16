@@ -1,32 +1,38 @@
 class Regex:
-    re_c_minus = '(a|b)*c'  # Regex :c-- TODO
+    __regex_keyword = {'*': 50,  # 闭包
+                       '.': 40,  # 连接
+                       '|': 30  # 或
+                       }  # 正则表达式的关键字
 
-    def __init__(self, re: str):
-        self.re = re
-
-    def get_regex_pofix(self) -> str:  # 得到后缀表达式
-        specials = {'*': 50, '.': 40, '|': 30}
-
-        pofix = ""
+    @staticmethod
+    def get_re_postfix(re: str) -> str:  # 得到后缀表达式 a.b -> ab.
+        postfix = ""
         stack = ""
 
         # Loop through the string one character at a time
-        for c in self.re:
-            if c == '(':
-                stack = stack + c
-            elif c == ')':
+        for ch in re:
+            if ch == '(':
+                stack = stack + ch
+            elif ch == ')':
                 while stack[-1] != '(':
-                    pofix, stack = pofix + stack[-1], stack[:-1]
+                    postfix, stack = postfix + stack[-1], stack[:-1]
                 # Remove '(' from stack
                 stack = stack[:-1]
-            elif c in specials:
-                while stack and specials.get(c, 0) <= specials.get(stack[-1], 0):
-                    pofix, stack = pofix + stack[-1], stack[:-1]
-                stack = stack + c
+            elif ch in Regex.__regex_keyword:
+                while stack and Regex.__regex_keyword.get(ch, 0) <= Regex.__regex_keyword.get(stack[-1], 0):
+                    postfix, stack = postfix + stack[-1], stack[:-1]
+                stack = stack + ch
             else:
-                pofix = pofix + c
+                postfix = postfix + ch
 
         while stack:
-            pofix, stack = pofix + stack[-1], stack[:-1]
+            postfix, stack = postfix + stack[-1], stack[:-1]
 
-        return pofix
+        return postfix
+
+
+re_c_minus = '(a|b)*c'  # Regex :c-- TODO
+
+
+def get_re_postfix_c_minus() -> str:  # 获得c--的后缀表达式
+    return Regex.get_re_postfix(re_c_minus)

@@ -1,6 +1,6 @@
 import string
 
-from src.lexical.regex import Regex
+from src.lexical.regex import Regex, get_re_postfix_c_minus
 from src.lexical.rules import Rules
 from src.lexical.state import State
 
@@ -42,7 +42,7 @@ class FA:
         return True
 
     @staticmethod
-    def init_by_regex_pofix(regex_pofix: str):  # TODO
+    def init_by_re_postfix(regex_pofix: str):  # TODO
         return FA(f=FA.get_f_by_regex())
 
     @staticmethod
@@ -73,7 +73,7 @@ class FA:
 
 
 def get_fa_c_minus() -> FA:
-    return FA.init_by_regex_pofix(Regex(Regex.re_c_minus).get_regex_pofix())
+    return FA.init_by_re_postfix(get_re_postfix_c_minus())
 
 
 def get_fa_c_minus_letters() -> list[str]:

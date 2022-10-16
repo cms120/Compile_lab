@@ -1,7 +1,7 @@
 import unittest
 
-from lexical.regex import Regex
 from src.lexical.finite_automation import FA
+from src.lexical.regex import Regex
 
 re_s = [
     '',
@@ -16,4 +16,10 @@ class RegexTest(unittest.TestCase):
         self.assertTrue(True)
         for re in re_s:
             print(FA.get_f_by_regex(
-                Regex(re).get_regex_pofix()))
+                Regex.get_re_postfix(re)))
+
+    def test_get_re_postfix(self):
+        for re in re_s:
+            re_postfix = Regex.get_re_postfix(re)
+            self.assertIsNotNone(re_postfix)
+            print(re_postfix)

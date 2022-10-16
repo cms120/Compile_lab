@@ -23,7 +23,9 @@ class FATest(unittest.TestCase):
         for re in re_s:
             re_postfix = Regex.get_re_postfix(re)
             print(re_postfix)
-            print(FA.get_f_by_rules(re_postfix))
+            rules = Rules.init_by_re_postfix(re_postfix)
+            print(rules)
+            print(FA.get_f_by_rules(rules))
 
 
 if __name__ == '__main__':

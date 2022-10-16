@@ -111,5 +111,5 @@ class Rules:
         return stack.pop()
 
 
-def get_rules_c_minus(re_postfix: str) -> Rules:  # 获得c--的rules
+def get_rules_c_minus() -> Rules:  # 获得c--的rules
     return Rules.init_by_re_postfix(get_re_postfix_c_minus())

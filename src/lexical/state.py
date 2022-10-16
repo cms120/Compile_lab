@@ -31,4 +31,5 @@ class State:
 
     @classmethod
     def reset_flag(cls):
+
         cls.__FLAG = 0

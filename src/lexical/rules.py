@@ -11,6 +11,7 @@ class Rules:
         return 'state0:\t' + str(self.start.flag) + '\n' + \
                'state1:\t' + str(self.end.flag) + '\n'
 
+    @staticmethod
     def epsilon_transition(pre_state, next_state):
         pre_state.epsilonTransitions.append(next_state)
 
@@ -23,7 +24,7 @@ class Rules:
         start = State(False)
         end = State(True)
         Rules.epsilon_transition(start, end)
-
+        return start, end
 
     @staticmethod
     def letter_rules(letter):

@@ -4,10 +4,10 @@ from lexical.regex import Regex
 from src.lexical.finite_automation import FA
 
 re_s = [
+    '',
     'a.b.c.d',
     '(a|b)*',
-    '(a|b).c',
-    ''
+    '(a|b).c'
 ]
 
 
@@ -15,4 +15,5 @@ class RegexTest(unittest.TestCase):
     def test_get_f_by_regex(self):
         self.assertTrue(True)
         for re in re_s:
-            print(FA.get_f_by_regex(Regex(re).get_regex_pofix()))
+            print(FA.get_f_by_regex(
+                Regex(re).get_regex_pofix()))

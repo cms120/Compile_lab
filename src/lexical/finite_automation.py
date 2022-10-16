@@ -1,12 +1,12 @@
 import string
 
-from lexical.state import State
 from src.lexical.regex import Regex
 from src.lexical.rules import Rules
+from src.lexical.state import State
 
 
 def print_rules(rules):
-    print(rules.start.flag,rules.end.flag)
+    print(rules.start.flag, rules.end.flag)
 
 
 class FA:
@@ -43,12 +43,11 @@ class FA:
 
     @staticmethod
     def init_by_regex_pofix(regex_pofix: str):  # TODO
-
         return FA(f=FA.get_f_by_regex())
 
     @staticmethod
     def get_f_by_regex(regex_pofix: str):  # TODO
-        State.set_flag_zero()
+        State.reset_flag()
         if regex_pofix == '':
             return Rules.get_epsilon_rules()  # fa 的转换函数
         stack = []

@@ -7,8 +7,13 @@ class State:
         self.transition = {}
         self.epsilonTransitions = []
 
-    @staticmethod
-    def get_flag() -> int:
-        State.FLAG += 1
-        return State.FLAG
+    @classmethod
+    def get_flag(cls) -> int:
+        cls.FLAG += 1
+        return cls.FLAG
+
+    @classmethod
+    def set_flag_zero(cls):
+        cls.FLAG = -1
+
 

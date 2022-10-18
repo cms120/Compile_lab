@@ -13,3 +13,4 @@
 5. NFA确定化 TODO
 6. DFA最小化 TODO
 7. 根据DFA分析程序 TODO
+## syntax

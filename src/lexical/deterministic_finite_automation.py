@@ -1,15 +1,41 @@
 from src.lexical.finite_automation import FA
-
+from src.lexical.state import State
 
 class DFA(FA):
 
     @staticmethod
-    def init_by_fa(fa: FA):  # 根据FA构造最小DFA
+    def init_by_fa(fa: FA):  # TODO:根据FA构造最小DFA
         return dfa_minimize(
             fa_2_dfa(fa))
 
+# def epsilon_closure(s0:State): #传进：初始状态s0；返回：一个由s0的epsilon闭包组成的状态集合
+#     return s0.epsilonTransitions
+#     pass
+
+def move(I:list, letter:str, fa:FA):    #将集合I转为J=move(I,letter)，再转为Ia=epsilon_closure{j}
+    J =[]
+    Ia = []
+    for state in I:
+        key = (state,str)
+        if(fa.f[key] != None):
+         J.append(fa.f[key]) 
+    
+    for state in J:
+        for state_2 in state.epsilonTransitions: 
+            if not (Ia.__contains__(state_2)):
+                Ia.append[state_2]
+
+    return Ia   
+    pass
+
+
+
 
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
+    # for  x in fa.s.epsilonTransitions:
+
+    pass
+
 
 #   一. 不具有e−转移的NFA转具有e−转移的NFA
 #    （1）引进初态X和终态Y，X, Y ∈S, 从X到S0中任意状态连接一条
@@ -129,4 +155,4 @@ def dfa_minimize(dfa) -> DFA:  # DFA最小化
 
     # 3.对两个集合根据是否可再分继续划分集合，直到不可再划分为止
 
-    pass  # TODO
+   pass  # TODO

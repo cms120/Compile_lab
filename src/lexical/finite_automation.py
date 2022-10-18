@@ -44,7 +44,7 @@ class FA:
         return True
 
     @staticmethod
-    def init_by_rules(rules: Rules):  # TODO 通过rules构造fa
+    def init_by_rules(rules: Rules):
         fa = FA(set(), set(), dict(), '', set())
 
         state_live = deque()  # 需要遍历的state

@@ -26,7 +26,7 @@ class Regex:
                 while stack and Regex.__keyword[ch] <= Regex.__keyword.get(stack[-1], 0):
                     postfix.append((stack.pop()))
                 stack.append(ch)
-            elif ch == '\\':#TODO 转义字符
+            elif ch == '\\':  # TODO 转义字符
                 pass
 
             else:

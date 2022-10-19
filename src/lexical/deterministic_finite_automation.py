@@ -1,5 +1,5 @@
 from src.lexical.finite_automation import FA
-from src.lexical.state import State
+
 
 class DFA(FA):
 
@@ -8,27 +8,26 @@ class DFA(FA):
         return dfa_minimize(
             fa_2_dfa(fa))
 
+
 # def epsilon_closure(s0:State): #传进：初始状态s0；返回：一个由s0的epsilon闭包组成的状态集合
 #     return s0.epsilonTransitions
 #     pass
 
-def move(I:list, letter:str, fa:FA):    #将集合I转为J=move(I,letter)，再转为Ia=epsilon_closure{j}
-    J =[]
+def move(I: list, letter: str, fa: FA):  # 将集合I转为J=move(I,letter)，再转为Ia=epsilon_closure{j}
+    J = []
     Ia = []
     for state in I:
-        key = (state,str)
-        if(fa.f[key] != None):
-         J.append(fa.f[key]) 
-    
+        key = (state, str)
+        if (fa.f[key] != None):
+            J.append(fa.f[key])
+
     for state in J:
-        for state_2 in state.epsilonTransitions: 
+        for state_2 in state.epsilonTransitions:
             if not (Ia.__contains__(state_2)):
                 Ia.append[state_2]
 
-    return Ia   
+    return Ia
     pass
-
-
 
 
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
@@ -40,7 +39,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
 #   一. 不具有e−转移的NFA转具有e−转移的NFA
 #    （1）引进初态X和终态Y，X, Y ∈S, 从X到S0中任意状态连接一条
 # ε箭弧，从F中任意状态连接一条ε箭弧到Y。
-      
+
 #    （2）对M的状态转换图进一步实施如下替换，其中状态2是新引入
 # 状态。重复该过程，直到每条箭弧上标记ε，或者为∑中的单个字
 # 符。 
@@ -51,7 +50,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
 
 #     (2) 分别把从q0（对应于M的状态子集I）出发，经过任意a∈文法有穷字母表的a弧转换Ia 所
 #     组成的集合作为M’ 的状态，如此继续，直到不再有新的状态为止。
-    
+
 # 参考代码：
 # d = defaultdict(list)
 #     t = [] #终结符
@@ -155,4 +154,4 @@ def dfa_minimize(dfa) -> DFA:  # DFA最小化
 
     # 3.对两个集合根据是否可再分继续划分集合，直到不可再划分为止
 
-   pass  # TODO
+    pass  # TODO

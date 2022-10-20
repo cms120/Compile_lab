@@ -44,20 +44,20 @@ class FA:
         return True
 
     @staticmethod
-    def init_by_rules(rules: Rules):
+    def init_by_rules(rules: Rules):  # 根据rules构造fa
         fa = FA(set(), set(), dict(), '', set())
 
         state_live = deque()  # 需要遍历的state
         state_dead = set()  # 已遍历过的state
         state_live.append(rules.start)
-        fa.s = rules.start.flag
+        fa.s = rules.start.flag  # 维护fa开始字符
         while state_live:
             now = state_live.pop()
-            if now in state_dead:  # live 中可能有重复
+            if now in state_dead:  # live 中可能有重复 因此该state如果遍历过 跳过
                 continue
 
             state_dead.add(now)
-            fa.k.add(now.flag)
+            fa.k.add(now.flag)  # 维护状态集
 
             if now.is_end:  # 是终态
                 fa.z.add(now.flag)
@@ -82,7 +82,7 @@ class FA:
                     fa.f[key] = set()
 
                 fa.f[key].add(str(state.flag))
-                fa.letters.add(letter)
+                fa.letters.add(letter)  # 维护字符集
 
         return fa
 

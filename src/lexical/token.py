@@ -1,5 +1,3 @@
-from enum import Enum, unique
-
 LexicalUnitKeyword = {
     '_int': 'int',
     '_void': 'void',
@@ -26,24 +24,25 @@ LexicalUnitOp = {
 LexicalUnitOther = {
     '_IDN': 'idn',  # 标识符: 变量名、函数名
     'C': 'c',  # 整形常数
-    'fp': 'fp',  # 浮点型常数
+    '_fp': 'fp',  # 浮点型常数
 }
 
 
-@unique
-class LexicalUnit(Enum):  # 词法单元
-    def __init__(self):
-        for unit in LexicalUnitKeyword.items():
-            LexicalUnit[unit[0]] = unit[1]
-        for unit in LexicalUnitDelimiter.items():
-            LexicalUnit[unit[0]] = unit[1]
-        for unit in LexicalUnitOp.items():
-            LexicalUnit[unit[0]] = unit[1]
-        for unit in LexicalUnitOther.items():
-            LexicalUnit[unit[0]] = unit[1]
+def merge_dict(d1: dict, d2: dict) -> dict:  # 合并两个字典 两个字典不能有相同的key
+    res = dict()
+    for k, v in d1.items():
+        res[k] = v
+    for k, v in d2.items():
+        assert (k in res.keys(), '字典含有相同key')
+        res[k] = v
+    return res
+
+
+LexicalUnit = merge_dict(merge_dict(LexicalUnitKeyword, LexicalUnitDelimiter),
+                         merge_dict(LexicalUnitOp, LexicalUnitOther))
 
 
 class Token:
-    def __init__(self, lu: LexicalUnit, val: int):
+    def __init__(self, lu: str, val: int):
         self.lu = lu
         self.val = val

@@ -1,11 +1,15 @@
 from collections import deque
 
 
+
+
 class Regex:
-    __keyword = {'*': 50,  # 闭包
-                 '.': 40,  # 连接
-                 '|': 30  # 或
-                 }  # 正则表达式的关键字
+    keyword = {'*': 50,  # 闭包
+               '.': 40,  # 连接
+               '|': 30,  # 或
+               '(': 20,
+               ')': 10
+               }  # 正则表达式的关键字
 
     @staticmethod
     def get_re_postfix(re: str) -> str:  # 得到后缀表达式 a.b -> ab.
@@ -22,8 +26,8 @@ class Regex:
                     postfix.append((stack.pop()))
                 # Remove '(' from stack
                 stack.pop()
-            elif ch in Regex.__keyword:  # ch is keyword
-                while stack and Regex.__keyword[ch] <= Regex.__keyword.get(stack[-1], 0):
+            elif ch in Regex.keyword:  # ch is keyword
+                while stack and Regex.keyword[ch] <= Regex.keyword.get(stack[-1], 0):
                     postfix.append((stack.pop()))
                 stack.append(ch)
             elif ch == '\\':  # TODO 转义字符

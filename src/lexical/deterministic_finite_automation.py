@@ -1,4 +1,8 @@
+from sqlalchemy import false
+
 from src.lexical.finite_automation import FA
+from src.lexical.rules import Rules
+from src.lexical.state import State
 
 
 class DFA(FA):
@@ -9,142 +13,58 @@ class DFA(FA):
             fa_2_dfa(fa))
 
 
-# def epsilon_closure(s0:State): #传进：初始状态s0；返回：一个由s0的epsilon闭包组成的状态集合
-#     return s0.epsilonTransitions
-#     pass
-
-def move(I: list, letter: str, fa: FA):  # 将集合I转为J=move(I,letter)，再转为Ia=epsilon_closure{j}
+def epsilon_closure_Move(I: list, letter: str, fa: FA):  # 将集合I转为J=move(I,letter)，再转为Ia=epsilon_closure{j}
     J = []
-    Ia = []
-    for state in I:
+    I_letter = []
+    for state in I:  # move动作
         key = (state, str)
         if (fa.f[key] != None):
             J.append(fa.f[key])
 
-    for state in J:
+    for state in J:  # 得到Ia
         for state_2 in state.epsilonTransitions:
-            if not (Ia.__contains__(state_2)):
-                Ia.append[state_2]
+            if not (I_letter.__contains__(state_2)):
+                I_letter.append[state_2]
 
-    return Ia
+    return I_letter
     pass
 
 
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
-    # for  x in fa.s.epsilonTransitions:
 
+    ListOfNewStateList = []  # 存储某状态经过epsilon_closure_Move后得到的状态列表
+    dict1 = {}  # 字典dict1存储状态集——>新状态的映射
+    state = State(False)
+    Allstate = state.get_state_all  # get_state_all是不是改成静态方法好点？
+
+    for state1 in Allstate:  # 获得fa的开始状态
+        if (fa.s == state1.get_flag):
+            S0 = state1
+
+    for letter in fa.letters:
+        ListOfNewStateList.append(epsilon_closure_Move(S0.epsilonTransitions, letter,
+                                                       fa))  # 开始状态的Epsilon闭包通过letter达到的状态组成一个新状态集，存进ListOfNewStateList
+        state2 = State(false)
+        dict1[epsilon_closure_Move(S0.epsilonTransitions, letter, fa)] = state2  # 把初始状态集映射到一个新的状态
+        # S0.transitions[letter]=state2
+
+    for StateList in ListOfNewStateList:  # 遍历ListOfNewStateList中的状态集，经每个letter通过epsilon_closure_Move得到新的状态集再加进ListOfNewStateList再遍历，重复这个过程直到不产生新的状态集为止
+        for letter in fa.letters:
+            NewStateList = epsilon_closure_Move(StateList, letter, fa)
+            if not (ListOfNewStateList.__contains__(NewStateList)):
+                ListOfNewStateList.append(NewStateList)
+                state3 = state(false)
+                dict1[NewStateList] = state3  # 同样将得到的状态集NewStateList映射到一个新状态
+                dict1[StateList].transitions[letter] = dict1[
+                    NewStateList]  # 设置原状态的transitions映射：StateList映射到的原状态——letter——>NewStateList映射到的新状态
+
+    rules = Rules(dict1.get(next(iter(dict1))),
+                  dict1.get(list(dict1.keys())[-1]))  # 取字典中第一个值（状态）和最后一个值作为rule的start和end（python3中字典是按序存储的）
+
+    Dfa = Rules.init_by_rules(rules)  # 根据规则构造FA，得到的是DFA
+
+    return Dfa
     pass
-
-
-#   一. 不具有e−转移的NFA转具有e−转移的NFA
-#    （1）引进初态X和终态Y，X, Y ∈S, 从X到S0中任意状态连接一条
-# ε箭弧，从F中任意状态连接一条ε箭弧到Y。
-
-#    （2）对M的状态转换图进一步实施如下替换，其中状态2是新引入
-# 状态。重复该过程，直到每条箭弧上标记ε，或者为∑中的单个字
-# 符。 
-
-#   二.将 e−NFA转化为等价的 DFA
-#     (1) 首先从S0出发，仅经过任意条箭弧所能到达的状态所组成的集合I作为M’的
-#    初态q0. 
-
-#     (2) 分别把从q0（对应于M的状态子集I）出发，经过任意a∈文法有穷字母表的a弧转换Ia 所
-#     组成的集合作为M’ 的状态，如此继续，直到不再有新的状态为止。
-
-# 参考代码：
-# d = defaultdict(list)
-#     t = [] #终结符
-#     f = open(path)
-#     text = []
-#     for l in f:
-#         text.append(l)
-#     #将文本存入defaultdict中
-#     for item in text:
-#         if item == '\n':
-#             continue
-#         item = item.split('\n')
-#         item = item[0].split(':')
-#         separate = item[1].split('|')
-#         for i in separate:
-#             latter = i.split(' ')
-#             d[str(item[0])].append([str(latter[0]),str(latter[1])])
-#     print(d)
-#     #子集法进行转换
-#     #1、算出每个状态的闭包，空在词法中以 $ 表示
-#     closure = defaultdict(list)
-#     for key in d.keys():
-#         for item in d[key]:
-#             if item[0] == '$':
-#                 closure[str(key)].append(str(item[1]))
-#             else:
-#                 if item[0] not in t:
-#                     t.append(item[0])
-#     #2、找状态
-#     DFA = defaultdict(list)    #存储每一个状态里对应的东西
-#     ADVANCE = defaultdict(list)    #存储状态转换线路
-#     stateNum = 0
-#     analyseNum = 0
-#     DFA[str(stateNum)].append('start')
-#     for item in closure['start']:
-#         DFA[str(stateNum)].append(item)
-#     while True:
-#         F = False
-#         for item in DFA[str(stateNum)]:
-#             if item in closure.keys():
-#                 for value in closure[item]:
-#                     if value not in DFA[str(stateNum)]:
-#                         DFA[str(stateNum)].append(value)
-#                         F = True
-#         if F == False:
-#             break
-#     stateNum += 1
-#     while analyseNum != stateNum:
-#         for key in t:     #对每个终结符进行遍历
-#             temp = []
-#             for item in DFA[str(analyseNum)]:
-#                 for item1 in d[str(item)]:
-#                     if item1[0] == key:
-#                         temp.append(item1[1])
-#             if len(temp) == 0:
-#                 continue
-#             #找temp的闭包
-#             while True:
-#                 F = False    #如果有新加入的元素就变True，否则一直为False跳出while循环
-#                 for item in temp:
-#                     for p in closure[item]:
-#                         if p not in temp:
-#                             temp.append(p)
-#                             F = True
-#                 if F == False:
-#                     break
-
-#             flag = False  #判断是否已经存在这个状态，False代表不存在，True代表存在
-#             num = 0
-#             for kk in DFA.keys():
-#                 num = kk
-#                 if len(DFA[kk]) != len(temp):
-#                     continue
-#                 else:
-#                     cnt = 0
-#                     for i1 in temp:
-#                         if i1 not in DFA[kk]:
-#                             break
-#                         cnt += 1
-#                     if cnt == len(temp):
-#                         flag = True
-#                         break
-#             if flag == False:
-#                 for i in temp:
-#                     DFA[str(stateNum)].append(i)
-#                 ADVANCE[str(analyseNum)].append([str(key),str(stateNum)])
-#                 stateNum += 1
-#             else:
-#                 ADVANCE[str(analyseNum)].append([str(key), str(num)])
-#         analyseNum += 1
-#     print(DFA)
-#     print(ADVANCE)
-#     return ADVANCE
-#     pass  # TODO
 
 
 def dfa_minimize(dfa) -> DFA:  # DFA最小化
@@ -154,4 +74,4 @@ def dfa_minimize(dfa) -> DFA:  # DFA最小化
 
     # 3.对两个集合根据是否可再分继续划分集合，直到不可再划分为止
 
-    pass  # TODO
+    pass

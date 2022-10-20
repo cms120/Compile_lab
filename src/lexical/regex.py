@@ -41,7 +41,7 @@ class Regex:
         return res
 
 
-re_c_minus = '()*'  # Regex :c-- TODO 换行未识别
+re_c_minus = '(1-9).(0-9)* | (a-z|A-Z|_).(a-z|A-Z|_|0-9)* | (0-9)*.(.).(0-9)* | "(letters)*" | | + | - | * | / | % | = | > | < | == | <= | >= | != | && | || |：|（ | ）| {  | } | ；| ,'  # Regex :c-- TODO 换行未识别 浮点数等符号冲突未解决
 
 
 def get_re_postfix_c_minus() -> str:  # 获得c--的后缀表达式

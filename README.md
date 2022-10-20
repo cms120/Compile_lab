@@ -13,4 +13,8 @@
 5. NFA确定化 done
 6. DFA最小化 TODO
 7. 根据DFA分析程序 TODO
+   1. 根据传入字符串构造token TODO 
+   2. 正则表达式关键字的翻译 TODO
+   3. 后缀表达式修改 TODO
+
 ## syntax

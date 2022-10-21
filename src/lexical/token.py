@@ -2,7 +2,7 @@ from enum import unique, IntEnum
 
 
 @unique  # val值应该不相同
-class LexicalUnit(IntEnum):  # 词法单元
+class LexicalUnit(IntEnum):  # 词法单元 TODO 删除,
     V = 1,  # 变量
     C = 2,  # 整数常数
     INT = 3,
@@ -25,8 +25,8 @@ class Token:
         self.type = self.get_type_by_words()
         self.val = self.get_val_by_words()
 
-    def get_type_by_words(self) -> str: # TODO
+    def get_type_by_words(self) -> str:  # TODO
         pass
 
-    def get_val_by_words(self) -> str: # TODO
+    def get_val_by_words(self) -> str:  # TODO
         pass

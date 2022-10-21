@@ -10,10 +10,10 @@ class LexicalUnit(IntEnum):  # 词法单元
     RETURN = 5,
     CONST = 6,
     MAIN = 7,
-    LPAR = 8,  # (
-    RPAR = 9,  # )
-    LBRACE = 10,  # {
-    RBRACE = 11,  # }
+    L_PAR = 20,  # (
+    R_PAR = ')',  # )
+    L_BRACE = '{',  # {
+    R_BRACE = '}',  # }
     COMMA = 11,  # ,
     SEMICOLON = 12,  # ;
     OP = 13  # 运算符

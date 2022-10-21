@@ -35,7 +35,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
     ListOfNewStateList = []  # 存储某状态经过epsilon_closure_Move后得到的状态列表
     dict1 = {}  # 字典dict1存储状态集——>新状态的映射
     state = State(False)
-    Allstate = state.get_state_all  # get_state_all是不是改成静态方法好点？
+    Allstate = State.get_state_all  # get_state_all是不是改成静态方法好点？
 
     for state1 in Allstate:  # 获得fa的开始状态
         if (fa.s == state1.get_flag):

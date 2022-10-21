@@ -42,43 +42,46 @@ class Regex:
             res += postfix.popleft()
         return res
 
-ascii_lowercase='a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z'
-ascii_uppercase=ascii_lowercase.upper()
-digits_without_zero='1|2|3|4|5|6|7|8|9'
-digits='0|'+digits_without_zero
 
-re_c_minus ='('+ digits_without_zero+').('+digits+')*|'+\
+ascii_lowercase = 'a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z'
+ascii_uppercase = ascii_lowercase.upper()
+digits_without_zero = '1|2|3|4|5|6|7|8|9'
+digits = '0|' + digits_without_zero
 
-    '(1|2|3|4|5|6|7|8|9).(0|1|2|3|4|5|6|7|8|9)* |' \
-             '(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|' \
-             'A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|_).' \
-             '(a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z' \
-             '|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|_' \
-             '|0|1|2|3|4|5|6|7|8|9)*|' \
-             '(0|1|2|3|4|5|6|7|8|9)*.\\..(0|1|2|3|4|5|6|7|8|9)*|' \
-             '"(ascii)*" |' \
-             '( )*|' \
-             '+|' \
-             '-|' \
-             '\\*|' \
-             '/|' \
-             '%|' \
-             '=|' \
-             '>|' \
-             '<|' \
-             '==|' \
-             '<=|' \
-             '>=|' \
-             '!=|' \
-             '&&|' \
-             '\\|\\||' \
-             ':|' \
-             '\\(|' \
-             '\\)|' \
-             '{|' \
-             '}|' \
-             ';|' \
-             ','  # Regex :c-- TODO 换行未识别 浮点数等符号冲突未解决
+_INT = '(' + digits_without_zero + ').(' + digits + ')*'  # 常数
+_IDN = '(' + ascii_lowercase + '|' + ascii_uppercase + '|_)' \
+                                                       '.' \
+                                                       '(' + ascii_lowercase + '|' + ascii_uppercase + '|' + digits + '|_)*'
+_FP = '(' + _INT + '|0).' \
+                   '\\.' \
+                   '.(' + digits + ')*'
+
+re_c_minus = _INT + '|' + \
+             _IDN + '|' + \
+             _FP + '|' \
+                   '"(ascii)*"|' \
+                   '( )*|' \
+                   '+|' \
+                   '-|' \
+                   '\\*|' \
+                   '/|' \
+                   '%|' \
+                   '=|' \
+                   '>|' \
+                   '<|' \
+                   '==|' \
+                   '<=|' \
+                   '>=|' \
+                   '!=|' \
+                   '&&|' \
+                   '\\|\\||' \
+                   ':|' \
+                   '\\(|' \
+                   '\\)|' \
+                   '{|' \
+                   '}|' \
+                   ';|' \
+                   ','  # Regex :c-- TODO 换行未识别 浮点数等符号冲突未解决
 
 
 def get_re_postfix_c_minus() -> str:  # 获得c--的后缀表达式

@@ -65,7 +65,7 @@ class FA:
             for state in now.epsilonTransitions:  # epsilon
                 if state not in state_dead:
                     state_live.append(state)
-                key = (now.flag, 'epsilon')  # key 为起始state letter
+                key = (now.flag, '$')  # key 为起始state letter
 
                 if key not in fa.f.keys():
                     fa.f[key] = set()

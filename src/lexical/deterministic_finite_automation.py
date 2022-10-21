@@ -1,14 +1,28 @@
 import random
 
-from finite_automation import FA
+from src.lexical.finite_automation import FA
 
 
-class DFA(FA):
+class DFA:
+    def __init__(self, k: set[str],
+                 letters: set[str],
+                 f: dict[tuple[str, str], str],  # 转换函数 存储start letter ends
+                 s: str,
+                 z: set[str]):
+        self.k = k  # 状态集
+        self.letters = letters  # 字母表
+        self.f = f  # 转换函数集 示例 f(S,0)=V 那么在list中存入的是 (S,0) , V
+        self.s = s  # 唯一初态
+        self.z = z  # 终态集
 
     @staticmethod
     def init_by_fa(fa: FA):  # TODO:根据FA构造最小DFA
         return dfa_minimize(
             fa_2_dfa(fa))
+
+
+def fa_2_dfa_shan(fa: FA) -> DFA:  # NFA 确定化
+    dfa_letters = fa.letters
 
 
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化

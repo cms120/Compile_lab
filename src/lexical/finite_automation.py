@@ -1,4 +1,3 @@
-import string
 from collections import deque
 
 from src.lexical.rules import Rules, get_rules_c_minus
@@ -28,7 +27,7 @@ class FA:
                's:\t' + str(self.s) + '\n' + \
                'z:\t' + str(self.z) + '\n'
 
-    def k_and_letters(self) -> bool:  # 检查初态 终态 和转换函数中的状态及输入字符是否在状态集和字符集中 TODO
+    def k_and_letters(self) -> bool:  # 检查初态 终态 和转换函数中的状态及输入字符是否在状态集和字符集中
         for z in self.z:
             if z not in self.k:
                 return False
@@ -90,19 +89,3 @@ class FA:
 def get_fa_c_minus() -> FA:  # 获得c--的fa
     return FA.init_by_rules(get_rules_c_minus())
 
-
-def get_fa_c_minus_letters() -> list[str]:
-    letters = ['+', '-', '*', '/', '%', '=', '<', '>', '!', '&', '|',  # 运算符
-               '(', ')', '{', '}', ',', ';',  # 界符
-               ' ',  # 空格
-               '.',  # 浮点数
-               '_', ]  # 命名符
-
-    for letter in string.ascii_lowercase:
-        letters.append(letter)
-    for letter in string.ascii_uppercase:
-        letters.append(letter)
-    for i in range(10):
-        letters.append(str(i))
-
-    return letters

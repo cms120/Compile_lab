@@ -20,13 +20,12 @@ class LexicalAnaLysis:
                     break
                 now_state = self.dfa.f.get((now_state, content[Next]))
                 Next += 1
-            if now_state in self.dfa.z:  # 一次识别终止 停止在终态
-                res.append(Token(deepcopy(content[Pre:Next + (Next == len(content))])))  # 莫名bug
-                Pre = Next
-                now_state = self.dfa.s
-            else:  # TODO 识别失败应该抛出异常那种或者直接停止执行 未实现
-                print("未能识别成功，可能出现无法识别的符号")
-                return []  # TODO 错误处理程序
+            assert now_state in self.dfa.z, 'error'  # TODO 输出想要的信息
+
+            res.append(Token(deepcopy(content[Pre:Next + (Next == len(content))])))  # 莫名bug
+            Pre = Next
+            now_state = self.dfa.s
+
         return res
 
     def analysis(self, filepath: str) -> list[Token]:  # TODO 根据dfa扫描并且得到输出 set result

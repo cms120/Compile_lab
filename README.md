@@ -13,28 +13,32 @@
 5. NFA确定化 done
 6. DFA最小化 TODO
 7. 根据DFA分析程序 TODO
-   1. 根据传入字符串构造token TODO 
-   2. 正则表达式关键字的翻译 TODO
-   3. 后缀表达式修改 TODO
+    1. 根据传入字符串构造token TODO
+    2. 正则表达式关键字的翻译 TODO
+    3. 后缀表达式修改 TODO
 
 ## syntax
+
 1. 手动构造c--文法 done
-   - ![image-20221020200324493](README.assets/image-20221020200324493.png)
+    - ![image-20221020200324493](README.assets/image-20221020200324493.png)
 2. 根据token串将其理解为各类语法单位：短语、子句、程序段、程序。输出语法树
 
 ### syntax_bottom_up LL
+
 #### LL(1) 每一步只向前查看一个符号
+
 1. 消除左递归
-   1. 消除直接左递归
-   2. 消除左递归
+    1. 消除直接左递归
+    2. 消除左递归
 2. 消除回溯、提取左因子
+
 ### syntax_top_down LR
 
 #### 算符优先分析法
 
 #### LR分析法
 
-
 ## Semantic
+
 1. 静态语义检查
 2. 中间代码的翻译

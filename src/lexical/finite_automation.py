@@ -88,4 +88,3 @@ class FA:
 
 def get_fa_c_minus() -> FA:  # 获得c--的fa
     return FA.init_by_rules(get_rules_c_minus())
-

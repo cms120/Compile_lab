@@ -20,13 +20,7 @@ class LexicalUnit(IntEnum):  # 词法单元 TODO 删除,
 
 
 class Token:
-    def __init__(self, wordsUnit: str):
-        self.words = wordsUnit
-        self.type = self.get_type_by_words()
-        self.val = self.get_val_by_words()
+    def __init__(self, words_unit: LexicalUnit, val: str):
+        self.words = words_unit
+        self.val = val
 
-    def get_type_by_words(self) -> str:  # TODO
-        pass
-
-    def get_val_by_words(self) -> str:  # TODO
-        pass

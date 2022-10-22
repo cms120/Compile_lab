@@ -2,6 +2,7 @@ from copy import deepcopy
 
 from src.lexical.deterministic_finite_automation import DFA
 from src.lexical.token import Token
+from src.util import read_file
 
 
 class LexicalAnaLysis:
@@ -10,25 +11,24 @@ class LexicalAnaLysis:
         self.dfa = dfa
         self.result = self.analysis(filepath)
 
-    def get_token_by_content(self, content: str) -> list[Token]:
+    def analysis(self, file_path: str) -> list[Token]:  # TODO 根据dfa扫描并且得到输出 set result
+        return self.get_token_list_by_content_dfa(self.dfa, read_file(file_path))
+
+    @staticmethod
+    def get_token_list_by_content_dfa(dfa: DFA, content: str) -> list[Token]:
         res = []
         pre = nxt = 0  # 指针指向当前识别单词首位和正在识别的位置
-        now_state = self.dfa.s
+        now_state = dfa.s
         while pre != len(content):
-            while self.dfa.f.get((now_state, content[nxt]), 0):
+            while dfa.f.get((now_state, content[nxt]), 0):
                 if nxt == len(content):
                     break
-                now_state = self.dfa.f.get((now_state, content[nxt]))
+                now_state = dfa.f.get((now_state, content[nxt]))
                 nxt += 1
-            assert now_state in self.dfa.z, 'error'  # TODO 输出想要的信息
+            assert now_state in dfa.z, 'error'  # TODO 输出想要的信息
 
             res.append(Token(deepcopy(content[pre:nxt + (nxt == len(content))])))  # 莫名bug
             pre = nxt
-            now_state = self.dfa.s
+            now_state = dfa.s
 
         return res
-
-    def analysis(self, filepath: str) -> list[Token]:  # TODO 根据dfa扫描并且得到输出 set result
-        with open(filepath, 'r') as f:  # 读入待处理文本
-            text = f.read()
-        return self.get_token_by_content(text)

@@ -1,6 +1,8 @@
 import string
 from enum import unique, Enum
 
+from src.util import read_file
+
 
 @unique
 class SyntaxUnit(Enum):  # 非终结符的key是自己，val是注释
@@ -159,17 +161,16 @@ class Grammar:
 
 def get_g_c_minus_auto() -> Grammar:
     grammar = Grammar(set())
+    content = read_file('src/syntax/c_minus_grammar.txt')
+    lines = content.split('\n')
 
-    with open('src/syntax/c_minus_grammar.txt', 'r') as f:
-        for line in f:
-            i = 0
-            while line[i] in string.digits + '. ':  # 跳过序号
-                i += 1
-            line = line[i:]
-            if line.endswith('\n'):
-                line = line[:-1]
-            if line.endswith(';'):
-                line = line[:-1]
-            grammar.productions.add(Production.init_by_string(line))  # 跳过换行符和分号
+    for line in lines:
+        i = 0
+        while line[i] in string.digits + '. ':  # 跳过序号
+            i += 1
+        line = line[i:]
+        if line.endswith(';'):
+            line = line[:-1]
+        grammar.productions.add(Production.init_by_string(line))
 
     return grammar

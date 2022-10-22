@@ -3,7 +3,7 @@ from collections import deque
 from src.syntax.syntax_unit import SyntaxUnit
 
 
-class AnalysisResultNode:  # 书中的一个节点
+class SyntaxTreeNode:  # 书中的一个节点
     def __init__(self, su: SyntaxUnit):
         self.su = su
         self.children = deque()
@@ -12,6 +12,6 @@ class AnalysisResultNode:  # 书中的一个节点
         self.children.append(child)
 
 
-class AnalysisResult:
+class SyntaxTree:
     def __init__(self, s):
         self.s = s

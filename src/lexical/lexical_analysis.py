@@ -12,18 +12,18 @@ class LexicalAnaLysis:
 
     def get_token_by_content(self, content: str) -> list[Token]:
         res = []
-        Pre = Next = 0  # 指针指向当前识别单词首位和正在识别的位置
+        pre = nxt = 0  # 指针指向当前识别单词首位和正在识别的位置
         now_state = self.dfa.s
-        while Pre != len(content):
-            while self.dfa.f.get((now_state, content[Next]), 0):
-                if Next == len(content):
+        while pre != len(content):
+            while self.dfa.f.get((now_state, content[nxt]), 0):
+                if nxt == len(content):
                     break
-                now_state = self.dfa.f.get((now_state, content[Next]))
-                Next += 1
+                now_state = self.dfa.f.get((now_state, content[nxt]))
+                nxt += 1
             assert now_state in self.dfa.z, 'error'  # TODO 输出想要的信息
 
-            res.append(Token(deepcopy(content[Pre:Next + (Next == len(content))])))  # 莫名bug
-            Pre = Next
+            res.append(Token(deepcopy(content[pre:nxt + (nxt == len(content))])))  # 莫名bug
+            pre = nxt
             now_state = self.dfa.s
 
         return res

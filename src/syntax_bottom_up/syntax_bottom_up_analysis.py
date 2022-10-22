@@ -12,8 +12,9 @@ def analysis():  # c--的语法分析
 
 
 def analysis_with_back(g: Grammar, tokens: list[Token]):  # 带有回溯的分析一个token list TODO
+    token_pointer=0
 
-    pass
+
 
 
 def analysis_without_back(g: Grammar, tokens: list[Token]):  # TODO

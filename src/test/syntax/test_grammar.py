@@ -1,14 +1,14 @@
 import unittest
 
-from src.syntax import grammar
+from src.syntax.grammar import Production, get_g_c_minus_auto
 
 
 class GrammarTest(unittest.TestCase):
     def test_init_by_string(self):
         self.assertTrue(True)
-        print(grammar.Production.init_by_string('Ident -> [a-zA-Z_][a-zA-Z_0-9]*'))
+        print(Production.init_list_by_units(Production.get_units_list_by_str('')))
 
     def test_get_g_c_minus(self):
         self.assertTrue(True)
-        grammar_m = grammar.get_g_c_minus_auto()
+        grammar_m = get_g_c_minus_auto()
         print(grammar_m)

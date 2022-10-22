@@ -15,24 +15,24 @@ class Regex:
         stack = deque()
 
         # Loop through the string one character at a time
-        for ch in re:
+        for i in range(len(str)):
 
-            if ch == '(':
-                stack.append(ch)
-            elif ch == ')':
+            if re[i] == '(':
+                stack.append(re[i])
+            elif re[i] == ')':
                 while stack[-1] != '(':
                     postfix.append((stack.pop()))
                 # Remove '(' from stack
                 stack.pop()
-            elif ch in Regex.keyword:  # ch is keyword
-                while stack and Regex.keyword[ch] <= Regex.keyword.get(stack[-1], 0):
+            elif re[i] in Regex.keyword:  # re[i] is keyword
+                while stack and Regex.keyword[re[i]] <= Regex.keyword.get(stack[-1], 0):
                     postfix.append((stack.pop()))
-                stack.append(ch)
-            elif ch == '\\':  # TODO 转义字符
-                pass
-
+                stack.append(re[i])
+            elif re[i] == '\\':  # TODO 转义字符
+                postfix.append(re[i + 1])
+                i += 1
             else:
-                postfix.append(ch)
+                postfix.append(re[i])
 
         while stack:
             postfix += (stack.pop())
@@ -56,32 +56,34 @@ _FP = '(' + _INT + '|0).' \
                    '\\.' \
                    '.(' + digits + ')*'
 
+# STR只支持了c--中字符以及部分必要字符
+_STR = ascii_lowercase + '|' + ascii_uppercase + '|' + digits + '+|-|\\*|/|%|=|>|<|!|&|\\||:|;|{|}|\\(|\\)|,| |\r|\n|\t'
+
 re_c_minus = _INT + '|' + \
              _IDN + '|' + \
              _FP + '|' \
-                   '"(ascii)*"|' \
-                   '( )*|' \
-                   '+|' \
-                   '-|' \
-                   '\\*|' \
-                   '/|' \
-                   '%|' \
-                   '=|' \
-                   '>|' \
-                   '<|' \
-                   '==|' \
-                   '<=|' \
-                   '>=|' \
-                   '!=|' \
-                   '&&|' \
-                   '\\|\\||' \
-                   ':|' \
-                   '\\(|' \
-                   '\\)|' \
-                   '{|' \
-                   '}|' \
-                   ';|' \
-                   ','  # Regex :c-- TODO 换行未识别 浮点数等符号冲突未解决
+                   '"(' + _STR + ')*"|' \
+                                 '+|' \
+                                 '-|' \
+                                 '\\*|' \
+                                 '/|' \
+                                 '%|' \
+                                 '=|' \
+                                 '>|' \
+                                 '<|' \
+                                 '=.=|' \
+                                 '<.=|' \
+                                 '>.=|' \
+                                 '!.=|' \
+                                 '&.&|' \
+                                 '\\|.\\||' \
+                                 ':|' \
+                                 '\\(|' \
+                                 '\\)|' \
+                                 '{|' \
+                                 '}|' \
+                                 ';|' \
+                                 ','  # Regex :c-- TODO 换行未识别 浮点数等符号冲突未解决
 
 
 def get_re_postfix_c_minus() -> str:  # 获得c--的后缀表达式

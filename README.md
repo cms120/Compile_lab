@@ -4,7 +4,7 @@
 
 分析过程
 
-1. 手写c--的正则表达式 TODO
+1. 手写c--的正则表达式 done
 2. 将正则表达式转换成后缀表达式 done
 3. 根据后缀表达式构造Rules done
 4. 根据Rules构造NFA done
@@ -14,8 +14,8 @@
 6. DFA最小化 TODO
 7. 根据DFA分析程序 TODO
     1. 根据传入字符串构造token TODO
-    2. 正则表达式关键字的翻译 TODO
-    3. 后缀表达式修改 TODO
+    2. 正则表达式关键字的翻译 好像不用
+    3. 后缀表达式修改 done
 
 ## syntax
 

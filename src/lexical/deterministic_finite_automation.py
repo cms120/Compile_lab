@@ -1,4 +1,4 @@
-from finite_automation import FA
+from finite_automation import FA, get_fa_c_minus
 
 
 class DFA(FA):
@@ -87,7 +87,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
     pass
 
 
-def dfa_minimize(dfa) -> DFA:  # DFA最小化
+def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     # 1.区分初态和末态，各分为一个集合
 
     # 2.判断集合是否可“区分”
@@ -95,3 +95,7 @@ def dfa_minimize(dfa) -> DFA:  # DFA最小化
     # 3.对两个集合根据是否可再分继续划分集合，直到不可再划分为止
 
     pass
+
+
+def get_dfa_c_minus() -> DFA:  # 获得c--的dfa
+    return DFA.init_by_fa(get_fa_c_minus())

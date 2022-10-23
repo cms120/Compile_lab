@@ -1,8 +1,9 @@
-from finite_automation import FA, get_fa_c_minus
 import random
 import string
-import random
 from copy import deepcopy
+
+from finite_automation import FA, get_fa_c_minus
+
 
 class DFA(FA):
 
@@ -99,6 +100,7 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     # 1.区分初态和末态，各分为一个集合
     dfa_nz = dfa.dfa_k - dfa.dfa_z
     dfa_z = dfa.dfa_z
+
     def get_source_set(target_set, char):
         source_set = set()
         for state in dfa.dfa_k:
@@ -108,8 +110,9 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
             except KeyError:
                 pass
         return source_set
-    P = [dfa_z,dfa_nz]
-    W = [dfa_z,dfa_nz]
+
+    P = [dfa_z, dfa_nz]
+    W = [dfa_z, dfa_nz]
     # 2.判断集合是否可“区分”
 
     while W:
@@ -149,4 +152,3 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
 
 def get_dfa_c_minus() -> DFA:  # 获得c--的dfa
     return DFA.init_by_fa(get_fa_c_minus())
-

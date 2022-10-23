@@ -3,6 +3,3 @@ def read_file(file_path: str) -> str:
         text = f.read()
 
     return text
-
-
-

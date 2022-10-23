@@ -15,7 +15,7 @@ class Regex:
         stack = deque()
 
         # Loop through the string one character at a time
-        for i in range(len(str)):
+        for i in range(len(re)):
 
             if re[i] == '(':
                 stack.append(re[i])

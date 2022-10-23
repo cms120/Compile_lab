@@ -57,7 +57,6 @@ class Rules:
 
     @staticmethod
     def get_union_rules(pre_rules, next_rules):
-        state_all = State.get_state_all()
 
         start = State(False)
         Rules.__epsilon_transition(start, pre_rules.start)

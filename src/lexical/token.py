@@ -23,4 +23,3 @@ class Token:
     def __init__(self, words_unit: LexicalUnit, val: str):
         self.words = words_unit
         self.val = val
-

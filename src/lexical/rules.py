@@ -92,23 +92,27 @@ class Rules:
         if re_postfix == '':
             return Rules.get_epsilon_rules()  # fa 的转换函数
         stack = deque()
-        for c in re_postfix:
-            if c == '.':
+        for i in range(len(re_postfix)):
+            if re_postfix[i] == '.':
                 rules_nxt = stack.pop()
                 rules_pre = stack.pop()
                 new_rules = Rules.get_concat_rules(rules_pre, rules_nxt)
                 stack.append(new_rules)
-            elif c == '|':
+            elif re_postfix[i] == '|':
                 rules_nxt = stack.pop()
                 rules_pre = stack.pop()
                 new_rules = Rules.get_union_rules(rules_pre, rules_nxt)
                 stack.append(new_rules)
-            elif c == '*':
+            elif re_postfix[i] == '*':
                 rules = stack.pop()
                 new_rules = Rules.closure(rules)
                 stack.append(new_rules)
+            elif re_postfix[i] == '\\':
+                rules = Rules.get_single_letters_rules(re_postfix[i+1])
+                stack.append(rules)
+                continue
             else:
-                rules = Rules.get_single_letters_rules(c)
+                rules = Rules.get_single_letters_rules(re_postfix[i])
                 stack.append(rules)
         return stack.pop()
 

@@ -13,6 +13,9 @@ class DFATest(unittest.TestCase):
             fa = FA(k, letters, f, s, z)
             print(fa_2_dfa(fa))
 
+    def test_dfa_minimize(self):
+        self.assertTrue(True)
+
 
 if __name__ == '__main__':
     unittest.main()

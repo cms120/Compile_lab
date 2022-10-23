@@ -2,24 +2,45 @@ from enum import unique, IntEnum
 
 
 @unique  # val值应该不相同
-class LexicalUnit(IntEnum):  # 词法单元 TODO 删除,
-    V = 1  # 变量
-    C = 2  # 整数常数
-    INT = 3
-    VOID = 4
-    RETURN = 5
-    CONST = 6
-    MAIN = 7
-    L_PAR = 20  # (
-    R_PAR = ')'  # )
-    L_BRACE = '{'  # {
-    R_BRACE = '}'  # }
-    COMMA = 11  # ,
-    SEMICOLON = 12  # ;
-    OP = 13  # 运算符
+class LexicalUnit(IntEnum):
+    regex_int_const = '[0-9]+'  # 整形常数
+    regex_ident = '[a-zA-Z_][a-zA-Z_0-9]*'  # 标识符
+    # 终结符
+
+    # 运算符
+    _add = '+'
+    _minus = '-'
+    _plus = '*'
+    _exclamation = '!'
+    _divide = '/'
+    _int_divide = '%'
+    _assign = '='
+
+    _equal = '=='
+    _less = '<'
+    _more = '>'
+    _less_or_equal = '<='
+    _more_or_equal = '>='
+    _not_equal = '!='
+    _and = '&&'
+    _or = '||'
+
+    # 界符
+    _comma = ','
+    _semicolon = ';'
+    _l_par = '('
+    _r_par = ')'
+    _l_brace = '{'
+    _r_brace = '}'
+
+    _const = 'const'
+    _void = 'void'
+    _int = 'int'
+    _return = 'return'
+    _main = 'main'
 
 
 class Token:
-    def __init__(self, words_unit: LexicalUnit, val: str):
+    def __init__(self, words_unit: LexicalUnit, val=''):
         self.words = words_unit
         self.val = val

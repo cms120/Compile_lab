@@ -29,6 +29,7 @@ class Regex:
                     postfix.append((stack.pop()))
                 stack.append(re[i])
             elif re[i] == '\\':  # TODO 转义字符
+                postfix.append(re[i])
                 postfix.append(re[i + 1])
                 i += 1
             else:

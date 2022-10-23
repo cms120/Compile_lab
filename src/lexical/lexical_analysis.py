@@ -1,7 +1,7 @@
 from copy import deepcopy
 
 from src.lexical.deterministic_finite_automation import DFA, get_dfa_c_minus
-from src.lexical.token import Token
+from src.lexical.token import Token, LexicalUnit
 from src.util import read_file
 
 
@@ -25,7 +25,13 @@ def get_token_list_by_content_dfa(dfa: DFA, content: str) -> list[Token]:
             nxt += 1
         assert now_state in dfa.z, 'error'  # TODO 输出想要的信息 不会写
 
-        res.append(Token(deepcopy(content[pre:nxt + (nxt == len(content))])))
+        content_unit = deepcopy(content[pre:nxt + (nxt == len(content))])
+        if content_unit in LexicalUnit.name:
+            res.append(Token(LexicalUnit(content_unit)))
+        elif content_unit[0].isdigit():
+            res.append(Token(LexicalUnit['regex_int_const'], content_unit))
+        else:
+            res.append(Token(LexicalUnit['regex_ident'], content_unit))
         pre = nxt
         now_state = dfa.s
 

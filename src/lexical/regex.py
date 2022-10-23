@@ -15,7 +15,8 @@ class Regex:
         stack = deque()
 
         # Loop through the string one character at a time
-        for i in range(len(re)):
+        it = iter(range(len(re)))
+        for i in it:
 
             if re[i] == '(':
                 stack.append(re[i])
@@ -30,8 +31,9 @@ class Regex:
                 stack.append(re[i])
             elif re[i] == '\\':  # TODO 转义字符
                 postfix.append(re[i])
+                postfix.append(re[i])
                 postfix.append(re[i + 1])
-                i += 1
+                next(it)
             else:
                 postfix.append(re[i])
 
@@ -58,33 +60,31 @@ _FP = '(' + _INT + '|0).' \
                    '.(' + digits + ')*'
 
 # STR只支持了c--中字符以及部分必要字符
-_STR = ascii_lowercase + '|' + ascii_uppercase + '|' + digits + '+|-|\\*|/|%|=|>|<|!|&|\\||:|;|{|}|\\(|\\)|,| |\r|\n|\t'
+_STR = ascii_lowercase + '|' + ascii_uppercase + '|' + digits + '+|-|\\*|/|%|=|>|<|!|&|\\\||:|;|{|}|\\(|\\)|,| |\n|\t'
 
 re_c_minus = _INT + '|' + \
              _IDN + '|' + \
-             _FP + '|' \
-                   '"(' + _STR + ')*"|' \
-                                 '+|' \
-                                 '-|' \
-                                 '\\*|' \
-                                 '/|' \
-                                 '%|' \
-                                 '=|' \
-                                 '>|' \
-                                 '<|' \
-                                 '=.=|' \
-                                 '<.=|' \
-                                 '>.=|' \
-                                 '!.=|' \
-                                 '&.&|' \
-                                 '\\|.\\||' \
-                                 ':|' \
-                                 '\\(|' \
-                                 '\\)|' \
-                                 '{|' \
-                                 '}|' \
-                                 ';|' \
-                                 ','  # Regex :c-- TODO 换行未识别 浮点数等符号冲突未解决
+             '+|' \
+             '-|' \
+             '\\*|' \
+             '/|' \
+             '%|' \
+             '=|' \
+             '>|' \
+             '<|' \
+             '=.=|' \
+             '<.=|' \
+             '>.=|' \
+             '!.=|' \
+             '&.&|' \
+             '\\|.\\||' \
+             ':|' \
+             '\\(|' \
+             '\\)|' \
+             '{|' \
+             '}|' \
+             ';|' \
+             ','  # Regex :c-- TODO 换行未识别 浮点数等符号冲突未解决
 
 
 def get_re_postfix_c_minus() -> str:  # 获得c--的后缀表达式

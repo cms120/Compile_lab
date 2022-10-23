@@ -91,7 +91,8 @@ class Rules:
         if re_postfix == '':
             return Rules.get_epsilon_rules()  # fa 的转换函数
         stack = deque()
-        for i in range(len(re_postfix)):
+        it = iter(range(len(re_postfix)))
+        for i in it:
             if re_postfix[i] == '.':
                 rules_nxt = stack.pop()
                 rules_pre = stack.pop()
@@ -109,7 +110,7 @@ class Rules:
             elif re_postfix[i] == '\\':
                 rules = Rules.get_single_letters_rules(re_postfix[i+1])
                 stack.append(rules)
-                continue
+                next(it)
             else:
                 rules = Rules.get_single_letters_rules(re_postfix[i])
                 stack.append(rules)

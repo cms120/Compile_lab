@@ -1,7 +1,7 @@
 import random
 import string
 from copy import deepcopy
-
+from typing import Counter
 from finite_automation import FA, get_fa_c_minus
 
 
@@ -25,6 +25,21 @@ def generate_random_str(randomlength):  # randomlength最大取值为26*2+10=62
     return random_str
 
 
+
+def epsilon_closure(I:list,fa:FA):
+    EC = I
+    for state in EC:
+     for tuple in fa.f:
+        if tuple[0] == (state, '$'):
+          for Statee in tuple[1]:
+                if not EC.__contains__(Statee):
+                    EC.append(Statee)
+    
+    return EC
+    pass
+
+
+
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
     # defaultNewStateL储存DFA备用状态字符
     dfa_k = []
@@ -37,7 +52,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
 
     # 把fa的开始状态也设为dfa的开始状态，并建立状态集合到状态字符的映射
     strr = generate_random_str(2)
-    Listdict.append([[fa.s], strr])
+    Listdict.append([Counter(epsilon_closure([fa.s],fa)), strr])
     dfa_s = strr
 
     # 如果传进来的fa只有一个状态，也把他设为终止状态
@@ -50,6 +65,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
     # 遍历状态集，再遍历字符，再遍历状态。根据fa[2]即fa.f实现nfa确定化的子集法
     for StateList in ListOfStateList:
         for letter in fa.letters:
+          if not letter == '$':
             StateList2 = []
             for State in StateList:
                 for tuple in fa.f:
@@ -57,32 +73,36 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
                         for Statee in tuple[1]:
                             if not StateList2.__contains__(Statee):
                                 StateList2.append(Statee)
-
+                                
+            EC_StateList2 = epsilon_closure(StateList2,fa)
+            C_EC_StateList2 = Counter(EC_StateList2)
             # 如果StateList2不在ListOfStateList里，给它映射一个新状态字符串，并准备交给dfa.f建立关系
-            if not ListOfStateList.__contains__(StateList2) and not StateList2 == []:
-                ListOfStateList.append(StateList2)
+
+                
+            if not ListOfStateList.__contains__(C_EC_StateList2) and not EC_StateList2 == []:
+                ListOfStateList.append(C_EC_StateList2)
                 while 1:
                     L = [list[1] for list in Listdict]
                     strr = generate_random_str(2)
                     if not L.__contains__(strr):
-                        Listdict.append([StateList2, strr])
+                        Listdict.append([Counter(EC_StateList2), strr])
                         break
 
-            # 如果StateList2在ListOfStateList里，从Listdict找到StateList2对应的状态字符串，并准备交给dfa.f
-            if ListOfStateList.__contains__(StateList2) and not StateList2 == []:
+            # 如果EC_StateList2在ListOfStateList里，从Listdict找到EC_StateList2对应的状态字符串，并准备交给dfa.f
+            if ListOfStateList.__contains__(C_EC_StateList2) and not EC_StateList2 == []:
                 for list3 in Listdict:
-                    if list3[0] == StateList2:
+                    if list3[0] == C_EC_StateList2:
                         strr = list3[1]
 
             # 构建dfa_f
-            if not StateList2 == []:
-                for list4 in Listdict:
+            if not EC_StateList2 == []:
+                for list4 in Listdict: #从Listdict里找到StateList对应的状态字符串
                     if list4[0] == StateList:
                         dfa_f.append(((list4[1], letter), [strr]))
 
                         # 构建dfa_z。如果StateList2里有fa的终结状态，则它对应的状态也是终结状态
                         for str in fa.z:
-                            if StateList2.__contains__(str) and not dfa_z.__contains__(strr):
+                            if EC_StateList2.__contains__(str) and not dfa_z.__contains__(strr):
                                 dfa_z.append(strr)
 
     # 用Listdict的状态字符集构造dfa_k

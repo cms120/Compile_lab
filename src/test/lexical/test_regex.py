@@ -1,6 +1,6 @@
 import unittest
 
-from src.lexical.regex import Regex, get_re_postfix_c_minus
+from src.lexical.regex import Regex, get_re_postfix_c_minus,re_c_minus
 from src.test.lexical.test_case import re_s
 
 
@@ -13,5 +13,6 @@ class RegexTest(unittest.TestCase):
             print(re_postfix)
 
     def test_get_re_postfix_c_minus(self):
+        print(re_c_minus)
         self.assertTrue(True)
         print(get_re_postfix_c_minus())

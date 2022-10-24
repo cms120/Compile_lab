@@ -94,6 +94,7 @@ class Rules:
         it = iter(range(len(re_postfix)))
         for i in it:
             if re_postfix[i] == '.':
+                assert len(stack) >= 2, 'stack: ' + str(stack)
                 rules_nxt = stack.pop()
                 rules_pre = stack.pop()
                 new_rules = Rules.get_concat_rules(rules_pre, rules_nxt)
@@ -108,7 +109,7 @@ class Rules:
                 new_rules = Rules.closure(rules)
                 stack.append(new_rules)
             elif re_postfix[i] == '\\':
-                rules = Rules.get_single_letters_rules(re_postfix[i+1])
+                rules = Rules.get_single_letters_rules(re_postfix[i + 1])
                 stack.append(rules)
                 next(it)
             else:

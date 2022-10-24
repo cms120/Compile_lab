@@ -105,8 +105,11 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
         source_set = set()
         for state in dfa.dfa_k:
             try:
-                if dfa.dfa_f[state][char] in target_set:
-                    source_set.update(state)
+                for puple in dfa.dfa_f:
+                  if puple[0] == (state,char) :
+                      for statee in puple[1]:
+                          if statee in target_set:
+                             source_set.update(state)
             except KeyError:
                 pass
         return source_set

@@ -1,6 +1,6 @@
 import unittest
 
-from src.lexical.regex import Regex, _INT, _IDN
+from src.lexical.regex import Regex
 from src.lexical.rules import Rules, get_rules_c_minus
 from src.test.lexical.test_case import re_s
 

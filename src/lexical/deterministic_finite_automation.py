@@ -106,16 +106,17 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     mdfa_letters = dfa.dfa_letters
     mdfa_s = ''
     mdfa_z = []
-    target=[]#转移结果
+    target = []  # 转移结果
+
     def get_source_set(target_set, char):
         source_set = set()
         for state in dfa.dfa_k:
             try:
                 for puple in dfa.dfa_f:
-                  if puple[0] == (state,char) :
-                      for statee in puple[1]:
-                          if statee in target_set:
-                             source_set.update(state)
+                    if puple[0] == (state, char):
+                        for statee in puple[1]:
+                            if statee in target_set:
+                                source_set.update(state)
             except KeyError:
                 pass
         return source_set
@@ -157,20 +158,19 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     # Listdict储存状态集到状态字符的映射，用一个二维列表表示，如[['S','E'],'A']
     Listdict = []
 
-    
     # 将新的状态集用字符表示
-    for state in P :
+    for state in P:
         strr = generate_random_str(2)
         Listdict.append([state, strr])
     # 得到新的k,f,s,z
     for state in P:
         for letter in dfa.dfa_letters:
-            for list in Listdict :
-                if list[0]==state:
-                    
+            for list in Listdict:
+                if list[0] == state:
+
                     for statee in list[0]:
                         for list1 in dfa.dfa_f:
-                            if list1[0]==(statee,letter):
+                            if list1[0] == (statee, letter):
                                 target.append(list1[1])
                         if statee in dfa.dfa_s:
                             mdfa_s = list[1]
@@ -179,24 +179,17 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
                     mdfa_f.append(((list[1], letter), target))
                     target.clear()
 
-
-
-
-
-    
-
     # 如果传进来的fa只有一个状态，也把他设为终止状态
     if len(dfa.k) == 1:
         strr = generate_random_str(2)
         mdfa_z.append[strr]
-
 
     mdfa_k = P
     mdfa_letters = dfa.dfa_letters
 
     mdfa = FA(mdfa_k, mdfa_letters, mdfa_f, mdfa_s, mdfa_z)
     return mdfa
-    
+
     pass
 
 

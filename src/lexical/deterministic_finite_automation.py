@@ -2,7 +2,7 @@ import random
 import string
 from copy import deepcopy
 
-from src.lexical.finite_automation import FA, get_fa_c_minus
+from finite_automation import FA, get_fa_c_minus
 
 
 class DFA(FA):
@@ -98,27 +98,34 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
 
 def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     # 1.区分初态和末态，各分为一个集合
-    dfa_nz = dfa.dfa_k - dfa.dfa_z
-    dfa_z = dfa.dfa_z
+    dfa_nz = set(dfa.k) - set(dfa.z)
+    dfa_z = set(dfa.z)
+
     # defaultNewStateL储存最小化DFA备用状态字符
     mdfa_k = []
     mdfa_f = []
-    mdfa_letters = dfa.dfa_letters
+    mdfa_letters = dfa.letters
     mdfa_s = ''
     mdfa_z = []
-    target=[]#转移结果
+    #target=[]#转移结果
     def get_source_set(target_set, char):
         source_set = set()
-        for state in dfa.dfa_k:
+        for state in dfa.k:
+
             try:
-                for puple in dfa.dfa_f:
+                for puple in dfa.f:
                   if puple[0] == (state,char) :
                       for statee in puple[1]:
                           if statee in target_set:
-                             source_set.update(state)
+                             source_set.add(state)
+                            # print(source_set)
+
             except KeyError:
+
                 pass
+        #print(source_set)
         return source_set
+
 
     P = [dfa_z, dfa_nz]
     W = [dfa_z, dfa_nz]
@@ -129,8 +136,12 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
         A = random.choice(W)
         W.remove(A)
 
-        for char in dfa.dfa_letters:
+        for char in dfa.letters:
             X = get_source_set(A, char)
+            ''' print(W)
+            print(P)
+            print(A)
+            print(X)'''
             P_temp = []
 
             for Y in P:
@@ -157,48 +168,65 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     # Listdict储存状态集到状态字符的映射，用一个二维列表表示，如[['S','E'],'A']
     Listdict = []
 
-    
+
     # 将新的状态集用字符表示
     for state in P :
         strr = generate_random_str(2)
         Listdict.append([state, strr])
     # 得到新的k,f,s,z
     for state in P:
-        for letter in dfa.dfa_letters:
+        for letter in dfa.letters:
             for list in Listdict :
                 if list[0]==state:
-                    
+
                     for statee in list[0]:
-                        for list1 in dfa.dfa_f:
-                            if list1[0]==(statee,letter):
-                                target.append(list1[1])
-                        if statee in dfa.dfa_s:
+                        for list1 in dfa.f:
+                            if list1[0]==(statee,letter) :
+                                #if not mdfa_f.__contains__(((list[1], letter), list1[1])):
+
+
+
+                                      mdfa_f.append(((list[1], letter), list1[1]))
+
+                        if statee in dfa.s:
                             mdfa_s = list[1]
-                        if statee in dfa.dfa_z:
-                            mdfa_z.append(list[1])
-                    mdfa_f.append(((list[1], letter), target))
-                    target.clear()
+                        if statee in dfa.z:
+                            if not mdfa_z.__contains__(list[1]):
+                              mdfa_z.append(list[1])
+
+    for list2 in mdfa_f:
+        for list in Listdict:
+            for state1 in list[0]:
+
+                if list2[1][0] == state1 :
+                    list2[1][0] = list[1]
 
 
 
 
 
-    
+
+
 
     # 如果传进来的fa只有一个状态，也把他设为终止状态
     if len(dfa.k) == 1:
         strr = generate_random_str(2)
         mdfa_z.append[strr]
 
-
-    mdfa_k = P
-    mdfa_letters = dfa.dfa_letters
-
-    mdfa = FA(mdfa_k, mdfa_letters, mdfa_f, mdfa_s, mdfa_z)
+    L = [list[1] for list in Listdict]
+    for state in L:
+        mdfa_k.append(state)
+    mdfa_letters = dfa.letters
+    lmdfa_f=[]
+    for item in mdfa_f:
+        if lmdfa_f.count(item)<1:
+            lmdfa_f.append(item)
+    mdfa = FA(mdfa_k, mdfa_letters, lmdfa_f, mdfa_s, mdfa_z)
     return mdfa
-    
+
     pass
 
 
 def get_dfa_c_minus() -> DFA:  # 获得c--的dfa
     return DFA.init_by_fa(get_fa_c_minus())
+

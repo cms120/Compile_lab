@@ -20,15 +20,13 @@ class Production:
         pass
 
     @staticmethod
-    def get_units_list_by_str(line: str) -> list[SyntaxUnit]:  # 一行字符串拆分为若干 unit
+    def init_by_str(line: str):  # 一行字符串拆分为若干 unit 构建 Production
         left_right = line.split(' -> ')
         assert len(left_right) == 2, 'error left_right: ' + line
 
         right_groups = left_right[1].split(' ')
         assert len(right_groups) >= 1, 'error in right_group: ' + line
         assert SyntaxUnit.check_key(left_right[0]), 'error left: ' + line
-
-        units = [SyntaxUnit[left_right[0]]]
 
         right_with_op = []  # 带有 |  的产生式右端
         for group in right_groups:
@@ -41,15 +39,10 @@ class Production:
                 assert SyntaxUnit.check_val(group), group + ' : ' + line  # 不在枚举类型的值中
                 right_with_op.append(SyntaxUnit(group))
 
-        return units + right_with_op
+        return Production(SyntaxUnit[left_right[0]], tuple(right_with_op))
 
     @staticmethod
-    def init_list_by_units(units: list[SyntaxUnit]):  # 通过 units 构建产生式
-        return Production(units[0], tuple(units[1:]))
-
-    @staticmethod
-    def divide_by_or_op(right) -> list[list[SyntaxUnit]]:  # 将产生式右端根据 | 拆分 这里 | 不能出现在开始和结束
-        # 暂时没用
+    def divide_by_or_op(right) -> list[list[SyntaxUnit]]:  # 暂时没用 将产生式右端根据 | 拆分 这里 | 不能出现在开始和结束
         indexes = []  # | 的索引
         rights = []
         l_par = 0
@@ -85,8 +78,14 @@ class Grammar:
             _str += str(prod) + '\n'
         return _str
 
+    def get_first(self) -> dict:  # TODO 获得一个文法的first集
+        pass
 
-def get_g_c_minus_auto() -> Grammar:
+    def get_follow(self) -> dict:  # TODO 获得一个文法的follow集
+        pass
+
+
+def get_g_c_minus_auto() -> Grammar:  # 从文件中读入c--文法 并且将他的左递归消除
     grammar = Grammar()
     content = read_file('src/syntax/c_minus_grammar.txt')
     lines = content.split('\n')
@@ -99,6 +98,5 @@ def get_g_c_minus_auto() -> Grammar:
         if line.endswith(';'):
             line = line[:-1]
 
-        units = Production.get_units_list_by_str(line)
-        grammar.productions.append(Production.init_list_by_units(units))
+        grammar.productions.append(Production.init_by_str(line))
     return grammar

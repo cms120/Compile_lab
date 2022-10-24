@@ -32,11 +32,11 @@ def analysis() -> SyntaxTree:  # c--的语法分析
 
 
 def remove_left_recursion(g: Grammar):  # TODO 消除一个文法的左递归
-    return g
+    pass
 
 
 def remove_recall(g: Grammar):  # TODO 消除回溯
-    return g
+    pass
 
 
 def analysis_with_back(g: Grammar, tokens: list[Token]) -> SyntaxTree:  # 带有回溯的分析一个token list TODO 不能含有左递归

@@ -1,7 +1,7 @@
 import unittest
 
 from src.lexical.regex import Regex
-from src.lexical.rules import Rules
+from src.lexical.rules import Rules,get_rules_c_minus
 from src.test.lexical.test_case import re_s
 
 
@@ -13,3 +13,7 @@ class RulesTest(unittest.TestCase):
             print(re_postfix)
             rules = Rules.init_by_re_postfix(re_postfix)
             print(rules)
+
+    def test_get_rules_c_minus(self):
+        self.assertTrue(True)
+        print(get_rules_c_minus())

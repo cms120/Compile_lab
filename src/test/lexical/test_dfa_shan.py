@@ -11,7 +11,7 @@ class DFAShanTest(unittest.TestCase):
 
     def test_fa_2_dfa(self):
         self.assertTrue(True)
-        fa_list=fa_s[0]
+        fa_list = fa_s[0]
         fa = FA(fa_list[0], fa_list[1], dict(fa_list[2]), fa_list[3], fa_list[4])
 
         dfa = fa_2_dfa(fa)

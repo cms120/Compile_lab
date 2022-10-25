@@ -24,4 +24,4 @@ def graph_dfa_print(dfa: DFA, file_name='DFA'):
         fa_f[item[0]] = set(item[1])
 
     fa = FA(dfa.k, dfa.letters, fa_f, dfa.s, dfa.z)
-    graph_fa_print(fa,file_name)
+    graph_fa_print(fa, file_name)

@@ -15,8 +15,7 @@ class GraphTest(unittest.TestCase):
     def test_graph_fa(self):
         self.assertTrue(True)
 
-        print(re_s[0])
-        re_postfix = Regex.get_re_postfix(re_s[0])
+        re_postfix = Regex.get_re_postfix(re_s[2])
         print(re_postfix)
         rules = Rules.init_by_re_postfix(re_postfix)
         # print(rules)

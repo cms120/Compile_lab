@@ -1,54 +1,130 @@
-from typing import Set, Dict, Tuple
+from collections import deque
+from typing import Set, Dict, Deque
 
 from lexical.finite_automation import FA, get_fa_c_minus
 
 
-class DFA(FA):
+class GetNewK:
+    __FLAG = ''
 
-    def __init__(self, k: set[str], letters: set[str], f: dict[tuple[str, str], set[str]], s: str, z: set[str]):
-        super().__init__(k, letters, f, s, z)
+    @classmethod
+    def get_flag(cls) -> str:
+        cls.__FLAG = str(int(cls.__FLAG) + 1)
+        return cls.__FLAG
+
+    @classmethod
+    def reset(cls):
+        cls.__FLAG = '-1'
+
+
+class DFA:
+
+    def __init__(self, k: set[str], letters: set[str], f: dict[tuple[str, str], str], s: str, z: set[str]):
+        self.k = k  # 状态集
+        self.letters = letters  # 字母表
+        self.f = f  # 转换函数集 示例 f(S,0)=Q 那么在list中存入的是 ( (S,0) , Q )
+        self.s = s  # 唯一初态Í
+        self.z = z  # 终态集
+
+    def __str__(self):
+        return 'k:\t' + str(self.k) + '\n' + \
+               'letters:\t' + str(self.letters) + '\n' + \
+               'f:\t' + str(self.f) + '\n' + \
+               's:\t' + str(self.s) + '\n' + \
+               'z:\t' + str(self.z) + '\n'
+
+
+def get_k_closure(k: str, fa: FA) -> tuple[str]:
+    """
+    获得一个旧的状态的关于一个字符的闭包
+    k : 状态
+    letter_in : 如果是一个输入字符 就将其加上 $
+
+    """
+
+    k_dead = set()  # 存储已访问过的状态
+    k_live_stack: Deque[str] = deque(k)  # 存储待访问的状态
+    res: Set[str] = set()
+    while len(k_live_stack) != 0:
+        k = k_live_stack.pop()
+        k_dead.add(k)
+        res.add(k)
+
+        k_news = fa.f.get((k, '$'))
+        if k_news is None:
+            continue
+        for k_new in k_news:
+            if k_new not in k_dead:
+                k_live_stack.append(k_new)
+
+    return tuple(res)
+
+
+def get_k_letter_closure(k: str, fa: FA, letter) -> tuple[str]:
+    """
+    获取状态的闭包
+    """
+    ks = fa.f.get((k, letter))
+    if ks is None:
+        return tuple()
+    return tuple(fa.f.get((k, letter)))
+
+
+def get_ks_letter_closure(ks: set[str], fa, letter) -> tuple[str]:
+    assert letter != '$'
+    res = set()
+
+    for k in ks:
+        for k_new in get_k_letter_closure(k, fa, letter):
+            res.add(k_new)
+
+    return tuple(res)
 
 
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
-    # 用造表法实现
-    dfa_k: Set[str] = set()
-    dfa_s: str = '1'
-    dfa_z: Set[str] = fa.z
-    dfa_f: Dict[Tuple[str, str], Set[str]]
+    GetNewK.reset()
+    fa_s_epsilon_closure = get_k_closure(fa.s, fa)  # 获得fa.s 的epsilon闭包
 
-    # 存储表的若干行 每一行中list左侧是新的状态 右侧是 letter和其对应的状态
-    sheet = [[set[dfa_s]]]
-    k_new_set: Set[Set[str]] = set(sheet[0][0])
+    dfa_k_stack: Deque[Set[str]] = deque()
+    dfa_k_stack.append(fa_s_epsilon_closure)
 
-    i = 0
-    while i < len(sheet):  # 遍历sheet每一行
-        k_new = sheet[i][0]
-        sheet[i][1] = fa_2_dfa_k_new_closure(k_new, fa)
+    dfa_letters = fa.letters
 
-        for k_new_new in sheet[i][1].values():
-            if k_new_new not in k_new_set:
-                k_new_set.add(k_new_new)
-                sheet.append([k_new_new])
-        i += 1
+    if '$' in dfa_letters:
+        dfa_letters.remove('$')  # dfa中不含 epsilon
 
+    dfa_k_dict = dict()  # 存储dfa.k 的转化
+    dfa_k_dict[fa_s_epsilon_closure] = GetNewK.get_flag()
 
-def get_dfa_by_sheet(sheet:list)->DFA:
-    dfa_k=set()
-    dfa_f=dict()
-    for line in sheet :
-        pass
+    dfa_k_dead = set()  # 存储已访问过的 dfa.k
 
+    dfa_f: Dict[(str, str), str] = dict()
 
-def fa_2_dfa_k_new_closure(k_new: set[str], fa: FA) -> dict[str, set[str]]:  # 获得新状态对于所有letter的闭包
-    res: Dict[str, Set[str]] = dict()
+    dfa_z = set()
+    while len(dfa_k_stack) != 0:
+        dfa_k_now = dfa_k_stack.pop()
+        dfa_k_dead.add(dfa_k_now)
 
-    for letter in fa.letters:  # 遍历每个字符
-        k_new_closure = set()  # 新状态对于一个letter的闭包
-        for k_old in k_new:  # 遍历状态集中每个状态
-            for k in fa.f[(k_old, letter)]:  # 查询到的状态集
-                k_new_closure.add(k)
-        res[letter] = k_new_closure
-    return res
+        z_flag = True  # 是否为终态
+        for letter in fa.letters:
+            dfa_k_new = get_ks_letter_closure(dfa_k_now, fa, letter)
+            if len(dfa_k_new) == 0:
+                continue
+            else:
+                z_flag = False
+
+            if dfa_k_new not in dfa_k_dead:  # 这个状态未被访问过
+                dfa_k_stack.append(dfa_k_new)
+
+            if dfa_k_new not in dfa_k_dict.keys():  # 这个状态还没有转化
+                dfa_k_dict[dfa_k_new] = GetNewK.get_flag()
+
+            dfa_f[(dfa_k_dict[dfa_k_now], letter)] = dfa_k_dict[dfa_k_new]
+
+        if z_flag:
+            dfa_z.add(dfa_k_dict[dfa_k_now])
+
+    return DFA(set(dfa_k_dict.values()), dfa_letters, dfa_f, dfa_k_dict[fa_s_epsilon_closure], dfa_z)
 
 
 def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化

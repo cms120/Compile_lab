@@ -1,13 +1,13 @@
 import unittest
 
-from src.lexical.deterministic_finite_automation import fa_2_dfa, DFA, dfa_minimize, get_dfa_minimize_c_minus, \
+from src.lexical.dfa_shan import fa_2_dfa, DFA, dfa_minimize, get_dfa_minimize_c_minus, \
     get_dfa_c_minus
 from src.lexical.finite_automation import FA
 from src.lexical.graph import graph_dfa_print
 from src.test.lexical.test_case import fa_s, dfa_s
 
 
-class DFATest(unittest.TestCase):
+class DFAShanTest(unittest.TestCase):
 
     def test_fa_2_dfa(self):
         self.assertTrue(True)
@@ -15,7 +15,7 @@ class DFATest(unittest.TestCase):
         fa = FA(fa_list[0], fa_list[1], dict(fa_list[2]), fa_list[3], fa_list[4])
 
         dfa = fa_2_dfa(fa)
-        graph_dfa_print(dfa, 'DFA')
+        graph_dfa_print(dfa, 'DFA_shan')
         print(dfa)
 
     def test_dfa_minimize(self):

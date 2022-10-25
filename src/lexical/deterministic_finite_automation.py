@@ -14,16 +14,7 @@ class DFA(FA):
             fa_2_dfa(fa))
 
 
-def generate_random_str(randomlength):  # randomlength最大取值为26*2+10=62
-    """
-   从字符串“0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ”
-   中随机抽取randomlength个字符组成状态字符串
-    """
-    a = string.digits
 
-    str_list = random.sample(string.digits + string.ascii_letters, randomlength)
-    random_str = ''.join(str_list)
-    return random_str
 
 
 def epsilon_closure(I: list, fa: FA):
@@ -42,6 +33,7 @@ def epsilon_closure(I: list, fa: FA):
 
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
     #输入状态转换
+    i = 0
     faf = fa.f
     fa_f_list  = list(faf.items())
     fa_letter_list = list(fa.letters)
@@ -59,9 +51,9 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
     Listdict = []
 
     # 把fa的开始状态也设为dfa的开始状态，并建立状态集合到状态字符的映射
-    strr = generate_random_str(2)
-    Listdict.append([set(epsilon_closure([fa.s],fa)), strr])
-    dfa_s = strr
+    
+    Listdict.append([set(epsilon_closure([fa.s],fa)), str(i)])
+    dfa_s = str(i)
 
     # 如果传进来的fa只有一个状态，也把他设为终止状态
     if len(list(fa.k)) == 1:
@@ -87,12 +79,9 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
             # 如果C_EC_StateList2不在ListOfStateList里，给它映射一个新状态字符串，并准备交给dfa.f建立关系
             if not ListOfStateList.__contains__(C_EC_StateList2) and not EC_StateList2 == []:
                 ListOfStateList.append(C_EC_StateList2)
-                while 1:
-                    L = [list[1] for list in Listdict]
-                    strr = generate_random_str(2)
-                    if not L.__contains__(strr):
-                        Listdict.append([set(EC_StateList2), strr])
-                        break
+                i = i + 1
+                strr = str(i)
+                Listdict.append([set(EC_StateList2), strr])
 
             # 如果C_EC_StateList2在ListOfStateList里，从Listdict找到EC_StateList2对应的状态字符串，并准备交给dfa.f
             if ListOfStateList.__contains__(C_EC_StateList2) and not EC_StateList2 == []:
@@ -106,8 +95,8 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
                     if list4[0] == StateList:
                         dfa_f.append(((list4[1], letter), [strr]))
                         # 构建dfa_z。如果StateList2里有fa的终结状态，则它对应的状态也是终结状态
-                        for str in fa_z_list:
-                            if EC_StateList2.__contains__(str) and not dfa_z.__contains__(strr):
+                        for stre in fa_z_list:
+                            if EC_StateList2.__contains__(stre) and not dfa_z.__contains__(strr):
                                 dfa_z.append(strr)
 
     # 用Listdict的状态字符集构造dfa_k

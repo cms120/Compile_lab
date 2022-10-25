@@ -54,7 +54,8 @@ digits = '0|' + digits_without_zero
 _INT = '(' + digits_without_zero + ').(' + digits + ')*'  # 常数
 _IDN = '(' + ascii_lowercase + '|' + ascii_uppercase + '|_)' \
                                                        '.' \
-                                                       '(' + ascii_lowercase + '|' + ascii_uppercase + '|' + digits + '|_)*'
+                                                       '(' + ascii_lowercase + '|' + ascii_uppercase + '|' + \
+       digits + '|_)*'
 _FP = '(' + _INT + '|0).' \
                    '\\.' \
                    '.(' + digits + ')*'

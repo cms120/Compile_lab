@@ -60,7 +60,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
 
     # 把fa的开始状态也设为dfa的开始状态，并建立状态集合到状态字符的映射
     strr = generate_random_str(2)
-    Listdict.append([Counter(epsilon_closure([fa.s], fa)), strr])
+    Listdict.append([Counter[epsilon_closure([fa.s], fa)], strr])
     dfa_s = strr
 
     # 如果传进来的fa只有一个状态，也把他设为终止状态
@@ -83,7 +83,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
                                     StateList2.append(Statee)
 
                 EC_StateList2 = epsilon_closure(StateList2, fa)
-                C_EC_StateList2 = Counter(EC_StateList2)
+                C_EC_StateList2 = Counter[EC_StateList2]
                 # 如果StateList2不在ListOfStateList里，给它映射一个新状态字符串，并准备交给dfa.f建立关系
 
                 if not ListOfStateList.__contains__(C_EC_StateList2) and not EC_StateList2 == []:
@@ -92,7 +92,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
                         L = [list[1] for list in Listdict]
                         strr = generate_random_str(2)
                         if not L.__contains__(strr):
-                            Listdict.append([Counter(EC_StateList2), strr])
+                            Listdict.append([Counter[EC_StateList2], strr])
                             break
 
                 # 如果EC_StateList2在ListOfStateList里，从Listdict找到EC_StateList2对应的状态字符串，并准备交给dfa.f

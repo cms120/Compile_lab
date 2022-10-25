@@ -2,7 +2,7 @@ import random
 import string
 from copy import deepcopy
 from typing import Counter
-from finite_automation import FA, get_fa_c_minus
+from src.lexical.finite_automation import FA, get_fa_c_minus
 
 
 class DFA(FA):

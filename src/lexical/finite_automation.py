@@ -8,6 +8,7 @@ def print_rules(rules):
 
 
 class FA:
+    # epsilon 用 $ 表示
     def __init__(self, k: set[str],
                  letters: set[str],
                  f: dict[tuple[str, str], set[str]],  # 转换函数 存储start letter ends

@@ -105,6 +105,3 @@ class SyntaxUnit(Enum):  # 非终结符的key是自己，val是注释
     @classmethod
     def check_val(cls, val: str) -> bool:  # 检查值是否存在
         return val in cls._value2member_map_.keys()
-
-    def get_terminator(self) -> tuple:  # 获得一系列终结符
-        pass

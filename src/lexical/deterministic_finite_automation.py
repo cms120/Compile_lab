@@ -131,28 +131,31 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
 
 def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     # 1.区分初态和末态，各分为一个集合
-    dfa_nz = set(dfa.k) - set(dfa.z)
-    dfa_z = set(dfa.z)
+    dfa_nz = dfa.k - dfa.z
+    dfa_z = dfa.z
 
     # defaultNewStateL储存最小化DFA备用状态字符
-    mdfa_k = []
+    mdfa_k = set()
     mdfa_f = []
     mdfa_letters = dfa.letters
     mdfa_s = ''
-    mdfa_z = []
+    mdfa_z = set()
 
     # target=[]#转移结果
-    def get_source_set(target_set, char_m):
+    def get_source_set(target_set, char):
         source_set = set()
-        for state_m in dfa.k:
+        for state in dfa.k:
+           # print(state)
 
             try:
                 for puple in dfa.f:
-                    if puple[0] == (state_m, char_m):
-                        for statee in puple[1]:
+
+                    if puple == (state, char):
+                        for statee in dfa.f[puple]:
+
                             if statee in target_set:
-                                source_set.add(state_m)
-                            # print(source_set)
+                                source_set.add(state)
+                             #   print(source_set)
 
             except KeyError:
 
@@ -205,46 +208,59 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     for state in P:
         strr = generate_random_str(2)
         Listdict.append([state, strr])
+
     # 得到新的k,f,s,z
     for state in P:
         for letter in dfa.letters:
-            for list in Listdict:
-                if list[0] == state:
+            for list4 in Listdict:
+                if list4[0] == state:
 
-                    for statee in list[0]:
+                    for statee in list4[0]:
                         for list1 in dfa.f:
-                            if list1[0] == (statee, letter):
+                            if list1 == (statee, letter):
                                 # if not mdfa_f.__contains__(((list[1], letter), list1[1])):
 
-                                mdfa_f.append(((list[1], letter), list1[1]))
+                                tar=dfa.f[list1]
+                                mdfa_f.append(((list4[1], letter),tar ))
 
                         if statee in dfa.s:
-                            mdfa_s = list[1]
+                            mdfa_s = list4[1]
                         if statee in dfa.z:
-                            if not mdfa_z.__contains__(list[1]):
-                                mdfa_z.append(list[1])
-
+                            if not mdfa_z.__contains__(list4[1]):
+                                mdfa_z.add(list4[1])
+    l1=[]
+    l2=[]
     for list2 in mdfa_f:
-        for list in Listdict:
-            for state1 in list[0]:
+        for list3 in Listdict:
+            for state1 in list3[0]:
 
                 if list2[1][0] == state1:
-                    list2[1][0] = list[1]
+                    list2[1][0] = list3[1]
+
+
 
     # 如果传进来的fa只有一个状态，也把他设为终止状态
     if len(dfa.k) == 1:
         strr = generate_random_str(2)
-        mdfa_z.append[strr]
+        mdfa_z.add(strr)
 
     L = [list[1] for list in Listdict]
     for state in L:
-        mdfa_k.append(state)
+        mdfa_k.add(state)
     mdfa_letters = dfa.letters
     lmdfa_f = []
     for item in mdfa_f:
         if lmdfa_f.count(item) < 1:
             lmdfa_f.append(item)
-    mdfa = DFA(set(mdfa_k), mdfa_letters, lmdfa_f, mdfa_s, set(mdfa_z))
+    for i in lmdfa_f:
+        l1.append(i[0])
+        l2.append(i[1])
+    z=zip(l1,l2)
+
+    z1=list(z)
+    z2=dict(z1)
+
+    mdfa = FA(mdfa_k, mdfa_letters, z2, mdfa_s, mdfa_z)
     return mdfa
 
 

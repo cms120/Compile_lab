@@ -1,12 +1,12 @@
 from copy import deepcopy
 
-from src.lexical.deterministic_finite_automation import DFA, get_dfa_c_minus
+from src.lexical.deterministic_finite_automation import DFA, get_dfa_minimize_c_minus
 from src.lexical.token import Token, LexicalUnit
 from src.util import read_file
 
 
 def analysis(file_path='test.sy') -> list[Token]:  # 根据c--的dfa分析文件获得token list
-    return get_token_list_by_content_dfa(get_dfa_c_minus(), read_file(file_path))
+    return get_token_list_by_content_dfa(get_dfa_minimize_c_minus(), read_file(file_path))
 
 
 def get_token_list_by_content_dfa(dfa: DFA, content: str) -> list[Token]:

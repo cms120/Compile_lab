@@ -2,6 +2,7 @@ import random
 import string
 from copy import deepcopy
 from typing import Counter
+
 from src.lexical.finite_automation import FA, get_fa_c_minus
 
 
@@ -14,10 +15,10 @@ class DFA(FA):
 
 
 def generate_random_str(randomlength):  # randomlength最大取值为26*2+10=62
-    '''
+    """
    从字符串“0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ”
    中随机抽取randomlength个字符组成状态字符串
-    '''
+    """
     a = string.digits
 
     str_list = random.sample(string.digits + string.ascii_letters, randomlength)
@@ -25,19 +26,16 @@ def generate_random_str(randomlength):  # randomlength最大取值为26*2+10=62
     return random_str
 
 
-
-def epsilon_closure(I:list,fa:FA):
+def epsilon_closure(I: list, fa: FA):
     EC = I
     for state in EC:
-     for tuple in fa.f:
-        if tuple[0] == (state, '$'):
-          for Statee in tuple[1]:
-                if not EC.__contains__(Statee):
-                    EC.append(Statee)
-    
-    return EC
-    pass
+        for tuple in fa.f:
+            if tuple[0] == (state, '$'):
+                for Statee in tuple[1]:
+                    if not EC.__contains__(Statee):
+                        EC.append(Statee)
 
+    return EC
 
 
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
@@ -52,7 +50,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
 
     # 把fa的开始状态也设为dfa的开始状态，并建立状态集合到状态字符的映射
     strr = generate_random_str(2)
-    Listdict.append([Counter(epsilon_closure([fa.s],fa)), strr])
+    Listdict.append([Counter[epsilon_closure([fa.s], fa)], strr])
     dfa_s = strr
 
     # 如果传进来的fa只有一个状态，也把他设为终止状态
@@ -65,45 +63,44 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
     # 遍历状态集，再遍历字符，再遍历状态。根据fa[2]即fa.f实现nfa确定化的子集法
     for StateList in ListOfStateList:
         for letter in fa.letters:
-          if not letter == '$':
-            StateList2 = []
-            for State in StateList:
-                for tuple in fa.f:
-                    if tuple[0] == (State, letter):
-                        for Statee in tuple[1]:
-                            if not StateList2.__contains__(Statee):
-                                StateList2.append(Statee)
-                                
-            EC_StateList2 = epsilon_closure(StateList2,fa)
-            C_EC_StateList2 = Counter(EC_StateList2)
-            # 如果StateList2不在ListOfStateList里，给它映射一个新状态字符串，并准备交给dfa.f建立关系
+            if not letter == '$':
+                StateList2 = []
+                for State in StateList:
+                    for tuple in fa.f:
+                        if tuple[0] == (State, letter):
+                            for Statee in tuple[1]:
+                                if not StateList2.__contains__(Statee):
+                                    StateList2.append(Statee)
 
-                
-            if not ListOfStateList.__contains__(C_EC_StateList2) and not EC_StateList2 == []:
-                ListOfStateList.append(C_EC_StateList2)
-                while 1:
-                    L = [list[1] for list in Listdict]
-                    strr = generate_random_str(2)
-                    if not L.__contains__(strr):
-                        Listdict.append([Counter(EC_StateList2), strr])
-                        break
+                EC_StateList2 = epsilon_closure(StateList2, fa)
+                C_EC_StateList2 = Counter[EC_StateList2]
+                # 如果StateList2不在ListOfStateList里，给它映射一个新状态字符串，并准备交给dfa.f建立关系
 
-            # 如果EC_StateList2在ListOfStateList里，从Listdict找到EC_StateList2对应的状态字符串，并准备交给dfa.f
-            if ListOfStateList.__contains__(C_EC_StateList2) and not EC_StateList2 == []:
-                for list3 in Listdict:
-                    if list3[0] == C_EC_StateList2:
-                        strr = list3[1]
+                if not ListOfStateList.__contains__(C_EC_StateList2) and not EC_StateList2 == []:
+                    ListOfStateList.append(C_EC_StateList2)
+                    while 1:
+                        L = [list[1] for list in Listdict]
+                        strr = generate_random_str(2)
+                        if not L.__contains__(strr):
+                            Listdict.append([Counter[EC_StateList2], strr])
+                            break
 
-            # 构建dfa_f
-            if not EC_StateList2 == []:
-                for list4 in Listdict: #从Listdict里找到StateList对应的状态字符串
-                    if list4[0] == StateList:
-                        dfa_f.append(((list4[1], letter), [strr]))
+                # 如果EC_StateList2在ListOfStateList里，从Listdict找到EC_StateList2对应的状态字符串，并准备交给dfa.f
+                if ListOfStateList.__contains__(C_EC_StateList2) and not EC_StateList2 == []:
+                    for list3 in Listdict:
+                        if list3[0] == C_EC_StateList2:
+                            strr = list3[1]
 
-                        # 构建dfa_z。如果StateList2里有fa的终结状态，则它对应的状态也是终结状态
-                        for str in fa.z:
-                            if EC_StateList2.__contains__(str) and not dfa_z.__contains__(strr):
-                                dfa_z.append(strr)
+                # 构建dfa_f
+                if not EC_StateList2 == []:
+                    for list4 in Listdict:  # 从Listdict里找到StateList对应的状态字符串
+                        if list4[0] == StateList:
+                            dfa_f.append(((list4[1], letter), [strr]))
+
+                            # 构建dfa_z。如果StateList2里有fa的终结状态，则它对应的状态也是终结状态
+                            for str in fa.z:
+                                if EC_StateList2.__contains__(str) and not dfa_z.__contains__(strr):
+                                    dfa_z.append(strr)
 
     # 用Listdict的状态字符集构造dfa_k
     L = [list[1] for list in Listdict]
@@ -113,7 +110,6 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
     dfa = FA(dfa_k, dfa_letters, dfa_f, dfa_s, dfa_z)
 
     return dfa
-    pass
 
 
 def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
@@ -127,25 +123,25 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     mdfa_letters = dfa.letters
     mdfa_s = ''
     mdfa_z = []
-    #target=[]#转移结果
+
+    # target=[]#转移结果
     def get_source_set(target_set, char):
         source_set = set()
         for state in dfa.k:
 
             try:
                 for puple in dfa.f:
-                  if puple[0] == (state,char) :
-                      for statee in puple[1]:
-                          if statee in target_set:
-                             source_set.add(state)
+                    if puple[0] == (state, char):
+                        for statee in puple[1]:
+                            if statee in target_set:
+                                source_set.add(state)
                             # print(source_set)
 
             except KeyError:
 
                 pass
-        #print(source_set)
+        # print(source_set)
         return source_set
-
 
     P = [dfa_z, dfa_nz]
     W = [dfa_z, dfa_nz]
@@ -188,45 +184,35 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     # Listdict储存状态集到状态字符的映射，用一个二维列表表示，如[['S','E'],'A']
     Listdict = []
 
-
     # 将新的状态集用字符表示
-    for state in P :
+    for state in P:
         strr = generate_random_str(2)
         Listdict.append([state, strr])
     # 得到新的k,f,s,z
     for state in P:
         for letter in dfa.letters:
-            for list in Listdict :
-                if list[0]==state:
+            for list in Listdict:
+                if list[0] == state:
 
                     for statee in list[0]:
                         for list1 in dfa.f:
-                            if list1[0]==(statee,letter) :
-                                #if not mdfa_f.__contains__(((list[1], letter), list1[1])):
+                            if list1[0] == (statee, letter):
+                                # if not mdfa_f.__contains__(((list[1], letter), list1[1])):
 
-
-
-                                      mdfa_f.append(((list[1], letter), list1[1]))
+                                mdfa_f.append(((list[1], letter), list1[1]))
 
                         if statee in dfa.s:
                             mdfa_s = list[1]
                         if statee in dfa.z:
                             if not mdfa_z.__contains__(list[1]):
-                              mdfa_z.append(list[1])
+                                mdfa_z.append(list[1])
 
     for list2 in mdfa_f:
         for list in Listdict:
             for state1 in list[0]:
 
-                if list2[1][0] == state1 :
+                if list2[1][0] == state1:
                     list2[1][0] = list[1]
-
-
-
-
-
-
-
 
     # 如果传进来的fa只有一个状态，也把他设为终止状态
     if len(dfa.k) == 1:
@@ -237,16 +223,17 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     for state in L:
         mdfa_k.append(state)
     mdfa_letters = dfa.letters
-    lmdfa_f=[]
+    lmdfa_f = []
     for item in mdfa_f:
-        if lmdfa_f.count(item)<1:
+        if lmdfa_f.count(item) < 1:
             lmdfa_f.append(item)
     mdfa = FA(mdfa_k, mdfa_letters, lmdfa_f, mdfa_s, mdfa_z)
     return mdfa
 
-    pass
+
+def get_dfa_c_minus() -> DFA:  # 获得 c-- 确定化的DFA
+    return fa_2_dfa(get_fa_c_minus())
 
 
-def get_dfa_c_minus() -> DFA:  # 获得c--的dfa
+def get_dfa_minimize_c_minus() -> DFA:  # 获得c--的 最小化 dfa
     return DFA.init_by_fa(get_fa_c_minus())
-

@@ -11,7 +11,7 @@ def graph_fa_print(fa: FA, file_name='DFA'):  # 画NFA的图像
         for val in f[1]:
             g.edge(f[0][0], val, f[0][1])
 
-    g.node(fa.s, color='res')  # 开始节点红色
+    g.node(fa.s, color='red')  # 开始节点红色
     for z in fa.z:
         g.node(z, shape='doublecircle')  # 结束节点双层
 

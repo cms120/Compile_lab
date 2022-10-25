@@ -64,10 +64,19 @@ def get_k_letter_closure(k: str, fa: FA, letter) -> tuple[str]:
     """
     获取状态的闭包
     """
-    ks = fa.f.get((k, letter))
-    if ks is None:
+    epsilon_closure = set(get_k_closure(k, fa))  # 先获取epsilon闭包
+
+    res = set()
+    for k_new in epsilon_closure:
+        ks_new = fa.f.get((k_new, letter))
+        if ks_new is None:
+            continue
+        for k_new_new in ks_new:
+            res.add(k_new_new)
+
+    if len(res) == 0:
         return tuple()
-    return tuple(fa.f.get((k, letter)))
+    return tuple(res)
 
 
 def get_ks_letter_closure(ks: set[str], fa, letter) -> tuple[str]:

@@ -1,4 +1,5 @@
 from collections import deque
+from typing import Dict, Set
 
 from src.lexical.rules import Rules, get_rules_c_minus
 
@@ -17,7 +18,7 @@ class FA:
         self.k = k  # 状态集
         self.letters = letters  # 字母表
         self.f = f  # 转换函数集 示例 f(S,0)={V,Q} 那么在list中存入的是 ( (S,0) , [V,Q] )
-        self.s = s  # 唯一初态
+        self.s = s  # 唯一初态Í
         self.z = z  # 终态集
 
     def __str__(self):
@@ -45,22 +46,26 @@ class FA:
 
     @staticmethod
     def init_by_rules(rules: Rules):  # 根据rules构造fa
-        fa = FA(set(), set(), dict(), '', set())
+        fa_f: Dict[tuple[str, str], set[str]] = dict()
+        fa_k: Set[str] = set()
+        fa_letters: Set[str] = set()
+        fa_s: str
+        fa_z: Set[str] = set()
 
         state_live = deque()  # 需要遍历的state
         state_dead = set()  # 已遍历过的state
         state_live.append(rules.start)
-        fa.s = rules.start.flag  # 维护fa开始字符
+        fa_s = rules.start.flag  # 维护fa开始字符
         while state_live:
             now = state_live.pop()
             if now in state_dead:  # live 中可能有重复 因此该state如果遍历过 跳过
                 continue
 
             state_dead.add(now)
-            fa.k.add(now.flag)  # 维护状态集
+            fa_k.add(now.flag)  # 维护状态集
 
             if now.is_end:  # 是终态
-                fa.z.add(now.flag)
+                fa_z.add(now.flag)
                 continue
 
             for state in now.epsilonTransitions:  # epsilon
@@ -68,23 +73,23 @@ class FA:
                     state_live.append(state)
                 key = (now.flag, '$')  # key 为起始state letter
 
-                if key not in fa.f.keys():
-                    fa.f[key] = set()
+                if key not in fa_f.keys():
+                    fa_f[key] = set()
 
-                fa.f[key].add(str(state.flag))
+                fa_f[key].add(str(state.flag))
 
             for letter, state in now.transitions.items():
                 if state not in state_dead:
                     state_live.append(state)
                 key = (now.flag, letter)  # key 为起始state letter
 
-                if key not in fa.f.keys():
-                    fa.f[key] = set()
+                if key not in fa_f.keys():
+                    fa_f[key] = set()
 
-                fa.f[key].add(str(state.flag))
-                fa.letters.add(letter)  # 维护字符集
+                fa_f[key].add(str(state.flag))
+                fa_letters.add(letter)  # 维护字符集
 
-        return fa
+        return FA(fa_k, fa_letters, fa_f, fa_s, fa_z)
 
 
 def get_fa_c_minus() -> FA:  # 获得c--的fa

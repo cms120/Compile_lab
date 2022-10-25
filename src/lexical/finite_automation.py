@@ -1,7 +1,8 @@
 from collections import deque
-from typing import Dict, Set
+from typing import Dict, Set, Deque
 
 from src.lexical.rules import Rules, get_rules_c_minus
+from src.lexical.state import State
 
 
 def print_rules(rules):
@@ -52,8 +53,9 @@ class FA:
         fa_s: str
         fa_z: Set[str] = set()
 
-        state_live = deque()  # 需要遍历的state
-        state_dead = set()  # 已遍历过的state
+        state_live: Deque[State] = deque()  # 需要遍历的state
+        state_dead: Set[State] = set()  # 已遍历过的state
+
         state_live.append(rules.start)
         fa_s = rules.start.flag  # 维护fa开始字符
         while state_live:

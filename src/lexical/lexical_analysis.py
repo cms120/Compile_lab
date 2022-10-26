@@ -1,7 +1,7 @@
 from copy import deepcopy
 
+from lexical.regex.token import Token, LexicalUnit
 from src.lexical.deterministic_finite_automation import DFA, get_dfa_minimize_c_minus
-from src.lexical.token import Token, LexicalUnit
 from src.util import read_file
 
 

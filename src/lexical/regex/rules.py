@@ -1,7 +1,7 @@
 from collections import deque
 
-from src.lexical.regex import get_re_postfix_c_minus
-from src.lexical.state import State
+from lexical.regex.regex import get_re_postfix_c_minus
+from lexical.regex.state import State
 
 
 class Rules:

@@ -1,6 +1,6 @@
 import unittest
 
-from src.lexical.regex import Regex, get_re_postfix_c_minus, re_c_minus
+from lexical.regex.regex import Regex, get_re_postfix_c_minus, re_c_minus
 from src.test.lexical.test_case import re_s
 
 

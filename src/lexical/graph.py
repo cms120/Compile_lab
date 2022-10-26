@@ -4,7 +4,7 @@ from src.lexical.deterministic_finite_automation import DFA
 from src.lexical.finite_automation import FA
 
 
-def graph_fa_print(fa: FA, file_name='DFA'):  # 画NFA的图像
+def graph_fa_print(fa: FA, file_name='FA'):  # 画NFA的图像
 
     g = Digraph(comment='graph_fa')
     for f in fa.f.items():  # 遍历转换函数
@@ -21,7 +21,7 @@ def graph_fa_print(fa: FA, file_name='DFA'):  # 画NFA的图像
 def graph_dfa_print(dfa: DFA, file_name='DFA'):
     fa_f = dict()
     for item in dfa.f.items():
-        fa_f[item[0]] = set(item[1])
+        fa_f[item[0]] = {item[1]}
 
     fa = FA(dfa.k, dfa.letters, fa_f, dfa.s, dfa.z)
     graph_fa_print(fa, file_name)

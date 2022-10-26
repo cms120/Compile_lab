@@ -1,6 +1,6 @@
 import unittest
 
-from src.lexical.state import State
+from lexical.regex.state import State
 
 
 class StateTest(unittest.TestCase):

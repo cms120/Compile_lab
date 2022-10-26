@@ -1,6 +1,6 @@
 import unittest
 
-from src.lexical.token import LexicalUnit
+from lexical.regex.token import LexicalUnit
 
 
 class TokenTest(unittest.TestCase):

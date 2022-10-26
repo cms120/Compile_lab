@@ -1,9 +1,9 @@
 import unittest
 
+from lexical.regex.regex import Regex
+from lexical.regex.rules import Rules
 from src.lexical.finite_automation import FA, get_fa_c_minus
 from src.lexical.graph import graph_fa_print
-from src.lexical.regex import Regex
-from src.lexical.rules import Rules
 from src.test.lexical.test_case import re_s
 
 

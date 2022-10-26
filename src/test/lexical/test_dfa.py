@@ -1,10 +1,12 @@
 import unittest
 
+from lexical.regex.regex import Regex
+from lexical.regex.rules import Rules
 from src.lexical.deterministic_finite_automation import fa_2_dfa, DFA, dfa_minimize, get_dfa_minimize_c_minus, \
     get_dfa_c_minus
 from src.lexical.finite_automation import FA
-from src.lexical.graph import graph_dfa_print
-from src.test.lexical.test_case import fa_s, dfa_s
+from src.lexical.graph import graph_dfa_print, graph_fa_print
+from src.test.lexical.test_case import fa_s, dfa_s, re_s
 
 
 class DFATest(unittest.TestCase):
@@ -16,6 +18,18 @@ class DFATest(unittest.TestCase):
 
         dfa = fa_2_dfa(fa)
         graph_dfa_print(dfa, 'DFA')
+        print(dfa)
+
+    def test_fa_2_dfa2(self):  # 从re开始
+        self.assertTrue(True)
+        re_postfix = Regex.get_re_postfix(re_s[0])
+        print(re_postfix)
+        rules = Rules.init_by_re_postfix(re_postfix)
+        fa = FA.init_by_rules(rules)
+        print(fa)
+        graph_fa_print(fa)
+        dfa = fa_2_dfa(fa)
+        graph_fa_print(dfa, 'DFA')
         print(dfa)
 
     def test_dfa_minimize(self):

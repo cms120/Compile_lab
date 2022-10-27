@@ -1,8 +1,8 @@
 from collections import deque
 from typing import Dict, Set, Deque
 
-from lexical.regex.rules import Rules, get_rules_c_minus
-from lexical.regex.state import State
+from src.lexical.regex.rules import Rules, get_rules_c_minus
+from src.lexical.regex.state import State
 
 
 def print_rules(rules):

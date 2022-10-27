@@ -1,8 +1,9 @@
+import random
 from collections import deque
-from typing import Set, Dict, Deque, Tuple
+from typing import Set, Dict, Deque, Tuple, List
 
-import util
-from lexical.finite_automation import FA, get_fa_c_minus
+from src import util
+from src.lexical.finite_automation import FA, get_fa_c_minus
 
 
 class GetNewK:
@@ -111,8 +112,94 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
     return DFA(set(dfa_k_dict.values()), dfa_letters, dfa_f, dfa_k_dict[fa_s_epsilon_closure], dfa_z)
 
 
+def get_source_set(target_set: set, letter: str, dfa: DFA):
+    res_set = set()
+    for state in dfa.k:
+        if dfa.f.get((state, letter), '#') in target_set:
+            res_set.add(state)
+    return res_set
+
+
+def get_final_split_set(dfa: DFA) -> List[Set[str]]:  # 获得dfa的集合划分
+    P = [dfa.k - dfa.z, dfa.z]
+    W = [dfa.k - dfa.z, dfa.z]
+    while W:
+        S = random.choice(W)
+        W.remove(S)
+
+        for char in dfa.letters:
+            la = get_source_set(S, char, dfa)
+            for R in P:
+                R1 = la & R
+                R2 = R - R1
+                S3 = R - la
+                if len(R1) and len(S3):
+                    P.remove(R)
+                    P.append(R1)
+                    P.append(R2)
+
+                    if R in W:
+                        W.remove(R)
+                        W.append(R1)
+                        W.append(R2)
+                    else:
+                        if len(R1) <= len(R2):
+                            W.append(R1)
+                        else:
+                            W.append(R2)
+    return P
+
+
+def get_state_located_set_FLAG(P: List[Set[str]], state: str):  # 获得该state所在的state_set
+    for state_set in P:
+        if state in state_set:
+            return state_set
+
+
+def get_random_state(state_set: Set[str]):
+    random_num = random.randint(0, len(state_set) - 1)
+    for index, state in enumerate(state_set):
+        if index == random_num:
+            return state
+
+
 def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
-    pass
+
+    GetNewK.reset()
+
+    mdfa_k: Set[str] = set()
+    mdfa_s: str = ''
+    mdfa_z: Set[str] = set()
+    mdfa_letters = dfa.letters
+    mdfa_f: Dict[(str, str), str] = dict()
+
+    P = get_final_split_set(dfa)  # 得到划分后的集合
+
+    Representative_Set = set()  # 每组选取一个代表并保存在Representative_Set
+    for state_set in P:
+        state = get_random_state(state_set)
+        Representative_Set.add(state)
+
+    set2flag = dict()
+    for state_set in P:  # 为划分后的内部每个集合分配一个flag并存到字典
+        set2flag[tuple(state_set)] = GetNewK.get_flag()
+
+    for flag in set2flag.values():  # 将所有flag添加到mdfa_k中获得mdfa_k
+        mdfa_k.add(flag)
+    for state in dfa.k:
+        if state in dfa.s:
+            mdfa_s = set2flag[tuple(get_state_located_set_FLAG(P, state))]
+        if state in dfa.z:
+            if (set2flag[tuple(get_state_located_set_FLAG(P, state))]) not in mdfa_z:
+                mdfa_z.add(set2flag[tuple(get_state_located_set_FLAG(P, state))])
+
+    for state in Representative_Set:  # 遍历代表集合以获得mdfa_f
+        for letter in dfa.letters:
+            if (state, letter) in dfa.f.keys() and mdfa_f.get((set2flag[tuple(get_state_located_set_FLAG(P, state))], letter),'#') == '#':
+                mdfa_f[(set2flag[tuple(get_state_located_set_FLAG(P, state))], letter)] = set2flag[
+                    tuple(get_state_located_set_FLAG(P, dfa.f.get((state, letter))))]
+
+    return DFA(mdfa_k, mdfa_letters, mdfa_f, mdfa_s, mdfa_z)
 
 
 def get_dfa_c_minus() -> DFA:  # 获得 c-- 确定化的DFA

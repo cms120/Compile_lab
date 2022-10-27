@@ -1,6 +1,7 @@
 import random
 import string
 from copy import deepcopy
+from typing import List, Set
 
 from src.lexical.finite_automation import FA, get_fa_c_minus
 
@@ -143,13 +144,11 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     def get_source_set(target_set, char):
         source_set = set()
         for state in dfa.k:
-            # print(state)
-
+            # print(states)
             try:
-                for puple in dfa.f:
-
-                    if puple == (state, char):
-                        for statee in dfa.f[puple]:
+                for f in dfa.f:
+                    if f == (state, char):
+                        for statee in dfa.f[f]:
 
                             if statee in target_set:
                                 source_set.add(state)
@@ -161,8 +160,8 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
         # print(source_set)
         return source_set
 
-    P = [dfa_z, dfa_nz]
-    W = [dfa_z, dfa_nz]
+    P: List[Set[str]] = [dfa_z, dfa_nz]
+    W: List[Set[str]] = [dfa_z, dfa_nz]
     # 2得到划分出的新的状态集
 
     while W:
@@ -200,30 +199,30 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
             P = deepcopy(P_temp)
     # P即为所求状态集
     # Listdict储存状态集到状态字符的映射，用一个二维列表表示，如[['S','E'],'A']
-    Listdict = []
+    Listdict: List[List[Set[str], str]] = []
 
     # 将新的状态集用字符表示
-    for state in P:
+    for states in P:
         strr = generate_random_str(2)
-        Listdict.append([state, strr])
+        Listdict.append([states, strr])
 
     # 得到新的k,f,s,z
-    for state in P:
+    for states in P:
         for letter in dfa.letters:
             for list4 in Listdict:
-                if list4[0] == state:
+                if list4[0] == states:
 
-                    for statee in list4[0]:
+                    for state in list4[0]:
                         for list1 in dfa.f:
-                            if list1 == (statee, letter):
+                            if list1 == (state, letter):
                                 # if not mdfa_f.__contains__(((list[1], letter), list1[1])):
 
                                 tar = dfa.f[list1]
                                 mdfa_f.append(((list4[1], letter), tar))
 
-                        if statee in dfa.s:
+                        if state in dfa.s:
                             mdfa_s = list4[1]
-                        if statee in dfa.z:
+                        if state in dfa.z:
                             if not mdfa_z.__contains__(list4[1]):
                                 mdfa_z.add(list4[1])
     l1 = []
@@ -241,8 +240,8 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
         mdfa_z.add(strr)
 
     L = [list[1] for list in Listdict]
-    for state in L:
-        mdfa_k.add(state)
+    for states in L:
+        mdfa_k.add(states)
     mdfa_letters = dfa.letters
     lmdfa_f = []
     for item in mdfa_f:

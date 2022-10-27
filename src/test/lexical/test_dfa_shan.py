@@ -1,12 +1,13 @@
 import unittest
 
-from lexical.regex.regex import Regex
-from lexical.regex.rules import Rules
-from src.lexical.dfa_shan import fa_2_dfa, DFA, dfa_minimize, get_dfa_minimize_c_minus, \
-    get_dfa_c_minus
+from src.lexical.dfa_shan import fa_2_dfa, DFA, get_dfa_minimize_c_minus, \
+    get_dfa_c_minus, dfa_minimize
 from src.lexical.finite_automation import FA
 from src.lexical.graph import graph_dfa_print, graph_fa_print
-from src.test.lexical.test_case import fa_s, dfa_s, re_s
+# from src.lexical.deterministic_finite_automation import dfa_minimize
+from src.lexical.regex.regex import Regex
+from src.lexical.regex.rules import Rules
+from src.test.lexical.test_case import fa_s, dfa_s_shan, re_s
 
 
 class DFAShanTest(unittest.TestCase):
@@ -34,9 +35,9 @@ class DFAShanTest(unittest.TestCase):
 
     def test_dfa_minimize(self):
         self.assertTrue(True)
-        for k, letters, f, s, z in dfa_s:
-            dfa = DFA(k, letters, f, s, z)
-            print(dfa_minimize(dfa))
+
+        dfa = DFA(dfa_s_shan[0][0],dfa_s_shan[0][1],dfa_s_shan[0][2],dfa_s_shan[0][3],dfa_s_shan[0][4])
+        print(dfa_minimize(dfa))
 
     def test_get_dfa_c_minus(self):
         self.assertTrue(True)
@@ -46,6 +47,7 @@ class DFAShanTest(unittest.TestCase):
 
     def test_get_dfa_minimize_c_minus(self):
         self.assertTrue(True)
+        print(get_dfa_c_minus())
         print(get_dfa_minimize_c_minus())
 
 

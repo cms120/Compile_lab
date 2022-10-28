@@ -2,7 +2,13 @@ from typing import List
 
 
 def read_file(file_path: str) -> List[str]:
-    return open(file_path, 'r').readlines()
+    res = []
+    for line in open(file_path, 'r').readlines():
+        if line.endswith('\n'):
+            res.append(line[:-1])
+        else:
+            res.append(line)
+    return res
 
 
 def check_set_if_exist(set1: set, items: set):

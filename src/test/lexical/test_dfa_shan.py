@@ -4,7 +4,6 @@ from src.lexical.dfa_shan import fa_2_dfa, DFA, get_dfa_minimize_c_minus, \
     get_dfa_c_minus, dfa_minimize
 from src.lexical.finite_automation import FA
 from src.lexical.graph import graph_dfa_print, graph_fa_print
-# from src.lexical.deterministic_finite_automation import dfa_minimize
 from src.lexical.regex.regex import Regex
 from src.lexical.regex.rules import Rules
 from src.test.lexical.test_case import fa_s, dfa_s_shan, re_s
@@ -33,11 +32,28 @@ class DFAShanTest(unittest.TestCase):
         print(dfa)
         graph_dfa_print(dfa, 'DFA_shan')
 
-    def test_dfa_minimize(self):
+    def test_dfa_minimize1(self):
         self.assertTrue(True)
 
-        dfa = DFA(dfa_s_shan[0][0],dfa_s_shan[0][1],dfa_s_shan[0][2],dfa_s_shan[0][3],dfa_s_shan[0][4])
+        dfa = DFA(dfa_s_shan[0][0], dfa_s_shan[0][1], dfa_s_shan[0][2], dfa_s_shan[0][3], dfa_s_shan[0][4])
         print(dfa_minimize(dfa))
+
+    def test_dfa_minimize2(self):
+        self.assertTrue(True)
+        re_postfix = Regex.get_re_postfix(re_s[2])
+        rules = Rules.init_by_re_postfix(re_postfix)
+
+        fa = FA.init_by_rules(rules)
+        print(fa)
+        graph_fa_print(fa, 'FA_shan')
+
+        dfa = fa_2_dfa(fa)
+        print(dfa)
+        graph_dfa_print(dfa, 'DFA_shan')
+
+        dfa = dfa_minimize(dfa)
+        print(dfa_minimize(dfa))
+        graph_dfa_print(dfa, 'DFA_min_shan')
 
     def test_get_dfa_c_minus(self):
         self.assertTrue(True)

@@ -82,7 +82,7 @@ fa_s = [
 
 ]  # 用来测试确定化
 
-dfa_s = [  # TODO
+dfa_s = [
     [
         {'A', 'B', 'C', 'D'},
         {'a', 'b'},
@@ -100,7 +100,7 @@ dfa_s = [  # TODO
     ]
 ]  # 用来测试最小化
 
-dfa_s_shan = [  # TODO
+dfa_s_shan = [
     [
         {'A', 'B', 'C', 'D'},
         {'a', 'b'},
@@ -123,4 +123,4 @@ grammars = (
     ('A', 'b'),
     ('A', 'Ab'),
     ('B', 'd')
-)
+)  # TODO 移到 syntax目录下

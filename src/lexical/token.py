@@ -1,8 +1,8 @@
-from enum import unique, IntEnum
+from enum import unique, Enum
 
 
 @unique  # val值应该不相同
-class LexicalUnit(IntEnum):
+class LexicalUnit(Enum):
     regex_int_const = '[0-9]+'  # 整形常数
     regex_ident = '[a-zA-Z_][a-zA-Z_0-9]*'  # 标识符
     # 终结符

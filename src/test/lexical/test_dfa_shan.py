@@ -63,7 +63,7 @@ class DFAShanTest(unittest.TestCase):
 
     def test_get_dfa_minimize_c_minus(self):
         self.assertTrue(True)
-        dfa=get_dfa_minimize_c_minus()
+        dfa = get_dfa_minimize_c_minus()
         print(dfa)
         graph_dfa_print(dfa)
 

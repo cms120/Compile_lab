@@ -1,8 +1,9 @@
 import string
 from collections import deque
+from typing import List
 
 from src.syntax.syntax_unit import SyntaxUnit
-from src.util import read_file2
+from src.util import read_file
 
 
 class Production:
@@ -13,7 +14,7 @@ class Production:
     def __str__(self):
         str_m = self.left.value + ' ->'
         for unit in self.right:
-            str_m += ' ' + unit.value
+            str_m += ' ' + str(unit.value)
         return str_m
 
     def check_left_recursion(self) -> bool:  # TODO 检查是否有左递归
@@ -28,7 +29,7 @@ class Production:
         assert len(right_groups) >= 1, 'error in right_group: ' + line
         assert SyntaxUnit.check_key(left_right[0]), 'error left: ' + line
 
-        right_with_op = []  # 带有 |  的产生式右端
+        right_with_op: List[SyntaxUnit] = []  # 带有 |  的产生式右端
         for group in right_groups:
             assert group, line
             if group[0] in string.ascii_lowercase + string.ascii_uppercase:  # 非终结符
@@ -88,7 +89,7 @@ class Grammar:
 def get_g_c_minus_auto() -> Grammar:  # 从文件中读入c--文法 并且将他的左递归消除
     grammar = Grammar()
 
-    lines = read_file2('src/syntax/c_minus_grammar.txt')
+    lines = read_file('src/syntax/c_minus_grammar.txt')
 
     for line in lines:
         i = 0

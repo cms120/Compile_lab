@@ -25,7 +25,7 @@
 25. funcRParams -> funcRParam ( ',' funcRParam ) *;
 26. funcRParam -> exp;
 27. mulExp -> unaryExp | mulExp ( '*' | '/' | '%' ) unaryExp;
-28. addExp -> mulExp # add1 | addExp ( '+' | '-' ) mulExp;
+28. addExp -> mulExp | addExp ( '+' | '-' ) mulExp;
 29. relExp -> addExp | relExp ( '<' | '>' | '<=' | '>=' ) addExp;
 30. eqExp -> relExp | eqExp ( '==' | '!=' ) relExp;
 31. lAndExp -> eqExp | lAndExp '&&' eqExp;

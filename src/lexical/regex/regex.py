@@ -51,7 +51,7 @@ ascii_uppercase = ascii_lowercase.upper()
 digits_without_zero = '1|2|3|4|5|6|7|8|9'
 digits = '0|' + digits_without_zero
 
-_INT = '(' + digits_without_zero + ').(' + digits + ')*'  # 常数
+_INT = '(' + digits_without_zero + ').(' + digits + ')*|0'  # 非负常数
 _IDN = '(' + ascii_lowercase + '|' + ascii_uppercase + '|_)' \
                                                        '.' \
                                                        '(' + ascii_lowercase + '|' + ascii_uppercase + '|' + \

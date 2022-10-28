@@ -9,7 +9,7 @@ from src.lexical.finite_automation import FA, get_fa_c_minus
 class DFA(FA):
 
     @staticmethod
-    def init_by_fa(fa: FA):  # TODO:根据FA构造最小DFA
+    def init_by_fa(fa: FA):
         return dfa_minimize(
             fa_2_dfa(fa))
 

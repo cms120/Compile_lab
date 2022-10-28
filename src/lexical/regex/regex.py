@@ -29,7 +29,7 @@ class Regex:
                 while stack and Regex.keyword[re[i]] <= Regex.keyword.get(stack[-1], 0):
                     postfix.append((stack.pop()))
                 stack.append(re[i])
-            elif re[i] == '\\':  # TODO 转义字符
+            elif re[i] == '\\':
                 postfix.append(re[i])
                 # postfix.append(re[i])
                 postfix.append(re[i + 1])
@@ -61,7 +61,7 @@ _FP = '(' + _INT + '|0).' \
                    '.(' + digits + ')*'  # TODO 不用支持
 
 # STR只支持了c--中字符以及部分必要字符
-_STR = ascii_lowercase + '|' + ascii_uppercase + '|' + digits + '+|-|\\*|/|%|=|>|<|!|&|:|;|{|}|\\(|\\)|,| |\n|\t'
+_STR = ascii_lowercase + '|' + ascii_uppercase + '|' + digits + '+|-|\\*|/|%|=|>|<|!|&|:|;|{|}|\\(|\\)|,| |\n|\t' #TODO
 
 re_c_minus = _INT + '|' + \
              _IDN + '|' + \
@@ -85,7 +85,7 @@ re_c_minus = _INT + '|' + \
              '{|' + \
              '}|' + \
              ';|' + \
-             ','  # Regex :c-- TODO 换行未识别 浮点数等符号冲突未解决
+             ','  # Regex :c--
 
 
 def get_re_postfix_c_minus() -> str:  # 获得c--的后缀表达式

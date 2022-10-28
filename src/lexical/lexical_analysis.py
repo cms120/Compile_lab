@@ -23,10 +23,10 @@ def get_token_list_by_content_dfa(dfa: DFA, content: str) -> list[Token]:
                 break
             now_state = dfa.f.get((now_state, content[nxt]))
             nxt += 1
-        assert now_state in dfa.z, 'error'  # TODO 输出想要的信息 不会写
+        assert now_state in dfa.z, 'error ' + now_state + ' ' + str(pre) + ' ' + str(nxt)  # TODO 输出想要的信息 不会写
 
         content_unit = deepcopy(content[pre:nxt + (nxt == len(content))])
-        if content_unit in LexicalUnit.name:
+        if LexicalUnit.check_val(content_unit):  # 在unit中是否存在val
             res.append(Token(LexicalUnit(content_unit)))
         elif content_unit[0].isdigit():
             res.append(Token(LexicalUnit['regex_int_const'], content_unit))

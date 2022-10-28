@@ -7,5 +7,6 @@ class LATest(unittest.TestCase):
 
     def testAnalysis(self):
         self.assertTrue(True)
-        res = analysis('sy_s/test1.sy')
-        print(res)
+        res = analysis('sy_s/02_var_defn.sy')
+        for i in res:
+            print(i)

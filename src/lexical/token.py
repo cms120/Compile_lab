@@ -52,3 +52,11 @@ class Token:
     def __init__(self, words_unit: LexicalUnit, val=''):
         self.words = words_unit
         self.val = val
+
+    def __str__(self):
+        if self.words == LexicalUnit.regex_ident:
+            return 'IDN: ' + self.val
+        elif self.words == LexicalUnit.regex_int_const:
+            return 'INT: ' + self.val
+        else:
+            return self.words.value

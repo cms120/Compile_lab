@@ -29,8 +29,8 @@ class DFAShanTest(unittest.TestCase):
         print(fa)
         graph_fa_print(fa, 'FA_shan')
         dfa = fa_2_dfa(fa)
-        graph_dfa_print(dfa, 'DFA_shan')
         print(dfa)
+        graph_dfa_print(dfa, 'DFA_shan')
 
     def test_dfa_minimize(self):
         self.assertTrue(True)
@@ -41,8 +41,8 @@ class DFAShanTest(unittest.TestCase):
     def test_get_dfa_c_minus(self):
         self.assertTrue(True)
         dfa = get_dfa_c_minus()
-        graph_dfa_print(dfa)
         print(dfa)
+        graph_dfa_print(dfa)
 
     def test_get_dfa_minimize_c_minus(self):
         self.assertTrue(True)

@@ -127,7 +127,7 @@ rules与fa的f（转换函数）极为相似，因此构造较为简单
 
 
 
-![dfa_min](/Users/shan/py/Compile_lab/report.assets/dfa_min-6928255.svg)
+![dfa_min](/Users/shan/py/Compile_lab/report.assets/dfa_min.svg)
 
 #### 7 根据DFA分析程序 TODO
 

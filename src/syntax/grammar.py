@@ -2,7 +2,7 @@ import string
 from collections import deque
 
 from src.syntax.syntax_unit import SyntaxUnit
-from src.util import read_file
+from src.util import read_file2
 
 
 class Production:
@@ -87,8 +87,8 @@ class Grammar:
 
 def get_g_c_minus_auto() -> Grammar:  # 从文件中读入c--文法 并且将他的左递归消除
     grammar = Grammar()
-    content = read_file('src/syntax/c_minus_grammar.txt')
-    lines = content.split('\n')
+
+    lines = read_file2('src/syntax/c_minus_grammar.txt')
 
     for line in lines:
         i = 0

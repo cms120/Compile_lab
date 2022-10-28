@@ -3,11 +3,13 @@ from typing import List
 
 def read_file(file_path: str) -> List[str]:
     res = []
-    for line in open(file_path, 'r').readlines():
+    f = open(file_path, 'r')
+    for line in f.readlines():
         if line.endswith('\n'):
             res.append(line[:-1])
         else:
             res.append(line)
+    f.close()
     return res
 
 

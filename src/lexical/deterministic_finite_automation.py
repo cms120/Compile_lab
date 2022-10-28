@@ -41,32 +41,32 @@ def epsilon_closure(I: list, fa: FA):
 
 
 def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
-    #输入状态转换
+    # 输入状态转换
     i = 0
     faf = fa.f
-    fa_f_list  = list(faf.items())
+    fa_f_list = list(faf.items())
     fa_letter_list = list(fa.letters)
-    fa_z_list =fa.z
+    fa_z_list = fa.z
     dfa_k = []
     dfa_f = []
-    #dfa_letters里不含有‘$'
-    dfa_letters= fa_letter_list
+    # dfa_letters里不含有‘$'
+    dfa_letters = fa_letter_list
     if dfa_letters.__contains__('$'):
-     dfa_letters.remove('$')
-    
+        dfa_letters.remove('$')
+
     dfa_s = ''
     dfa_z = []
     # Listdict储存状态集到状态字符的映射，用一个二维列表表示，如[['S','E'],'A']
     Listdict = []
 
     # 把fa的开始状态也设为dfa的开始状态，并建立状态集合到状态字符的映射
-    
+
     Listdict.append([set(epsilon_closure([fa.s], fa)), str(i)])
-    dfa_s ='s'+ str(i)
+    dfa_s = 's' + str(i)
 
     # 如果传进来的fa只有一个状态，也把他设为终止状态
     if len(list(fa.k)) == 1:
-        dfa_z.append['s'+ str(i)]
+        dfa_z.append['s' + str(i)]
 
     # ListOfStateList储存Listdict中的状态列表，便于遍历
     ListOfStateList = [list[0] for list in Listdict]
@@ -89,7 +89,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
                 if not ListOfStateList.__contains__(C_EC_StateList2) and not EC_StateList2 == []:
                     ListOfStateList.append(C_EC_StateList2)
                     i = i + 1
-                    strr = 's'+str(i)
+                    strr = 's' + str(i)
                     Listdict.append([set(EC_StateList2), strr])
 
                 # 如果C_EC_StateList2在ListOfStateList里，从Listdict找到EC_StateList2对应的状态字符串，并准备交给dfa.f
@@ -105,7 +105,7 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
                             if not list4[1] == '0':
                                 dfa_f.append(((list4[1], letter), [strr]))
                             else:
-                                dfa_f.append((('s'+list4[1], letter), [strr]))
+                                dfa_f.append((('s' + list4[1], letter), [strr]))
                             # 构建dfa_z。如果StateList2里有fa的终结状态，则它对应的状态也是终结状态
                             for stre in fa_z_list:
                                 if EC_StateList2.__contains__(stre) and not dfa_z.__contains__(strr):
@@ -114,8 +114,8 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
     # 用Listdict的状态字符集构造dfa_k
     L = [list[1] for list in Listdict]
     for state in L:
-        if state=='0':
-            dfa_k.append('s'+state)
+        if state == '0':
+            dfa_k.append('s' + state)
         else:
             dfa_k.append(state)
 
@@ -130,7 +130,6 @@ def fa_2_dfa(fa: FA) -> DFA:  # NFA确定化
     dfa = FA(dfa_k, dfa_letters, dfa_f, dfa_s, dfa_z)
 
     return dfa
-    pass
 
 
 def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化

@@ -1,9 +1,18 @@
-from typing import List
-re_s = [
+ascii_lowercase = 'a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z'
+ascii_uppercase = ascii_lowercase.upper()
+digits_without_zero = '1|2|3|4|5|6|7|8|9'
+digits = '0|' + digits_without_zero
 
-    'a.s.d.(s|b|(a)*)*.c',
-    '(a|b)*',
-    '',
+_INT = '(' + digits_without_zero + ').(' + digits + ')*'  # 常数
+_IDN = '(' + ascii_lowercase + '|' + ascii_uppercase + '|_)' \
+                                                       '.' \
+                                                       '(' + ascii_lowercase + '|' + ascii_uppercase + '|' + \
+       digits + '|_)*'
+
+re_s = [
+    _INT,
+    _IDN,
+    'a.s.d.s|b|(a)*.c',
 
     'a.b.c.d',
 
@@ -32,9 +41,18 @@ re_c_minus = [
     '{|' + \
     '}|' + \
     ';|' + \
-    ','  # success
+    ',',
 
+    '(a|b)*',
+    '',
+
+    'a.b.c.d',
+
+    '(a|b).c',
+    '\\*|\\|',
+    '+|-|\\*|/|%|=|>|<|!|&|:|;|{|}|\\(|\\)|,| |\n|\t'
 ]
+
 fa_s = [
 
     [  # on ppt 3_2 page22
@@ -110,6 +128,7 @@ dfa_s_shan = [  # TODO
         {'D'}
     ]
 ]  # 用来测试最小化
+
 grammars = (
     ('S', 'aAcBe'),
     ('A', 'b'),

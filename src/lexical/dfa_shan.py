@@ -1,3 +1,4 @@
+import pickle
 import random
 from collections import deque
 from typing import Set, Dict, Deque, Tuple, List
@@ -207,12 +208,23 @@ def get_dfa_c_minus() -> DFA:  # 获得 c-- 确定化的DFA
     return fa_2_dfa(get_fa_c_minus())
 
 
-def get_dfa_minimize_c_minus(ifReadFile=False) -> DFA:
+def get_dfa_minimize_c_minus(if_read_file=False) -> DFA:
     """
     ifReadFile: 是否从文件中读入 c--的dfa
     获得c--的 最小化 dfa
     """
-    if ifReadFile:
-        pass
+
+    dfa: DFA
+    if if_read_file:
+        with open("dfa.pkl", 'rb') as file:
+            dfa = pickle.loads(file.read())
+        with open("dfa.txt", 'w+') as file:
+            file.write(dfa.__str__())
     else:
-        return dfa_minimize(fa_2_dfa(get_fa_c_minus()))
+        dfa = dfa_minimize(fa_2_dfa(get_fa_c_minus()))
+        output_hal = open("dfa.pkl", 'wb')
+        str_dfa = pickle.dumps(dfa)
+        output_hal.write(str_dfa)
+        output_hal.close()
+
+    return dfa

@@ -1,6 +1,6 @@
 from graphviz import Digraph
 
-from src.lexical.deterministic_finite_automation import DFA
+from src.lexical.dfa_shan import DFA
 from src.lexical.finite_automation import FA
 
 

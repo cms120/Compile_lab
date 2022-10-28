@@ -7,5 +7,5 @@ class LATest(unittest.TestCase):
 
     def testAnalysis(self):
         self.assertTrue(True)
-        res = analysis('test1.sy')
+        res = analysis('sy_s/test1.sy')
         print(res)

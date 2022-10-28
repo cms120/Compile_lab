@@ -5,8 +5,8 @@ from src.lexical.dfa_shan import DFA, get_dfa_minimize_c_minus
 from src.util import read_file
 
 
-def analysis(file_path='test.sy') -> list[Token]:  # 根据c--的dfa分析文件获得token list
-    return get_token_list_by_content_dfa(get_dfa_minimize_c_minus(), read_file(file_path))
+def analysis(file_path='test.sy',is_read_file=True) -> list[Token]:  # 根据c--的dfa分析文件获得token list
+    return get_token_list_by_content_dfa(get_dfa_minimize_c_minus(is_read_file), read_file(file_path))
 
 
 def get_token_list_by_content_dfa(dfa: DFA, content: str) -> list[Token]:

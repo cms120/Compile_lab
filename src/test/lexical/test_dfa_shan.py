@@ -40,20 +40,20 @@ class DFAShanTest(unittest.TestCase):
 
     def test_dfa_minimize2(self):
         self.assertTrue(True)
-        re_postfix = Regex.get_re_postfix(re_s[2])
+        re_postfix = Regex.get_re_postfix(re_s[0])
         rules = Rules.init_by_re_postfix(re_postfix)
 
         fa = FA.init_by_rules(rules)
         print(fa)
-        graph_fa_print(fa, 'FA_shan')
+        graph_fa_print(fa, 'INT_fa')
 
         dfa = fa_2_dfa(fa)
         print(dfa)
-        graph_dfa_print(dfa, 'DFA_shan')
+        graph_dfa_print(dfa, 'INT_dfa')
 
         dfa = dfa_minimize(dfa)
         print(dfa_minimize(dfa))
-        graph_dfa_print(dfa, 'DFA_min_shan')
+        graph_dfa_print(dfa, 'INT_dfa_min')
 
     def test_get_dfa_c_minus(self):
         self.assertTrue(True)
@@ -65,7 +65,7 @@ class DFAShanTest(unittest.TestCase):
         self.assertTrue(True)
         dfa = get_dfa_minimize_c_minus()
         print(dfa)
-        # graph_dfa_print(dfa)
+        graph_dfa_print(dfa)
 
 
 if __name__ == '__main__':

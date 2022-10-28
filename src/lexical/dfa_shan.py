@@ -195,7 +195,8 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
 
     for state in Representative_Set:  # 遍历代表集合以获得mdfa_f
         for letter in dfa.letters:
-            if (state, letter) in dfa.f.keys() and mdfa_f.get((set2flag[tuple(get_state_located_set_FLAG(P, state))], letter),'#') == '#':
+            if (state, letter) in dfa.f.keys() and mdfa_f.get(
+                    (set2flag[tuple(get_state_located_set_FLAG(P, state))], letter), '#') == '#':
                 mdfa_f[(set2flag[tuple(get_state_located_set_FLAG(P, state))], letter)] = set2flag[
                     tuple(get_state_located_set_FLAG(P, dfa.f.get((state, letter))))]
 
@@ -206,5 +207,12 @@ def get_dfa_c_minus() -> DFA:  # 获得 c-- 确定化的DFA
     return fa_2_dfa(get_fa_c_minus())
 
 
-def get_dfa_minimize_c_minus() -> DFA:  # 获得c--的 最小化 dfa
-    return dfa_minimize(fa_2_dfa(get_fa_c_minus()))
+def get_dfa_minimize_c_minus(ifReadFile=False) -> DFA:
+    """
+    ifReadFile: 是否从文件中读入 c--的dfa
+    获得c--的 最小化 dfa
+    """
+    if ifReadFile:
+        pass
+    else:
+        return dfa_minimize(fa_2_dfa(get_fa_c_minus()))

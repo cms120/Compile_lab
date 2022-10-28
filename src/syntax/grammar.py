@@ -96,6 +96,7 @@ def get_g_c_minus_auto() -> Grammar:  # 从文件中读入c--文法 并且将他
         while line[i] in string.digits + '. ':  # 跳过序号
             i += 1
         line = line[i:]
+
         if line.endswith(';'):
             line = line[:-1]
 

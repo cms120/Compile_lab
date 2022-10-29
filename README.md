@@ -12,6 +12,8 @@ https://trusted-software.feishu.cn/wiki/wikcnYBVlSkzQKWR0amh9ByDy9d
 
 词法分析
 
+格式化输出 TODO
+
 TODO 符号表
 
 TODO 字符串 浮点数

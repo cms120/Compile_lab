@@ -5,18 +5,13 @@ from src.lexical.token import Token, LexicalUnit
 from src.util import read_file
 
 
-def analysis(file_path='test.sy', is_read_file=True) -> list[Token]:  # 根据c--的dfa分析文件获得token list
-    assert file_path.endswith(".sy"), 'file should end with .sy  ' + file_path
-    res = get_token_list_by_content_dfa(get_dfa_minimize_c_minus(is_read_file), read_file(file_path))
-    res_output(res)
-    return res
-
-
-def res_output(tokens: List[Token], file='lexical_result.txt') -> None:
-
-
-
 def get_token_by_content(content: str) -> Token:
+    """
+    分析一串字符所属的token
+
+    :param content:一串字符 已经验证过可以被dfa接受
+    :returns: token
+    """
     if LexicalUnit.check_val(content):  # 在unit中是否存在val
         return Token(LexicalUnit(content))
     elif content[0].isdigit():
@@ -26,6 +21,13 @@ def get_token_by_content(content: str) -> Token:
 
 
 def get_token_list_by_content_dfa(dfa: DFA, content: List[str]) -> list[Token]:
+    """
+    从若干行c--程序中分析出tokens
+
+    :param dfa: 最小化的dfa
+    :param content: 若干行c--程序
+    :returns: tokens
+    """
     res = []
     for line in content:
         res.extend(get_token_list_by_line_dfa(dfa, line))
@@ -33,6 +35,13 @@ def get_token_list_by_content_dfa(dfa: DFA, content: List[str]) -> list[Token]:
 
 
 def get_token_list_by_line_dfa(dfa: DFA, line: str) -> List[Token]:
+    """
+    从一行c--代码中分析出tokens
+
+    :param dfa: 最小化的dfa
+    :param line: 一行c--代码
+    :returns: tokens
+    """
     res: List[Token] = []
     pre = nxt = 0  # 指针指向当前识别单词首位和正在识别的位置
     now_state = dfa.s
@@ -60,4 +69,24 @@ def get_token_list_by_line_dfa(dfa: DFA, line: str) -> List[Token]:
         pre = nxt
         now_state = dfa.s
 
+    return res
+
+
+def res_output(res: List[Token], file_name: str = 'result/lexical/LA_tokens.txt') -> None:
+    """
+    将分析结果格式化输出到文件中
+
+    :param res: LA分析结果
+    :param file_name: 输出路径
+    """
+    f = open(file_name, 'w')
+    for token in res:
+        f.write(token.format_str() + '\n')
+    f.close()
+
+
+def analysis(file_path='src/test/lexical/test.sy', is_read_file=True) -> list[Token]:  # 根据c--的dfa分析文件获得token list
+    assert file_path.endswith(".sy"), 'file should end with .sy  ' + file_path
+    res = get_token_list_by_content_dfa(get_dfa_minimize_c_minus(is_read_file), read_file(file_path))
+    res_output(res)
     return res

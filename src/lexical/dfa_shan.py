@@ -187,6 +187,7 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
 
     for flag in set2flag.values():  # 将所有flag添加到m_dfa_k中获得m_dfa_k
         m_dfa_k.add(flag)
+
     for state in dfa.k:
         if state in dfa.s:
             m_dfa_s = set2flag[tuple(get_state_located_set_flag(p, state))]

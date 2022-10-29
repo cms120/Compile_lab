@@ -37,6 +37,7 @@ def get_token_list_by_line_dfa(dfa: DFA, line: str) -> List[Token]:
     pre = nxt = 0  # 指针指向当前识别单词首位和正在识别的位置
     now_state = dfa.s
     isEnd = 0
+
     while pre != len(line):
         if line[nxt:nxt + 2] == '//':
             break

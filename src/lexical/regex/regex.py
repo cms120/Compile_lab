@@ -17,7 +17,6 @@ class Regex:
         # Loop through the string one character at a time
         it = iter(range(len(re)))
         for i in it:
-
             if re[i] == '(':
                 stack.append(re[i])
             elif re[i] == ')':

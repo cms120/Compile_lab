@@ -7,7 +7,13 @@ from src.util import read_file
 
 def analysis(file_path='test.sy', is_read_file=True) -> list[Token]:  # 根据c--的dfa分析文件获得token list
     assert file_path.endswith(".sy"), 'file should end with .sy  ' + file_path
-    return get_token_list_by_content_dfa(get_dfa_minimize_c_minus(is_read_file), read_file(file_path))
+    res = get_token_list_by_content_dfa(get_dfa_minimize_c_minus(is_read_file), read_file(file_path))
+    res_output(res)
+    return res
+
+
+def res_output(tokens: List[Token], file='lexical_result.txt') -> None:
+
 
 
 def get_token_by_content(content: str) -> Token:

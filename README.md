@@ -12,6 +12,10 @@ https://trusted-software.feishu.cn/wiki/wikcnYBVlSkzQKWR0amh9ByDy9d
 
 词法分析
 
+TODO 符号表
+
+TODO 字符串 浮点数
+
 ### src/syntax
 
 语法分析通用部分
@@ -31,3 +35,4 @@ https://trusted-software.feishu.cn/wiki/wikcnYBVlSkzQKWR0amh9ByDy9d
 ### resource
 
 课程资源
+

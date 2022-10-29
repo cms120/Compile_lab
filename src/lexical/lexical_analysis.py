@@ -72,7 +72,7 @@ def get_token_list_by_line_dfa(dfa: DFA, line: str) -> List[Token]:
     return res
 
 
-def res_output(res: List[Token], file_name: str = 'LA_tokens.txt') -> None:
+def res_output(res: List[Token], file_name: str = 'result/lexical/LA_tokens.txt') -> None:
     """
     将分析结果格式化输出到文件中
 

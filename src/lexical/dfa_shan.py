@@ -211,21 +211,24 @@ def get_dfa_c_minus() -> DFA:  # 获得 c-- 确定化的DFA
 
 def get_dfa_minimize_c_minus(if_read_file=False) -> DFA:
     """
-    ifReadFile: 是否从文件中读入 c--的dfa
     获得c--的 最小化 dfa
+
+    :param if_read_file: 是否从文件中读入 c--的dfa
     """
     lexical_result_path = os.path.join('result', 'lexical')
     dfa: DFA
     if if_read_file:
         with open(os.path.join(lexical_result_path, "dfa.pkl"), 'rb') as file:
             dfa = pickle.loads(file.read())
-        with open(os.path.join(lexical_result_path, "dfa.txt"), 'w+') as file:
-            file.write(str(dfa))
+
     else:
         dfa = dfa_minimize(fa_2_dfa(get_fa_c_minus()))
         output_hal = open(os.path.join(lexical_result_path, "dfa.pkl"), 'wb')
         str_dfa = pickle.dumps(dfa)
         output_hal.write(str_dfa)
         output_hal.close()
+
+        with open(os.path.join(lexical_result_path, "dfa.txt"), 'w+') as file:
+            file.write(str(dfa))
 
     return dfa

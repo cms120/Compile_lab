@@ -96,8 +96,6 @@ class SyntaxUnit(Enum):  # 非终结符的key是自己，val是注释
     relExp = 'res_expression'
     eqExp = 'equal_expression'
 
-    add1 = 'add1'
-
     @classmethod
     def check_key(cls, key: str) -> bool:  # 检查key是否存在
         return key in cls.__members__.keys()

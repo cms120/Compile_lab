@@ -63,7 +63,10 @@ def get_token_list_by_line_dfa(dfa: DFA, line: str) -> List[Token]:
                 break
             now_state = dfa.f.get((now_state, line[nxt]))
             nxt += 1
-
+        assert nxt + isEnd > pre, 'line: ' + line + \
+                                  '\tnxt: ' + str(nxt) + \
+                                  '\tisEnd: ' + str(isEnd) + \
+                                  '\tpre: ' + str(pre)
         res.append(get_token_by_content(line[pre:nxt + isEnd]))
 
         if isEnd == 1:

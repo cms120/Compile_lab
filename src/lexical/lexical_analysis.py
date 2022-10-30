@@ -12,6 +12,7 @@ def get_token_by_content(content: str) -> Token:
     :param content:一串字符 已经验证过可以被dfa接受
     :returns: token
     """
+    assert len(content) > 0
     if LexicalUnit.check_val(content):  # 在unit中是否存在val
         return Token(LexicalUnit(content))
     elif content[0].isdigit():

@@ -82,6 +82,30 @@ def TurnListToGrammar(listLeftRight:list):
 
 
 def remove_left_recursion(g: Grammar):  # TODO 消除一个文法的左递归
+    #建立dictLeftRight：文法的左边为key，右边以|分裂存在tuple
+    listLeftRight = TurnGrammartoList(g)
+    g_result = Grammar()
+    
+        
+    for i in range(len(listLeftRight)):# 以listLeftRight=[[unit_R,[[unit_a],[unit_S,unit_a]]] , [unit_Q,[[Unit_b],[unit_R,unit_b]]] , [unit_S,[[unit_c],[unit_Q,unit_c]]]]为例
+        for j in range(i):
+            for k in range(len(listLeftRight[i][1])):#[[unit_a],[unit_S,unit_a]]
+                if listLeftRight[i][1][k][0] ==  listLeftRight[j][0]: #例如：listLeftRight[1][1][1][0]=unit_R = listLeftRight[0][0]
+                    lastlist = listLeftRight[i][1][k][1:] # [unit_R,unit_b]转成[unit_b]
+                    del listLeftRight[i][1][k] 
+                    for frontlist in listLeftRight[j][1]: 
+                        newlist =  frontlist + lastlist   # [unit_a]+[unit_b]或[unit_S,unit_a]+[unit_b]   
+                        listLeftRight[i][1].append(newlist) #以[unit_Q,[[Unit_b],[unit_R,unit_b]]]为例，变成了[unit_Q,[[Unit_b],[unit_a,unit_b],[unit_S,unit_a,unit_b]]]
+    # #消除直接左递归
+    # for liLR in  listLeftRight:
+    #     for li in liLR[1]:
+    #         if li[0] == liLR[0]:
+    #             RemovedDirectList = remove_direct_left_recursion(liLR)
+    #             listLeftRight=[RemovedDirectList if i ==liLR else i for i in listLeftRight]
+
+    g_result = TurnListToGrammar(listLeftRight)    
+    
+    return g_result 
     pass
 
 

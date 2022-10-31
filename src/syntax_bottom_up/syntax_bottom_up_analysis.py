@@ -32,14 +32,14 @@ def analysis() -> SyntaxTree:  # c--的语法分析
 
 
 """
-GetListLeftRight
+TurnGrammartoList
 目的是构建一个四维队列来存文法结构(右部以'|'分割)
 如： 传进文法'R -> a | S a','Q -> b | R b','S -> c | Q c'
 转成 : [[unit_R,[[unit_a],[unit_S,unit_a]]] , [unit_Q,[[Unit_b],[unit_R,unit_b]]] , [unit_S,[[unit_c],[unit_Q,unit_c]]]]
 便于后续转换操作
 
 """
-def GetListLeftRight(g:Grammar):
+def TurnGrammartoList(g:Grammar):
     listLeftRight = []  #四维队列 元素是三维队列[UnitS,[[Unita],[Unitb,Unitc]]]
     
     for production in g.productions:
@@ -62,6 +62,22 @@ def GetListLeftRight(g:Grammar):
         threeList= []
         # print(listLeftRight)
     return listLeftRight
+    pass
+
+#把listLeftRight转成Grammar 
+def TurnListToGrammar(listLeftRight:list):
+    g = Grammar()
+    for l in listLeftRight:
+        listAddOr = []
+        for listU in l[1]:
+            if not listAddOr == []:
+                listAddOr.append(SyntaxUnit('|'))  
+            for unit in listU:              
+                listAddOr.append(unit)
+        p = Production(l[0],tuple(listAddOr)) 
+        g.productions.append(p)
+    
+    return g 
     pass
 
 

@@ -31,6 +31,40 @@ def analysis() -> SyntaxTree:  # c--的语法分析
                                  la.analysis())
 
 
+"""
+GetListLeftRight
+目的是构建一个四维队列来存文法结构(右部以'|'分割)
+如： 传进文法'R -> a | S a','Q -> b | R b','S -> c | Q c'
+转成 : [[unit_R,[[unit_a],[unit_S,unit_a]]] , [unit_Q,[[Unit_b],[unit_R,unit_b]]] , [unit_S,[[unit_c],[unit_Q,unit_c]]]]
+便于后续转换操作
+
+"""
+def GetListLeftRight(g:Grammar):
+    listLeftRight = []  #四维队列 元素是三维队列[UnitS,[[Unita],[Unitb,Unitc]]]
+    
+    for production in g.productions:
+        threeList= []
+        right_doublelist = []#二维队列 如[[Unita],[Unitb,Unitc]]
+        sinlist = [] #一维队列 如[Unita]或[Unitb,Unitc] ，以‘|’区分
+        for unit in production.right:
+            if  unit.name == 'regex_line' :
+                right_doublelist.append(sinlist)
+                sinlist = []
+            if  unit==production.right[-1]:
+                sinlist.append(unit)
+                right_doublelist.append(sinlist)
+                sinlist = []
+            else:
+                sinlist.append(unit)
+        
+        threeList.append([production.left,right_doublelist])
+        listLeftRight.append(threeList)
+        threeList= []
+        # print(listLeftRight)
+    return listLeftRight
+    pass
+
+
 def remove_left_recursion(g: Grammar):  # TODO 消除一个文法的左递归
     pass
 

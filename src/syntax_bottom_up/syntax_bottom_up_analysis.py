@@ -1,6 +1,6 @@
 import src.lexical.lexical_analysis as la
 from lexical.token import Token
-from src.syntax.grammar import Grammar, get_g_c_minus_auto
+from src.syntax.grammar import Grammar, get_g_c_minus_auto,Production
 from src.syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
 from src.syntax.syntax_unit import SyntaxUnit
 

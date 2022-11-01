@@ -1,60 +1,83 @@
 import string
-from collections import deque
-from typing import List
+from typing import Dict, Tuple, List
 
-from src.syntax.syntax_unit import SyntaxUnit
 from src.util import read_file
 
 
-class Production:
-    def __init__(self, left: SyntaxUnit, right: tuple[SyntaxUnit]):  # 产生式
-        self.left = left
-        self.right = right
+class Grammar:
+    def __init__(self):
+        self.productions: Dict[str, Tuple[str]] = dict()
+
+    def add_production(self, production: Tuple[str, Tuple[str]]) -> None:
+        self.productions[production[0]] = production[1]
 
     def __str__(self):
-        str_m = self.left.value + ' ->'
-        for unit in self.right:
-            str_m += ' ' + str(unit.value)
-        return str_m
+        s = ''
+        for left, right in self.productions.items():
+            s += left + ' ->'
+            for r in right:
+                s += ' ' + r
+            s += '\n'
+        return s
 
-    def check_left_recursion(self) -> bool:  # TODO 检查是否有左递归
+    @staticmethod
+    def get_production_by_line(line: str) -> Tuple[str, Tuple[str]]:
+        """
+        根据一行grammar得到key和val
+
+        :param line: 1. Program -> compUnit;
+        :returns: (Program,(compUnit))
+        """
+        i = 0
+        while line[i] in string.digits + '. ':  # 跳过序号
+            i += 1
+        line = line[i:]
+
+        if line.endswith(';'):  # 去除结尾的分号
+            line = line[:-1]
+        # 去除后的效果 Program -> compUnit
+
+        left_and_right = line.split(' -> ')
+        assert len(left_and_right) == 2, 'error left_and_right: ' + line
+
+        right_groups = left_and_right[1].split(' ')
+        assert len(right_groups) >= 1, 'error in right_group: ' + line
+
+        return left_and_right[0], tuple(right_groups)
+
+    def get_first(self) -> dict:  # TODO 获得一个文法的first集
         pass
 
-    @staticmethod
-    def init_by_str(line: str):  # 一行字符串拆分为若干 unit 构建 Production
-        left_right = line.split(' -> ')
-        assert len(left_right) == 2, 'error left_right: ' + line
+    def get_follow(self) -> dict:  # TODO 获得一个文法的follow集
+        pass
 
-        right_groups = left_right[1].split(' ')
-        assert len(right_groups) >= 1, 'error in right_group: ' + line
-        assert SyntaxUnit.check_key(left_right[0]), 'error left: ' + line
+    def init_by_file(self, file: str) -> None:
+        """
+        通过文件来构造语法
+        """
+        lines = read_file(file)
+        for line in lines:
+            self.add_production(Grammar.get_production_by_line(line))
 
-        right_with_op: List[SyntaxUnit] = []  # 带有 |  的产生式右端
-        for group in right_groups:
-            assert group, line
-            if group[0] in string.ascii_lowercase + string.ascii_uppercase:  # 非终结符
-                assert SyntaxUnit.check_key(group), group + ' : ' + line  # 不在枚举类型中
-                right_with_op.append(SyntaxUnit[group])
-
-            else:  # 字符串 或者 正则表达式关键字
-                assert SyntaxUnit.check_val(group), group + ' : ' + line  # 不在枚举类型的值中
-                right_with_op.append(SyntaxUnit(group))
-
-        return Production(SyntaxUnit[left_right[0]], tuple(right_with_op))
+    def init_c_minus(self) -> None:
+        """
+        构造c--的语法
+        """
+        self.init_by_file('src/syntax/c_minus_grammar.txt')
 
     @staticmethod
-    def divide_by_or_op(right) -> list[list[SyntaxUnit]]:  # 暂时没用 将产生式右端根据 | 拆分 这里 | 不能出现在开始和结束
+    def divide_by_or_op(right: Tuple[str]) -> List[Tuple[str]]:  # 暂时没用 将产生式右端根据 | 拆分 这里 | 不能出现在开始和结束
         indexes = []  # | 的索引
-        rights = []
+        rights: List[Tuple[str]] = []
         l_par = 0
         for i in range(len(right)):
-            if right[i] == SyntaxUnit('|'):
+            if right[i] == '|':
                 if l_par == 0:  # 不在括号中
                     indexes.append(i)
-            if right[i] == SyntaxUnit('('):
+            if right[i] == '(':
                 l_par += 1
 
-            if right[i] == SyntaxUnit(')'):
+            if right[i] == ')':
                 l_par -= 1
         if len(indexes) == 0:
             rights = [right]
@@ -65,40 +88,3 @@ class Production:
             rights.append(right[indexes[-1] + 1:])
 
         return rights
-
-
-class Grammar:
-    def __init__(self, productions=None):
-        if productions is None:
-            productions = deque()
-        self.productions = productions
-
-    def __str__(self):
-        _str = ''
-        for prod in self.productions:
-            _str += str(prod) + '\n'
-        return _str
-
-    def get_first(self) -> dict:  # TODO 获得一个文法的first集
-        pass
-
-    def get_follow(self) -> dict:  # TODO 获得一个文法的follow集
-        pass
-
-
-def get_g_c_minus_auto() -> Grammar:  # 从文件中读入c--文法 并且将他的左递归消除
-    grammar = Grammar()
-
-    lines = read_file('src/syntax/c_minus_grammar.txt')
-
-    for line in lines:
-        i = 0
-        while line[i] in string.digits + '. ':  # 跳过序号
-            i += 1
-        line = line[i:]
-
-        if line.endswith(';'):
-            line = line[:-1]
-
-        grammar.productions.append(Production.init_by_str(line))
-    return grammar

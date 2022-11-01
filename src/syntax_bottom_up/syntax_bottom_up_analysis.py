@@ -30,6 +30,22 @@ def analysis() -> SyntaxTree:  # c--的语法分析
     return analysis_without_back(get_g_c_minus_auto(),
                                  la.analysis())
 
+#把c_minus_grammar.txt转成dict，存的元素如：'compUnit': ['(', 'decl', '|', 'funcDef', ')', '*', 'EOF']
+def GrammartextTodict() ->dict:
+    grammar = Grammar()
+    content = read_file('src/syntax/c_minus_grammar.txt')
+    lines = content.split('\n')
+    GrammarDict = {}
+    for line in lines:
+        i = 0
+        while line[i] in string.digits + '. ':  # 跳过序号
+            i += 1
+        line = line[i:]
+        if line.endswith(';'):
+            line = line[:-1]
+        lineList = line.split(' -> ')
+        GrammarDict[lineList[0]] = lineList[1].split(' ') 
+    return GrammarDict
 
 """
 TurnGrammartoList

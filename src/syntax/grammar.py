@@ -1,5 +1,5 @@
 import string
-from typing import Dict, Tuple, List
+from typing import Dict, Tuple, List, Set
 
 from src.util import read_file
 
@@ -7,6 +7,8 @@ from src.util import read_file
 class Grammar:
     def __init__(self):
         self.productions: Dict[str, Tuple[str]] = dict()
+        self.terminals: Set[str] = set()
+        self.non_terminals: Set[str] = set()
 
     def add_production(self, production: Tuple[str, Tuple[str]]) -> None:
         self.productions[production[0]] = production[1]
@@ -18,6 +20,15 @@ class Grammar:
             for r in right:
                 s += ' ' + r
             s += '\n'
+        s += '\n'
+
+        s += 'terminals:'
+        for t in self.terminals:
+            s += ' ' + t
+        s += '\nnon_terminals:'
+        for nt in self.non_terminals:
+            s += ' ' + nt
+        s += '\n'
         return s
 
     @staticmethod
@@ -51,19 +62,19 @@ class Grammar:
     def get_follow(self) -> dict:  # TODO 获得一个文法的follow集
         pass
 
-    def init_by_file(self, file: str) -> None:
+    def init_by_lines(self, lines: List[str]) -> None:
         """
-        通过文件来构造语法
+        通过多行程序来构造语法
         """
-        lines = read_file(file)
         for line in lines:
-            self.add_production(Grammar.get_production_by_line(line))
-
-    def init_c_minus(self) -> None:
-        """
-        构造c--的语法
-        """
-        self.init_by_file('src/syntax/c_minus_grammar.txt')
+            production = Grammar.get_production_by_line(line)
+            self.add_production(production)
+            self.non_terminals.add(production[0])
+            for r in production[1]:
+                if r.startswith('\'') and r.endswith('\''):
+                    self.terminals.add(r)
+                else:
+                    self.non_terminals.add(r)
 
     @staticmethod
     def divide_by_or_op(right: Tuple[str]) -> List[Tuple[str]]:  # 暂时没用 将产生式右端根据 | 拆分 这里 | 不能出现在开始和结束
@@ -88,3 +99,13 @@ class Grammar:
             rights.append(right[indexes[-1] + 1:])
 
         return rights
+
+
+def get_grammar_c_minus() -> Grammar:
+    """
+    构造c--的语法
+    """
+    g = Grammar()
+    c_minus_grammar_file = 'src/syntax/c_minus_grammar.txt'
+    g.init_by_lines(read_file(c_minus_grammar_file))
+    return g

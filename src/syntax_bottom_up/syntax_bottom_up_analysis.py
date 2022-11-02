@@ -1,8 +1,10 @@
+import string
+
 import src.lexical.lexical_analysis as la
-from lexical.token import Token
-from src.syntax.grammar import Grammar, get_g_c_minus_auto,Production
+from src.lexical.token import Token
+from src.syntax.grammar import Grammar, get_grammar_c_minus
 from src.syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
-from src.syntax.syntax_unit import SyntaxUnit
+from src.util import read_file
 
 
 # 根据文法来分析token list
@@ -27,11 +29,11 @@ def check_if_ll_one(g: Grammar) -> bool:  # 检查一个文法是否是ll(1)
 
 
 def analysis() -> SyntaxTree:  # c--的语法分析
-    return analysis_without_back(get_g_c_minus_auto(),
-                                 la.analysis())
+    return analysis_without_back(get_grammar_c_minus(), la.analysis())
 
-#把c_minus_grammar.txt转成dict，存的元素如：'compUnit': ['(', 'decl', '|', 'funcDef', ')', '*', 'EOF']
-def GrammartextTodict() ->dict:
+
+# 把c_minus_grammar.txt转成dict，存的元素如：'compUnit': ['(', 'decl', '|', 'funcDef', ')', '*', 'EOF']
+def GrammartextTodict() -> dict:
     grammar = Grammar()
     content = read_file('src/syntax/c_minus_grammar.txt')
     lines = content.split('\n')
@@ -44,8 +46,9 @@ def GrammartextTodict() ->dict:
         if line.endswith(';'):
             line = line[:-1]
         lineList = line.split(' -> ')
-        GrammarDict[lineList[0]] = lineList[1].split(' ') 
+        GrammarDict[lineList[0]] = lineList[1].split(' ')
     return GrammarDict
+
 
 """
 TurnGrammartoList
@@ -55,63 +58,68 @@ TurnGrammartoList
 便于后续转换操作
 
 """
-def TurnGrammartoList(g:Grammar):
-    listLeftRight = []  #四维队列 元素是三维队列[UnitS,[[Unita],[Unitb,Unitc]]]
-    
+
+
+def TurnGrammartoList(g: Grammar):
+    listLeftRight = []  # 四维队列 元素是三维队列[UnitS,[[Unita],[Unitb,Unitc]]]
+
     for production in g.productions:
-        threeList= []
-        right_doublelist = []#二维队列 如[[Unita],[Unitb,Unitc]]
-        sinlist = [] #一维队列 如[Unita]或[Unitb,Unitc] ，以‘|’区分
+        threeList = []
+        right_doublelist = []  # 二维队列 如[[Unita],[Unitb,Unitc]]
+        sinlist = []  # 一维队列 如[Unita]或[Unitb,Unitc] ，以‘|’区分
         for unit in production.right:
-            if  unit.name == 'regex_line' :
+            if unit.name == 'regex_line':
                 right_doublelist.append(sinlist)
                 sinlist = []
-            if  unit==production.right[-1]:
+            if unit == production.right[-1]:
                 sinlist.append(unit)
                 right_doublelist.append(sinlist)
                 sinlist = []
             else:
                 sinlist.append(unit)
-        
-        threeList.append([production.left,right_doublelist])
+
+        threeList.append([production.left, right_doublelist])
         listLeftRight.append(threeList)
-        threeList= []
+        threeList = []
         # print(listLeftRight)
     return listLeftRight
     pass
 
-#把listLeftRight转成Grammar 
-def TurnListToGrammar(listLeftRight:list):
+
+# 把listLeftRight转成Grammar
+def TurnListToGrammar(listLeftRight: list):
     g = Grammar()
     for l in listLeftRight:
         listAddOr = []
         for listU in l[1]:
             if not listAddOr == []:
-                listAddOr.append(SyntaxUnit('|'))  
-            for unit in listU:              
+                listAddOr.append(SyntaxUnit('|'))
+            for unit in listU:
                 listAddOr.append(unit)
-        p = Production(l[0],tuple(listAddOr)) 
+        p = Production(l[0], tuple(listAddOr))
         g.productions.append(p)
-    
-    return g 
+
+    return g
     pass
 
 
 def remove_left_recursion(g: Grammar):  # TODO 消除一个文法的左递归
-    #建立dictLeftRight：文法的左边为key，右边以|分裂存在tuple
+    # 建立dictLeftRight：文法的左边为key，右边以|分裂存在tuple
     listLeftRight = TurnGrammartoList(g)
     g_result = Grammar()
-    
-        
-    for i in range(len(listLeftRight)):# 以listLeftRight=[[unit_R,[[unit_a],[unit_S,unit_a]]] , [unit_Q,[[Unit_b],[unit_R,unit_b]]] , [unit_S,[[unit_c],[unit_Q,unit_c]]]]为例
+
+    for i in range(
+            len(listLeftRight)):  # 以listLeftRight=[[unit_R,[[unit_a],[unit_S,unit_a]]] , [unit_Q,[[Unit_b],[unit_R,unit_b]]] , [unit_S,[[unit_c],[unit_Q,unit_c]]]]为例
         for j in range(i):
-            for k in range(len(listLeftRight[i][1])):#[[unit_a],[unit_S,unit_a]]
-                if listLeftRight[i][1][k][0] ==  listLeftRight[j][0]: #例如：listLeftRight[1][1][1][0]=unit_R = listLeftRight[0][0]
-                    lastlist = listLeftRight[i][1][k][1:] # [unit_R,unit_b]转成[unit_b]
-                    del listLeftRight[i][1][k] 
-                    for frontlist in listLeftRight[j][1]: 
-                        newlist =  frontlist + lastlist   # [unit_a]+[unit_b]或[unit_S,unit_a]+[unit_b]   
-                        listLeftRight[i][1].append(newlist) #以[unit_Q,[[Unit_b],[unit_R,unit_b]]]为例，变成了[unit_Q,[[Unit_b],[unit_a,unit_b],[unit_S,unit_a,unit_b]]]
+            for k in range(len(listLeftRight[i][1])):  # [[unit_a],[unit_S,unit_a]]
+                if listLeftRight[i][1][k][0] == listLeftRight[j][
+                    0]:  # 例如：listLeftRight[1][1][1][0]=unit_R = listLeftRight[0][0]
+                    lastlist = listLeftRight[i][1][k][1:]  # [unit_R,unit_b]转成[unit_b]
+                    del listLeftRight[i][1][k]
+                    for frontlist in listLeftRight[j][1]:
+                        newlist = frontlist + lastlist  # [unit_a]+[unit_b]或[unit_S,unit_a]+[unit_b]
+                        listLeftRight[i][1].append(
+                            newlist)  # 以[unit_Q,[[Unit_b],[unit_R,unit_b]]]为例，变成了[unit_Q,[[Unit_b],[unit_a,unit_b],[unit_S,unit_a,unit_b]]]
     # #消除直接左递归
     # for liLR in  listLeftRight:
     #     for li in liLR[1]:
@@ -119,9 +127,9 @@ def remove_left_recursion(g: Grammar):  # TODO 消除一个文法的左递归
     #             RemovedDirectList = remove_direct_left_recursion(liLR)
     #             listLeftRight=[RemovedDirectList if i ==liLR else i for i in listLeftRight]
 
-    g_result = TurnListToGrammar(listLeftRight)    
-    
-    return g_result 
+    g_result = TurnListToGrammar(listLeftRight)
+
+    return g_result
     pass
 
 

@@ -164,7 +164,84 @@ def remove_left_recursion(g: Grammar):  # TODO 消除一个文法的左递归
     return simplified_indirect_dict
 
 
-def remove_recall(g: Grammar):  # TODO 消除回溯
+def remove_recall(g:dict):  # TODO 消除回溯
+    llr = []
+    for u in g:
+
+            g[u] = ' '.join(g[u])
+            g[u] = g[u].split('| ')
+            for i in range(len(g[u])):
+                g[u][i] = ''.join(g[u][i])
+                g[u][i] = g[u][i].split(' ')
+            llr.append([u, g[u]])
+    for k1 in range(len(llr)):
+        for k2 in range(len(llr[k1][1])-1):
+            llr[k1][1][k2].pop()
+
+
+
+
+
+
+   # print(llr)
+    num=0
+    g_r = {}
+    while num == 0:
+        #print(llr)
+        nllr1 = []
+        for i in range(len(llr)):
+            newd1 = {}
+            dict1 = {}  # key:产生式后端的首个符号,val:其后面可能的的符号
+            for j in range(len(llr[i][1])):  # 同上遍历
+                a=llr[i][1][j][0]
+                dict1.setdefault(a, [])
+                #print (dict1)
+                #print(llr[i][1][j])
+                #print(llr[i][1][j][1:])
+                if llr[i][1][j][1:] != []:  # 某符号后有一个及以上符号，正常分开
+                    dict1[llr[i][1][j][0]].append(llr[i][1][j][1:])
+                    #print(dict1)
+                else:  # 否则添加epsilon符号
+                    dict1[llr[i][1][j][0]].append(['$'])
+
+            newd1.setdefault(llr[i][0], [])
+            for fu in dict1.keys():
+                #print(dict1)
+                if len(dict1[fu]) == 1:  # 无回溯
+                    if ['$'] not  in dict1[fu]:
+                        newd1[llr[i][0]].append([fu] + dict1[fu][0])
+                    else:
+                        newd1[llr[i][0]].append([fu])
+
+                    #print(newd1)
+                else:
+                    newstr = str(llr[i][0]) + 's'  # 新建产生式左端为原产生式左端加s，即S变为S和Ss
+                    newd1[llr[i][0]].append([fu] + [newstr])
+                    newd1.setdefault(newstr, dict1[fu])
+                    #newd1[newstr].append(dict1[fu])
+            for fu1 in newd1.keys():
+                nllr1.append([fu1, newd1[fu1]])  # 更新nllr1
+        if nllr1 == llr :
+            num = 1
+        else:
+            llr = copy.deepcopy(nllr1)
+    for i in range(len(llr)):
+        g_r.setdefault(llr[i][0],llr[i][1])
+    #print(g_r)
+    listA = {}
+    for l in g_r:
+
+        listA.setdefault(l,[])
+
+
+        for listU in g_r[l]:
+            if not listA[l] == []:
+                listA[l].append('|')
+            for unit in listU:
+                listA[l].append(unit)
+       # print(listA[l])
+    return listA
+
     pass
 
 

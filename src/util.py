@@ -21,3 +21,9 @@ def check_set_if_exist(set1: set, items: set):
         if item in set1:
             return True
     return False
+
+def spilt_list(l:List[str],ch:str)->List[List[str]]:
+    """
+    以ch来分割list
+    """
+    pass

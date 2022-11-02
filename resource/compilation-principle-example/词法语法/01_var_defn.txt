@@ -1,0 +1,62 @@
+int <KW,1>
+a <Ident,a>
+; <SE,24>
+int <KW,1>
+main <KW,5>
+( <SE,20>
+) <SE,21>
+{ <SE,22>
+a <Ident,a>
+= <OP,11>
+10 <IntConst,10>
+; <SE,24>
+return <KW,3>
+0 <IntConst,0>
+; <SE,24>
+} <SE,23>
+
+1	program#int	reduction
+2	compUnit#int	reduction
+3	decl#int	reduction
+4	valDecl#int	reduction
+5	btype#int	reduction
+6	int#int	move
+7	varDef#Ident	reduction
+8	Ident#Ident	move
+9	;#;	move
+10	funcDef#int	reduction
+11	funcType#int	reduction
+12	int#int	move
+13	Ident#Ident	move
+14	(#(	move
+15	)#)	move
+16	block#{	reduction
+17	{#{	move
+18	blockItem#Ident	reduction
+19	stmt#Ident	reduction
+20	Ival#Ident	reduction
+21	Ident#Ident	move
+22	=#=	move
+23	exp#IntConst	reduction
+24	addExp#IntConst	reduction
+25	mulExp#IntConst	reduction
+26	unaryExp#IntConst	reduction
+27	primaryExp#IntConst	reduction
+28	number#IntConst	reduction
+29	IntConst#IntConst	move
+30	;#;	move
+31	blockItem#return	reduction		
+32	stmt#return	reduction
+33	return#return	move
+34	exp#IntConst	reduction
+35	addExp#IntConst	reduction
+36	mulExp#IntConst	reduction
+37	unaryExp#IntConst	reduction
+38	primaryExp#IntConst	reduction
+39	number#IntConst	reduction
+40	IntConst#IntConst	move
+41	;#;	move
+42	}#}	move
+43	EOF#EOF	accept
+
+(program (compUnit (decl (varDecl (bType int) (varDef a) ;)) (funcDef (funcType int) main ( ) (block { (blockItem (stmt (lVal a) = (exp (addExp (mulExp (unaryExp (primaryExp (number 10)))))) ;)) (blockItem (stmt return (exp (addExp (mulExp (unaryExp (primaryExp (number 0)))))) ;)) })) <EOF>))

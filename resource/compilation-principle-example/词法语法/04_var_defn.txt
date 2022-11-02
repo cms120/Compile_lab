@@ -1,0 +1,126 @@
+int <KW,1>
+a <Ident,a>
+= <OP,11>
+3 <IntConst,3>
+, <SE,25>
+b <Ident,b>
+= <OP,11>
+1 <IntConst,1>
+, <SE,25>
+c <Ident,c>
+= <OP,11>
+3 <IntConst,3>
+; <SE,24>
+int <KW,1>
+main <KW,5>
+( <SE,20>
+) <SE,21>
+{ <SE,22>
+int <KW,1>
+a <Ident,a>
+= <OP,11>
+5 <IntConst,5>
+; <SE,24>
+return <KW,3>
+a <Ident,a>
++ <OP,6>
+b <Ident,b>
+; <SE,24>
+} <SE,23>
+
+1	program#int	reduction
+2	compUnit#int	reduction
+
+3	decl#int	reduction
+4	valDecl#int	reduction
+5	btype#int	reduction
+6	int#int	move
+7	varDef#Ident	reduction
+8	Ident#Ident	move
+9	=#=	move
+10	initVal#IntCount	reduction
+11	exp#IntConst	reduction
+12	addExp#IntConst	reduction
+13	mulExp#IntConst	reduction
+14	unaryExp#IntConst	reduction
+15	primaryExp#IntConst	reduction
+16	number#IntConst	reduction
+17	IntConst#IntConst	move
+18	,#,	move
+
+19	varDef#Ident	reduction
+20	Ident#Ident	move
+21	=#=	move
+22	initVal#IntCount	reduction
+23	exp#IntConst	reduction
+24	addExp#IntConst	reduction
+25	mulExp#IntConst	reduction
+26	unaryExp#IntConst	reduction
+27	primaryExp#IntConst	reduction
+28	number#IntConst	reduction
+29	IntConst#IntConst	move	
+30	,#,	move
+
+31	varDef#Ident	reduction
+32	Ident#Ident	move
+33	=#=	move
+34	initVal#IntCount	reduction
+35	exp#IntConst	reduction
+36	addExp#IntConst	reduction
+37	mulExp#IntConst	reduction
+38	unaryExp#IntConst	reduction
+39	primaryExp#IntConst	reduction
+40	number#IntConst	reduction
+41	IntConst#IntConst	move
+42	;#;	move
+
+43	funcDef#int	reduction
+44	funcType#int	reduction
+45	int#int	move
+46	Ident#Ident	move
+47	(#(	move
+48	)#)	move
+49	block#{	reduction
+50	{#{	move
+
+51	blockItem#int	reduction
+52	decl#int	reduction
+53	valDecl#int	reduction
+54	btype#int	reduction
+55	int#int	move
+56	varDef#Ident	reduction
+57	Ident#Ident	move
+58	=#=	move
+59	initVal#IntCount	reduction
+60	exp#IntConst	reduction
+61	addExp#IntConst	reduction
+62	mulExp#IntConst	reduction
+63	unaryExp#IntConst	reduction
+64	primaryExp#IntConst	reduction
+65	number#IntConst	reduction
+66	IntConst#IntConst	move	
+67	;#;	move
+
+68	blockItem#return	reduction		
+69	stmt#return	reduction
+70	return#return	move
+71	exp#Ident	reduction
+72	addExp#Ident	reduction
+73	addExp#Ident	reduction
+74	mulExp#Ident	reduction
+75	unaryExp#Ident	reduction
+76	primaryExp#Ident	reduction
+77	IVal#Ident	reduction
+78	Ident#Ident	move
+79	+#+	move
+80	mulExp#Ident	reduction
+81	unaryExp#Ident	reduction
+82	primaryExp#Ident	reduction
+83	IVal#Ident	reduction
+84	Ident#Ident	move	
+85	;#;	move
+
+86	}#}	move
+87	EOF#EOF	accept
+
+(program (compUnit (decl (varDecl (bType int) (varDef a = (initVal (exp (addExp (mulExp (unaryExp (primaryExp (number 3)))))))) , (varDef b = (initVal (exp (addExp (mulExp (unaryExp (primaryExp (number 1)))))))) , (varDef c = (initVal (exp (addExp (mulExp (unaryExp (primaryExp (number 3)))))))) ;)) (funcDef (funcType int) main ( ) (block { (blockItem (decl (varDecl (bType int) (varDef a = (initVal (exp (addExp (mulExp (unaryExp (primaryExp (number 5)))))))) ;))) (blockItem (stmt return (exp (addExp (addExp (mulExp (unaryExp (primaryExp (lVal a))))) + (mulExp (unaryExp (primaryExp (lVal b)))))) ;)) })) <EOF>))

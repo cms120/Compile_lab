@@ -1,0 +1,91 @@
+int <KW,1>
+a <Ident,a>
+= <OP,11>
+3 <IntConst,3>
+; <SE,24>
+int <KW,1>
+b <Ident,b>
+= <OP,11>
+5 <IntConst,5>
+; <SE,24>
+int <KW,1>
+main <KW,5>
+( <SE,20>
+) <SE,21>
+{ <SE,22>
+return <KW,3>
+a <Ident,a>
++ <OP,6>
+b <Ident,b>
+; <SE,24>
+} <SE,23>
+
+1	program#int	reduction
+2	compUnit#int	reduction
+
+3	decl#int	reduction
+4	valDecl#int	reduction
+5	btype#int	reduction
+6	int#int	move
+7	varDef#Ident	reduction
+8	Ident#Ident	move
+9	=#=	move
+10	initVal#IntCount	reduction
+11	exp#IntConst	reduction
+12	addExp#IntConst	reduction
+13	mulExp#IntConst	reduction
+14	unaryExp#IntConst	reduction
+15	primaryExp#IntConst	reduction
+16	number#IntConst	reduction
+17	IntConst#IntConst	move	
+18	;#;	move
+
+19	decl#int	reduction
+20	valDecl#int	reduction
+21	btype#int	reduction
+22	int#int	move
+23	varDef#Ident	reduction
+24	Ident#Ident	move
+25	=#=	move
+26	initVal#IntCount	reduction
+27	exp#IntConst	reduction
+28	addExp#IntConst	reduction
+29	mulExp#IntConst	reduction
+30	unaryExp#IntConst	reduction
+31	primaryExp#IntConst	reduction
+32	number#IntConst	reduction
+33	IntConst#IntConst	move	
+34	;#;	move
+
+35	funcDef#int	reduction
+36	funcType#int	reduction
+37	int#int	move
+38	Ident#Ident	move
+39	(#(	move
+40	)#)	move
+41	block#{	reduction
+42	{#{	move
+
+43	blockItem#return	reduction		
+44	stmt#return	reduction
+45	return#return	move
+46	exp#Ident	reduction
+47	addExp#Ident	reduction
+48	addExp#Ident	reduction
+49	mulExp#Ident	reduction
+50	unaryExp#Ident	reduction
+51	primaryExp#Ident	reduction
+52	IVal#Ident	reduction
+53	Ident#Ident	move
+54	+#+	move
+55	mulExp#Ident	reduction
+56	unaryExp#Ident	reduction
+57	primaryExp#Ident	reduction
+58	IVal#Ident	reduction
+59	Ident#Ident	move	
+60	;#;	move
+
+61	}#}	move
+62	EOF#EOF	accept
+
+(program (compUnit (decl (varDecl (bType int) (varDef a = (initVal (exp (addExp (mulExp (unaryExp (primaryExp (number 3)))))))) ;)) (decl (varDecl (bType int) (varDef b = (initVal (exp (addExp (mulExp (unaryExp (primaryExp (number 5)))))))) ;)) (funcDef (funcType int) main ( ) (block { (blockItem (stmt return (exp (addExp (addExp (mulExp (unaryExp (primaryExp (lVal a))))) + (mulExp (unaryExp (primaryExp (lVal b)))))) ;)) })) <EOF>))

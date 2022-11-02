@@ -1,8 +1,10 @@
+import string
+
 import src.lexical.lexical_analysis as la
-from lexical.token import Token
-from src.syntax.grammar import Grammar, get_g_c_minus_auto,Production
+from src.lexical.token import Token
+from src.syntax.grammar import Grammar, get_grammar_c_minus
 from src.syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
-from src.syntax.syntax_unit import SyntaxUnit
+from src.util import read_file
 
 
 # 根据文法来分析token list
@@ -27,11 +29,11 @@ def check_if_ll_one(g: Grammar) -> bool:  # 检查一个文法是否是ll(1)
 
 
 def analysis() -> SyntaxTree:  # c--的语法分析
-    return analysis_without_back(get_g_c_minus_auto(),
-                                 la.analysis())
+    return analysis_without_back(get_grammar_c_minus(), la.analysis())
 
-#把c_minus_grammar.txt转成dict，存的元素如：'compUnit': ['(', 'decl', '|', 'funcDef', ')', '*', 'EOF']
-def GrammartextTodict() ->dict:
+
+# 把c_minus_grammar.txt转成dict，存的元素如：'compUnit': ['(', 'decl', '|', 'funcDef', ')', '*', 'EOF']
+def GrammartextTodict() -> dict:
     grammar = Grammar()
     content = read_file('src/syntax/c_minus_grammar.txt')
     lines = content.split('\n')
@@ -44,7 +46,7 @@ def GrammartextTodict() ->dict:
         if line.endswith(';'):
             line = line[:-1]
         lineList = line.split(' -> ')
-        GrammarDict[lineList[0]] = lineList[1].split(' ') 
+        GrammarDict[lineList[0]] = lineList[1].split(' ')
     return GrammarDict
 
 

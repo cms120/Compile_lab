@@ -8,7 +8,7 @@ class LATest(unittest.TestCase):
 
     def testAnalysis(self):
         self.assertTrue(True)
-        res = analysis('src/test/lexical/sy_s/05_var_defn.sy')
+        res = analysis('src/test/lexical/sy_s/03_var_defn.sy')
         for i in res:
             print(i)
 

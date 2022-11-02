@@ -50,86 +50,125 @@ def GrammartextTodict() -> dict:
     return GrammarDict
 
 
-"""
-TurnGrammartoList
-目的是构建一个四维队列来存文法结构(右部以'|'分割)
-如： 传进文法'R -> a | S a','Q -> b | R b','S -> c | Q c'
-转成 : [[unit_R,[[unit_a],[unit_S,unit_a]]] , [unit_Q,[[Unit_b],[unit_R,unit_b]]] , [unit_S,[[unit_c],[unit_Q,unit_c]]]]
-便于后续转换操作
-
-"""
-
-
-def TurnGrammartoList(g: Grammar):
-    listLeftRight = []  # 四维队列 元素是三维队列[UnitS,[[Unita],[Unitb,Unitc]]]
-
-    for production in g.productions:
-        threeList = []
-        right_doublelist = []  # 二维队列 如[[Unita],[Unitb,Unitc]]
-        sinlist = []  # 一维队列 如[Unita]或[Unitb,Unitc] ，以‘|’区分
-        for unit in production.right:
-            if unit.name == 'regex_line':
-                right_doublelist.append(sinlist)
-                sinlist = []
-            if unit == production.right[-1]:
-                sinlist.append(unit)
-                right_doublelist.append(sinlist)
-                sinlist = []
+def twoListTodict(listkey:list,listvalue:list):
+    dictt = {}
+    for i in range(len(listkey)):
+        newlist = []
+        for j in range(len(listvalue[i])):
+            if not j == len(listvalue[i])-1:
+                newlist += listvalue[i][j]+['|']
             else:
-                sinlist.append(unit)
+                newlist += listvalue[i][j]
+        listvalue[i] == listvalue[i]
+        dictt[listkey[i]] = newlist
+    return dictt
 
-        threeList.append([production.left, right_doublelist])
-        listLeftRight.append(threeList)
-        threeList = []
-        # print(listLeftRight)
-    return listLeftRight
+#以‘|’分割列表
+def getnoOrList (listhaveOr:list):#例:把listhaveOr:[['a','|','S','a'],['b','|','R','b']]转成listvaluenoOr[[['a'],['S','a']],[['b'],['R','b']]]
+    listvaluenoOr=[]
+    for listR in listhaveOr:        
+        listt = []
+        listnoOr = []
+        for i in range(len(listR)):
+            if listR[i] == '|':
+                listnoOr.append(listt)
+                listt = []
+            if i == len(listR)-1 :
+                listt.append(listR[i])
+                listnoOr.append(listt)
+                listt = []
+            if not (listR[i] == '|' or i == len(listR)-1):
+                listt.append(listR[i])
+        listvaluenoOr.append(listnoOr)
+    
+    return listvaluenoOr
     pass
 
 
-# 把listLeftRight转成Grammar
-def TurnListToGrammar(listLeftRight: list):
-    g = Grammar()
-    for l in listLeftRight:
-        listAddOr = []
-        for listU in l[1]:
-            if not listAddOr == []:
-                listAddOr.append(SyntaxUnit('|'))
-            for unit in listU:
-                listAddOr.append(unit)
-        p = Production(l[0], tuple(listAddOr))
-        g.productions.append(p)
 
-    return g
+#消除直接左递归, 返回一个元组tuplee，tuplee[0]为修改后的listkey，tuplee[1]为修改后的listvalue
+def remove_direct_left_recursion(listkey:list,listvalue:list):
+
+        memory = []
+        haveRecursion = 0
+        for i in range(len(listvalue)):#listvalue格式如：[[unit_c],[unit_S,unit_a,unit_b,unit_c]]
+            lists = [] 
+            for k in range(len(listvalue[i])):
+                  
+                if listvalue[i][k][0] == listkey[i]:
+                    
+                    haveRecursion = 1              
+                    memory.append(listvalue[i][k][1:])#记录，如[unit_S,unit_a,unit_b,unit_c]转成[Unit_a,unit_b,unit_c]
+                    lists.append(k)
+            if haveRecursion == 1:                
+                for number in lists:                    
+                    del listvalue[i][number]
+            # SyntaxTree(unit.name+ss)=unit.value+'`'
+                for j in range(len(listvalue[i])):
+                    listvalue[i][j].append(listkey[i]+'`')
+                    newlist = []  #即['S`',[]]
+                for l in memory:
+                    newlist.append(l+[listkey[i]+'`'])
+                newlist.append(['$'])
+
+                listvalue.append(newlist)
+                listkey.append(listkey[i]+'`')
+        
+        tuplee = (listkey,listvalue)
+                
+        return tuplee
+        pass
+
+def simplified(dic:dict):#化简 TODO
+    newdict = {'Program':['compUnit']}
+    listkey = list(newdict.keys())
+    for key in listkey:
+        for value in newdict[key]:
+            if not value in listkey and (value.isalpha() or value == key+'`') and not value == 'EOF'  :
+                newdict[value] = dic[value]
+                listkey.append(value)
+                print('value=',value)
+    return newdict
+     
     pass
 
-
-def remove_left_recursion(g: Grammar):  # TODO 消除一个文法的左递归
-    # 建立dictLeftRight：文法的左边为key，右边以|分裂存在tuple
-    listLeftRight = TurnGrammartoList(g)
-    g_result = Grammar()
-
-    for i in range(
-            len(listLeftRight)):  # 以listLeftRight=[[unit_R,[[unit_a],[unit_S,unit_a]]] , [unit_Q,[[Unit_b],[unit_R,unit_b]]] , [unit_S,[[unit_c],[unit_Q,unit_c]]]]为例
+#间接左递归转直接左递归,返回修改后的listvaluenoOr，如：[[['a'],['S','a']],[['b'],['R','b']]](R的value转成的列表和Q的value组成的列表) -> [[['a'],['S','a']],[['b'],[['S','a','b'],['a','b']]]
+def DisDirectRecursionToDirect(listkey:list,listvaluenoOr:list):
+    
+    for i in range(len(listkey)):
         for j in range(i):
-            for k in range(len(listLeftRight[i][1])):  # [[unit_a],[unit_S,unit_a]]
-                if listLeftRight[i][1][k][0] == listLeftRight[j][
-                    0]:  # 例如：listLeftRight[1][1][1][0]=unit_R = listLeftRight[0][0]
-                    lastlist = listLeftRight[i][1][k][1:]  # [unit_R,unit_b]转成[unit_b]
-                    del listLeftRight[i][1][k]
-                    for frontlist in listLeftRight[j][1]:
-                        newlist = frontlist + lastlist  # [unit_a]+[unit_b]或[unit_S,unit_a]+[unit_b]
-                        listLeftRight[i][1].append(
-                            newlist)  # 以[unit_Q,[[Unit_b],[unit_R,unit_b]]]为例，变成了[unit_Q,[[Unit_b],[unit_a,unit_b],[unit_S,unit_a,unit_b]]]
-    # #消除直接左递归
-    # for liLR in  listLeftRight:
-    #     for li in liLR[1]:
-    #         if li[0] == liLR[0]:
-    #             RemovedDirectList = remove_direct_left_recursion(liLR)
-    #             listLeftRight=[RemovedDirectList if i ==liLR else i for i in listLeftRight]
+            for k in range(len(listvaluenoOr[i])):
+                if listvaluenoOr[i][k][0] == listkey[j]:
+                    lastlist = listvaluenoOr[i][k][1:]
+                    del listvaluenoOr[i][k]
+                    for headlist in listvaluenoOr[j]:
+                        newlist = headlist +lastlist
+                        listvaluenoOr[i].append(newlist)
 
-    g_result = TurnListToGrammar(listLeftRight)
+    return listvaluenoOr
+    pass
 
-    return g_result
+def remove_left_recursion():  # TODO 消除一个文法的左递归
+    #grammar_list = ['R -> a | S a','Q -> b | R b','S -> c | Q c']
+    #{'R':['a','|','S','a'],Q:['b','|','R','b']}
+    
+    #获得c--文本转化的字典
+    dictLeftRight =  GrammartextTodict()
+    #把字典的键和值分别转换成列表
+    listkey = list(dictLeftRight.keys())
+    listvalue = dictLeftRight.values()
+    #值列表去除‘|’，以其分割成多个子列表，便于后续转成直接左递归
+    listvaluenoOr = getnoOrList(listvalue)
+    #间接左递归转成直接左递归
+    newlistvaluenoOr = DisDirectRecursionToDirect(listvaluenoOr)
+    #消除直接左递归，返回一个字典，tuple[0]是键列表，tuple[1]是值列表
+    tuple_of_listofKeyValue = remove_direct_left_recursion(listkey,newlistvaluenoOr)
+    #把结果再转化成字典，格式与GrammartextTodict()统一
+    indirect_dict = twoListTodict(tuple_of_listofKeyValue[0],tuple_of_listofKeyValue[1])
+    #化简
+    simplified_indirect_dict = simplified(indirect_dict)
+        
+    return  simplified_indirect_dict
     pass
 
 

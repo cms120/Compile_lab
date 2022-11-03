@@ -56,7 +56,7 @@ class Production:
 
         return p
 
-    def remove_direct_left_recursion(self) -> List:
+    def remove_direct_left_recursion(self, non_terminals: Set[str]) -> List:
         """
         消除一个产生式的直接左递归
 
@@ -86,7 +86,7 @@ class Production:
         """
         获得一个产生式的First集
         """
-
+        # TODO 没有处理非终结符
         for r in self.right:  # 遍历产生式的每个候选
             self.first[r] = r[0]
 
@@ -96,6 +96,26 @@ class Production:
         """
 
         return len(set(self.first.values())) != len(self.first.keys())
+
+    def remove_recall(self) -> List:
+        """
+        消除回溯 返回若干产生式 提取左因子
+        """
+        left_factor = ''  # 相同左因子
+        ch_set: Set[str] = set()
+        for ch in self.first.values():  # 遍历values 查找左因子
+            if ch in ch_set:
+                left_factor = ch
+                break
+            else:
+                ch_set.add(ch)
+
+        new_left = self.left
+
+        res = [Production(self.left, set()), Production(new_left, set())]
+        for r in self.right:
+            if r[0] == left_factor:
+                pass
 
 
 class Grammar:
@@ -157,8 +177,18 @@ class Grammar:
         ]
         """
         for line in lines:
-            production = Production.init_by_line(line)
-            self.add_production(production)
+            ps = Production.init_by_line(line)
+            for p in ps:
+                self.add_production(p)
+
+    def get_new_non_terminal(self, now: str) -> str:
+        """
+        传
+        """
+        res = now
+        while res in self.non_terminals:
+            res += '\''
+        return res
 
 
 def get_grammar_c_minus() -> Grammar:

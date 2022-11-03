@@ -8,3 +8,6 @@ class GrammarTest(unittest.TestCase):
         self.assertTrue(True)
 
         print(get_grammar_c_minus())
+
+    def test_remove_recall(self):
+        pass

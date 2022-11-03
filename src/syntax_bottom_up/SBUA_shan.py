@@ -7,12 +7,16 @@ from src.syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
 
 
 def remove_recall(g: Grammar):
+    # TODO
+    new_p: List[Production] = []  # 新地产生式集合
     for item in g.productions.items():
-        p = Production(item[0],item[1])
+        p = Production(item[0], item[1])
         p.set_first()
-        if p.check_first():# 有相交
-            pass
+        if p.check_first():  # 有相交
+            new_p += p.remove_recall()
 
+    for p in new_p:
+        g.add_production(p)
 
 
 def remove_left_recursion_simple(g: Grammar):

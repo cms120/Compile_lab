@@ -4,6 +4,16 @@ from typing import Dict, Tuple, List, Set
 from src.util import read_file, spilt_list, tuple_str
 
 
+def get_new_non_terminal(non_terminals: Set[str], now: str) -> str:
+    """
+    传入已有的非终结符 得到一个新的非终结符
+    """
+    res = now
+    while res in non_terminals:
+        res += '\''
+    return res
+
+
 class Production:
     def __init__(self, left: str, right: Set[Tuple[str]]):
         self.left = left
@@ -180,15 +190,6 @@ class Grammar:
             ps = Production.init_by_line(line)
             for p in ps:
                 self.add_production(p)
-
-    def get_new_non_terminal(self, now: str) -> str:
-        """
-        传
-        """
-        res = now
-        while res in self.non_terminals:
-            res += '\''
-        return res
 
 
 def get_grammar_c_minus() -> Grammar:

@@ -1,7 +1,7 @@
 import string
 from typing import Dict, Tuple, List, Set
 
-from src.util import read_file, spilt_list, tuple_str
+from src.util import read_file, split_list, tuple_str
 
 
 def get_new_non_terminal(non_terminals: Set[str], now: str) -> str:
@@ -12,6 +12,57 @@ def get_new_non_terminal(non_terminals: Set[str], now: str) -> str:
     while res in non_terminals:
         res += '\''
     return res
+
+
+def get_new_tuple(t: Tuple[str], non_terminals: Set[str]):  # 只能满足一个tuple出现一对括号 待做
+    new_list = list(t)
+    left_index = new_list.index('(')
+    right_index = new_list.index(')')
+    if new_list[right_index + 1] == '*':
+        left = ''
+        new_list.pop(left_index)
+        new_list.pop(right_index)
+        new_list.pop(right_index + 1)
+        new_tuple = tuple(new_list)
+
+        for s in list[left_index + 1:right_index:1]:
+            left += s
+        right = set()
+        right.add(tuple(left))
+        right.add(tuple('$'))
+
+    elif new_list[right_index + 1] == '?':
+        left = ''
+        new_list.pop(left_index)
+        new_list.pop(right_index)
+        new_list.pop(right_index + 1)
+        new_tuple = tuple(new_list)
+
+        for s in list[left_index + 1:right_index:1]:
+            left += s
+        right = set()
+        right.add(tuple(list[left_index + 1:right_index:1]))
+        right.add(tuple('$'))
+    else:
+        left = ''
+        new_list.pop(left_index)
+        new_list.pop(right_index)
+        new_tuple = tuple(new_list)
+
+        for s in list[left_index + 1:right_index:1]:
+            left += s
+        right = set(split_list(tuple(list[left_index + 1:right_index:1])))
+
+    p = Production(get_new_non_terminal(non_terminals, left), right)
+    return new_tuple, p
+
+
+def dont_have_regex_symbol(right):  # 判断是否有必要继续递归
+    for ch in ['(', ')', '|', '*', '?']:
+        for t in right:
+            if ch in t:
+                return False
+    return True
 
 
 class Production:
@@ -38,7 +89,32 @@ class Production:
         return False
 
     @staticmethod
-    def init_by_line(line: str) -> List:
+    def split_list_of_tuple(left: str, right: Set[Tuple[str]], non_terminals: Set[str]):
+        # 判断结束递归调用
+        if dont_have_regex_symbol(right):
+            return Production(left, right)
+
+        productin_list = []
+
+        new_right: Set[Tuple[str]] = set()  # right处理过的tuple的集合
+        for t in right:  # 遍历当前处理过外部'|'的右部
+
+            if '(' not in t:  # 不用处理的tuple
+                new_right.add(t)
+            else:
+                new_tuple, p = get_new_tuple(t, non_terminals)  # 从要处理的tuple中得到new_tuple以及新生成的production
+                productin_list.append(p)
+                new_right.add(new_tuple)
+
+        productin_list.append(Production(left, new_right))  # 将更新后的最初的的production加入到production_list中
+
+        res = []  # 递归
+        for p in productin_list:
+            res += Production.split_list_of_tuple(p.left, p.right, non_terminals)
+        return res
+
+    @staticmethod
+    def init_by_line(non_terminals: Set[str], line: str) -> List:
         """
         根据一行grammar得到若干production
 
@@ -57,14 +133,14 @@ class Production:
         left_and_right = line.split(' -> ')
         assert len(left_and_right) == 2, 'error left_and_right: ' + line
 
-        right_with_or = left_and_right[1].split(' ')
+        right_with_or = left_and_right[1].split(' ')  # 分割字符串得到右边部分
         assert len(right_with_or) >= 1, 'error in right_group: ' + line
 
-        right_without_or = set(spilt_list(tuple(right_with_or)))
+        right_without_outSides_brackets_or = set(split_list(tuple(right_with_or)))
 
-        p = Production(left_and_right[0], right_without_or)
+        res = Production.split_list_of_tuple(left_and_right[0], right_without_outSides_brackets_or, non_terminals)
 
-        return [p]
+        return [res]
 
     def remove_direct_left_recursion(self, non_terminals: Set[str]) -> List:
         """
@@ -131,6 +207,7 @@ class Production:
         res = [Production(self.left, set()), Production(new_non_terminal, set())]
         res[0].right.add(tuple([left_factor, new_non_terminal]))
 
+        res = [Production(self.left, set()), Production(new_left, set())]
         for r in self.right:
             if r[0] == left_factor:
                 res[1].right.add(r[1:])

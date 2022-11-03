@@ -40,7 +40,7 @@ class Production:
     @staticmethod
     def init_by_line(line: str) -> List:
         """
-        根据一行grammar得到key和val
+        根据一行grammar得到若干production
 
         :param line: 1. Program -> compUnit;
         :returns: (Program,(compUnit))

@@ -1,38 +1,57 @@
 import string
 from typing import Dict, Tuple, List, Set
 
-from src.util import read_file
+from src.util import read_file, spilt_list
 
 
 class Grammar:
-    def __init__(self):
-        self.productions: Dict[str, Tuple[str]] = dict()
+    def __init__(self, s: str = 'Program'):
+        """
+        :param s: 开始符号
+        """
+        self.productions: Dict[str, Set[Tuple[str]]] = dict()
         self.terminals: Set[str] = set()
         self.non_terminals: Set[str] = set()
+        self.s = s
 
-    def add_production(self, production: Tuple[str, Tuple[str]]) -> None:
-        self.productions[production[0]] = production[1]
+    def add_production_without_or(self, production: Tuple[str, Tuple[str]]) -> None:
+        """
+        :param production: 一条去除了 | 的产生式
+        """
+        if self.productions.get(production[0]) is None:
+            self.productions[production[0]] = {production[1]}
+        else:
+            self.productions[production[0]].add(production[1])
+
+    def add_production_with_or(self, production: Tuple[str, List[Tuple[str]]]) -> None:
+        """
+        :param production: 未去除 | 的产生式
+        """
+        for right_without_or in production[1]:
+            self.add_production_without_or((production[0], right_without_or))
 
     def __str__(self):
-        s = ''
+        res = ''
         for left, right in self.productions.items():
-            s += left + ' ->'
+            res += left + ' ->'
             for r in right:
-                s += ' ' + r
-            s += '\n'
-        s += '\n'
+                res += ' ' + str(r)
+            res += '\n'
+        res += '\n'
 
-        s += 'terminals:'
+        res += 'terminals:'
         for t in self.terminals:
-            s += ' ' + t
-        s += '\nnon_terminals:'
+            res += ' ' + t
+        res += '\nnon_terminals:'
         for nt in self.non_terminals:
-            s += ' ' + nt
-        s += '\n'
-        return s
+            res += ' ' + nt
+        res += '\n'
+
+        res += 's: ' + self.s + '\n'
+        return res
 
     @staticmethod
-    def get_production_by_line(line: str) -> Tuple[str, Tuple[str]]:
+    def get_production_by_line(line: str) -> Tuple[str, List[Tuple[str]]]:
         """
         根据一行grammar得到key和val
 
@@ -51,10 +70,10 @@ class Grammar:
         left_and_right = line.split(' -> ')
         assert len(left_and_right) == 2, 'error left_and_right: ' + line
 
-        right_groups = left_and_right[1].split(' ')
-        assert len(right_groups) >= 1, 'error in right_group: ' + line
+        right_with_or = left_and_right[1].split(' ')
+        assert len(right_with_or) >= 1, 'error in right_group: ' + line
 
-        return left_and_right[0], tuple(right_groups)
+        return left_and_right[0], spilt_list(tuple(right_with_or))
 
     def get_first(self) -> dict:  # TODO 获得一个文法的first集
         pass
@@ -68,37 +87,14 @@ class Grammar:
         """
         for line in lines:
             production = Grammar.get_production_by_line(line)
-            self.add_production(production)
+            self.add_production_with_or(production)
             self.non_terminals.add(production[0])
             for r in production[1]:
-                if r.startswith('\'') and r.endswith('\''):
-                    self.terminals.add(r)
-                else:
-                    self.non_terminals.add(r)
-
-    @staticmethod
-    def divide_by_or_op(right: Tuple[str]) -> List[Tuple[str]]:  # 暂时没用 将产生式右端根据 | 拆分 这里 | 不能出现在开始和结束
-        indexes = []  # | 的索引
-        rights: List[Tuple[str]] = []
-        l_par = 0
-        for i in range(len(right)):
-            if right[i] == '|':
-                if l_par == 0:  # 不在括号中
-                    indexes.append(i)
-            if right[i] == '(':
-                l_par += 1
-
-            if right[i] == ')':
-                l_par -= 1
-        if len(indexes) == 0:
-            rights = [right]
-        else:
-            rights.append(right[:indexes[0]])
-            for i in range(len(indexes) - 1):
-                rights.append(right[indexes[i] + 1:indexes[i + 1]])
-            rights.append(right[indexes[-1] + 1:])
-
-        return rights
+                for ch in r:
+                    if ch.startswith('\'') and ch.endswith('\''):
+                        self.terminals.add(ch)
+                    else:
+                        self.non_terminals.add(ch)
 
 
 def get_grammar_c_minus() -> Grammar:

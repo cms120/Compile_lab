@@ -1,38 +1,25 @@
 import string
 from typing import Dict, Tuple, List, Set
 
-from src.util import read_file
+from src.util import read_file, spilt_list
 
 
-class Grammar:
-    def __init__(self):
-        self.productions: Dict[str, Tuple[str]] = dict()
-        self.terminals: Set[str] = set()
-        self.non_terminals: Set[str] = set()
+class Production:
+    def __init__(self, left: str, right: Set[Tuple[str]]):
+        self.left = left
+        self.right = right
 
-    def add_production(self, production: Tuple[str, Tuple[str]]) -> None:
-        self.productions[production[0]] = production[1]
-
-    def __str__(self):
-        s = ''
-        for left, right in self.productions.items():
-            s += left + ' ->'
-            for r in right:
-                s += ' ' + r
-            s += '\n'
-        s += '\n'
-
-        s += 'terminals:'
-        for t in self.terminals:
-            s += ' ' + t
-        s += '\nnon_terminals:'
-        for nt in self.non_terminals:
-            s += ' ' + nt
-        s += '\n'
-        return s
+    def if_direct_left_recursion(self) -> bool:
+        """
+        检查一条产生式是否有直接左递归
+        """
+        for r in self.right:
+            if r[0] == self.left:
+                return True
+        return False
 
     @staticmethod
-    def get_production_by_line(line: str) -> Tuple[str, Tuple[str]]:
+    def init_by_line(line: str):
         """
         根据一行grammar得到key和val
 
@@ -51,10 +38,84 @@ class Grammar:
         left_and_right = line.split(' -> ')
         assert len(left_and_right) == 2, 'error left_and_right: ' + line
 
-        right_groups = left_and_right[1].split(' ')
-        assert len(right_groups) >= 1, 'error in right_group: ' + line
+        right_with_or = left_and_right[1].split(' ')
+        assert len(right_with_or) >= 1, 'error in right_group: ' + line
 
-        return left_and_right[0], tuple(right_groups)
+        right_without_or = set(spilt_list(tuple(right_with_or)))
+
+        right_without_regex = set
+        return Production(left_and_right[0], right_without_regex)
+
+    def remove_direct_left_recursion(self) -> List:
+        """
+        消除一个产生式的直接左递归
+
+        P -> Pa1 | Pa2 | b1 | b2
+
+        P -> b1P' | b2P'
+        P' -> a1P' | a2P'
+        :returns: 新的两个产生式
+
+
+        """
+        res: List[Production] = [Production(self.left, set()), Production(self.left + '\'', set())]
+
+        for r in self.right:
+            if r[0] == self.left:  # 以P起始
+                new_right = tuple(list(r[1:]) + [self.left + '\''])
+
+                res[1].right.add(new_right)
+            else:
+                new_right = tuple(list(r) + [self.left + '\''])
+                res[0].right.add(new_right)
+
+        res[1].right.add(tuple('$'))
+        return res
+
+
+class Grammar:
+    def __init__(self, s: str = 'Program'):
+        """
+        :param s: 开始符号
+        """
+        self.productions: Dict[str, Set[Tuple[str]]] = dict()
+        self.terminals: Set[str] = set()
+        self.non_terminals: Set[str] = set()
+        self.s = s
+
+    def add_production(self, p: Production) -> None:
+        """
+        添加产生式
+        """
+        self.productions[p.left] = p.right
+
+        self.non_terminals.add(p.left)
+        for r in p.right:
+            for str_r in r:
+                if str_r.startswith('\'') and str_r.endswith('\''):
+                    self.terminals.add(str_r)
+                else:
+                    self.non_terminals.add(str_r)
+
+    def __str__(self):
+        res = ''
+        for left, right in self.productions.items():
+            res += left + ' ->'
+            for r in right:
+                res += ' ' + str(r)
+            res += '\n'
+        res += '\n'
+
+        res += 'terminals:'
+        for t in self.terminals:
+            res += ' ' + t
+        res += '\nnon_terminals:'
+        for nt in self.non_terminals:
+            res += ' ' + nt
+        res += '\n'
+
+        res += 's: ' + self.s + '\n'
+        return res
 
     def get_first(self) -> dict:  # TODO 获得一个文法的first集
         pass
@@ -67,38 +128,8 @@ class Grammar:
         通过多行程序来构造语法
         """
         for line in lines:
-            production = Grammar.get_production_by_line(line)
+            production = Production.init_by_line(line)
             self.add_production(production)
-            self.non_terminals.add(production[0])
-            for r in production[1]:
-                if r.startswith('\'') and r.endswith('\''):
-                    self.terminals.add(r)
-                else:
-                    self.non_terminals.add(r)
-
-    @staticmethod
-    def divide_by_or_op(right: Tuple[str]) -> List[Tuple[str]]:  # 暂时没用 将产生式右端根据 | 拆分 这里 | 不能出现在开始和结束
-        indexes = []  # | 的索引
-        rights: List[Tuple[str]] = []
-        l_par = 0
-        for i in range(len(right)):
-            if right[i] == '|':
-                if l_par == 0:  # 不在括号中
-                    indexes.append(i)
-            if right[i] == '(':
-                l_par += 1
-
-            if right[i] == ')':
-                l_par -= 1
-        if len(indexes) == 0:
-            rights = [right]
-        else:
-            rights.append(right[:indexes[0]])
-            for i in range(len(indexes) - 1):
-                rights.append(right[indexes[i] + 1:indexes[i + 1]])
-            rights.append(right[indexes[-1] + 1:])
-
-        return rights
 
 
 def get_grammar_c_minus() -> Grammar:

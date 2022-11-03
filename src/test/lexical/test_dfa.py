@@ -2,6 +2,7 @@ import unittest
 
 from lexical.regex.regex import Regex
 from lexical.regex.rules import Rules
+
 from src.lexical.deterministic_finite_automation import fa_2_dfa, DFA, dfa_minimize, get_dfa_minimize_c_minus, \
     get_dfa_c_minus
 from src.lexical.finite_automation import FA

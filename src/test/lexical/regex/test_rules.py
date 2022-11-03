@@ -2,6 +2,7 @@ import unittest
 
 from lexical.regex.regex import Regex
 from lexical.regex.rules import Rules, get_rules_c_minus
+
 from src.test.lexical.test_case import re_s
 
 

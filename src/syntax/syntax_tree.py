@@ -11,5 +11,5 @@ class SyntaxTreeNode:  # 书中的一个节点
 
 
 class SyntaxTree:
-    def __init__(self, s):
+    def __init__(self, s: SyntaxTreeNode):
         self.s = s

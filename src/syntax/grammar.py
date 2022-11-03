@@ -64,7 +64,7 @@ class Production:
 
         p = Production(left_and_right[0], right_without_or)
 
-        return p
+        return [p]
 
     def remove_direct_left_recursion(self, non_terminals: Set[str]) -> List:
         """
@@ -81,12 +81,13 @@ class Production:
         res: List[Production] = [Production(self.left, set()), Production(self.left + '\'', set())]
 
         for r in self.right:
+            new_non_terminal = get_new_non_terminal(non_terminals, self.left)
             if r[0] == self.left:  # 以P起始
-                new_right = tuple(list(r[1:]) + [self.left + '\''])
+                new_right = tuple(list(r[1:]) + [new_non_terminal])
 
                 res[1].right.add(new_right)
             else:
-                new_right = tuple(list(r) + [self.left + '\''])
+                new_right = tuple(list(r) + [new_non_terminal])
                 res[0].right.add(new_right)
 
         res[1].right.add(tuple(['\'$\'']))
@@ -107,10 +108,16 @@ class Production:
 
         return len(set(self.first.values())) != len(self.first.keys())
 
-    def remove_recall(self) -> List:
+    def remove_recall(self, non_terminals: Set[str]) -> List:
         """
         消除回溯 返回若干产生式 提取左因子
+
+        :returns: 两个新的产生式
         """
+        self.set_first()
+        if not self.check_first():  # 没有回溯
+            return [self]
+
         left_factor = ''  # 相同左因子
         ch_set: Set[str] = set()
         for ch in self.first.values():  # 遍历values 查找左因子
@@ -120,12 +127,17 @@ class Production:
             else:
                 ch_set.add(ch)
 
-        new_left = self.left
+        new_non_terminal = get_new_non_terminal(non_terminals, self.left)
+        res = [Production(self.left, set()), Production(new_non_terminal, set())]
+        res[0].right.add(tuple([left_factor, new_non_terminal]))
 
-        res = [Production(self.left, set()), Production(new_left, set())]
         for r in self.right:
             if r[0] == left_factor:
-                pass
+                res[1].right.add(r[1:])
+            else:
+                res[0].right.add(r)
+
+        return res[0].remove_recall(non_terminals) + res[1].remove_recall(non_terminals)  # 递归调用消除所有递归
 
 
 class Grammar:

@@ -7,16 +7,14 @@ from src.syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
 
 
 def remove_recall(g: Grammar):
-    # TODO
-    new_p: List[Production] = []  # 新地产生式集合
-    for item in g.productions.items():
-        p = Production(item[0], item[1])
-        p.set_first()
-        if p.check_first():  # 有相交
-            new_p += p.remove_recall()
-
-    for p in new_p:
-        g.add_production(p)
+    """
+    消除一个文法的回溯 通过不断地提取左因子
+    """
+    non_ter_list = list(g.non_terminals)
+    for non_ter in non_ter_list:
+        p = Production(non_ter, g.productions[non_ter])
+        for p_new in p.remove_recall(g.non_terminals):
+            g.add_production(p_new)
 
 
 def remove_left_recursion_simple(g: Grammar):
@@ -52,19 +50,9 @@ def remove_direct_left_recursion_single(g: Grammar, p_i: str):
 
     p = Production(p_i, g.productions[p_i])
     if p.if_direct_left_recursion():
-        ps = p.remove_direct_left_recursion()
+        ps = p.remove_direct_left_recursion(g.non_terminals)
         for p_new in ps:
             g.add_production(p_new)
-
-    new_p: List[Production] = []
-    for item in g.productions.items():
-        p = Production(item[0], item[1])
-        if p.if_direct_left_recursion():
-            ps = p.remove_direct_left_recursion()
-            new_p += ps
-
-    for p in new_p:
-        g.add_production(p)
 
 
 def remove_left_recursion_single(g: Grammar, p_i: str, p_j: str):

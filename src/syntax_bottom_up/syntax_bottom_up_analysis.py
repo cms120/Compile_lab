@@ -1,3 +1,4 @@
+import copy
 import string
 
 import src.lexical.lexical_analysis as la
@@ -131,7 +132,6 @@ def simplified(dic: dict):  # 化简 TODO
                 print('value=', value)
     return newdict
 
-    pass
 
 
 # 间接左递归转直接左递归,返回修改后的listvaluenoOr，如：[[['a'],['S','a']],[['b'],['R','b']]](R的value转成的列表和Q的value组成的列表) -> [[['a'],['S','a']],[['b'],[['S','a','b'],['a','b']]]
@@ -159,6 +159,7 @@ def remove_left_recursion():  # TODO 消除一个文法的左递归
     # 把字典的键和值分别转换成列表
     listkey = list(dictLeftRight.keys())
     listvalue = dictLeftRight.values()
+
     # 值列表去除‘|’，以其分割成多个子列表，便于后续转成直接左递归
     listvaluenoOr = getnoOrList(listvalue)
     # 间接左递归转成直接左递归
@@ -171,7 +172,6 @@ def remove_left_recursion():  # TODO 消除一个文法的左递归
     simplified_indirect_dict = simplified(indirect_dict)
 
     return simplified_indirect_dict
-    pass
 
 
 def remove_recall(g: dict):  # TODO 消除回溯

@@ -1,6 +1,6 @@
 import unittest
 
-from lexical.regex.regex import Regex
+from src.lexical.regex.regex import Regex
 
 from src.lexical.finite_automation import *
 from src.lexical.finite_automation import FA

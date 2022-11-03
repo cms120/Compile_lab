@@ -1,13 +1,21 @@
 import string
 from typing import Dict, Tuple, List, Set
 
-from src.util import read_file, spilt_list
+from src.util import read_file, spilt_list, tuple_str
 
 
 class Production:
     def __init__(self, left: str, right: Set[Tuple[str]]):
         self.left = left
         self.right = right
+
+    def __str__(self):
+        res = self.left + '-> '
+
+        for r in self.right:
+            res += tuple_str(r) + ' '
+        res += '\n'
+        return res
 
     def if_direct_left_recursion(self) -> bool:
         """
@@ -43,8 +51,8 @@ class Production:
 
         right_without_or = set(spilt_list(tuple(right_with_or)))
 
-        right_without_regex = set
-        return Production(left_and_right[0], right_without_regex)
+        # right_without_regex = set()  # TODO 消除正则表达式
+        return Production(left_and_right[0], right_without_or)
 
     def remove_direct_left_recursion(self) -> List:
         """
@@ -69,7 +77,7 @@ class Production:
                 new_right = tuple(list(r) + [self.left + '\''])
                 res[0].right.add(new_right)
 
-        res[1].right.add(tuple('$'))
+        res[1].right.add(tuple(['\'$\'']))
         return res
 
 
@@ -82,6 +90,26 @@ class Grammar:
         self.terminals: Set[str] = set()
         self.non_terminals: Set[str] = set()
         self.s = s
+
+    def __str__(self):
+        res = ''
+        for left, right in self.productions.items():
+            res += left + ' -> '
+            for r in right:
+                res += tuple_str(r) + ' '
+            res += '\n'
+        res += '\n'
+
+        res += 'terminals:'
+        for t in self.terminals:
+            res += ' ' + t
+        res += '\nnon_terminals:'
+        for nt in self.non_terminals:
+            res += ' ' + nt
+        res += '\n'
+
+        res += 's: ' + self.s + '\n'
+        return res
 
     def add_production(self, p: Production) -> None:
         """
@@ -97,26 +125,6 @@ class Grammar:
                 else:
                     self.non_terminals.add(str_r)
 
-    def __str__(self):
-        res = ''
-        for left, right in self.productions.items():
-            res += left + ' ->'
-            for r in right:
-                res += ' ' + str(r)
-            res += '\n'
-        res += '\n'
-
-        res += 'terminals:'
-        for t in self.terminals:
-            res += ' ' + t
-        res += '\nnon_terminals:'
-        for nt in self.non_terminals:
-            res += ' ' + nt
-        res += '\n'
-
-        res += 's: ' + self.s + '\n'
-        return res
-
     def get_first(self) -> dict:  # TODO 获得一个文法的first集
         pass
 
@@ -126,6 +134,8 @@ class Grammar:
     def init_by_lines(self, lines: List[str]) -> None:
         """
         通过多行程序来构造语法
+        ['R -> S 'a' | 'a''
+        ]
         """
         for line in lines:
             production = Production.init_by_line(line)

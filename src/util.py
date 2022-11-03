@@ -52,3 +52,10 @@ def spilt_list(l: Tuple[str], ch: str = '|') -> List[Tuple[str]]:
         res.append(l[indexes[-1] + 1:])
 
     return res
+
+
+def tuple_str(t: Tuple[str]) -> str:
+    res = '( '
+    for s in t:
+        res += s + ' '
+    return res + ')'

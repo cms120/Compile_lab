@@ -7,7 +7,12 @@ from src.syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
 
 
 def remove_recall(g: Grammar):
-    pass
+    for item in g.productions.items():
+        p = Production(item[0],item[1])
+        p.set_first()
+        if p.check_first():# 有相交
+            pass
+
 
 
 def remove_left_recursion_simple(g: Grammar):

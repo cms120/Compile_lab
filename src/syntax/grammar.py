@@ -8,6 +8,7 @@ class Production:
     def __init__(self, left: str, right: Set[Tuple[str]]):
         self.left = left
         self.right = right
+        self.first: Dict[tuple[str], str] = dict()
 
     def __str__(self):
         res = self.left + '-> '
@@ -27,7 +28,7 @@ class Production:
         return False
 
     @staticmethod
-    def init_by_line(line: str):
+    def init_by_line(line: str) -> List:
         """
         根据一行grammar得到key和val
 
@@ -51,8 +52,9 @@ class Production:
 
         right_without_or = set(spilt_list(tuple(right_with_or)))
 
-        # right_without_regex = set()  # TODO 消除正则表达式
-        return Production(left_and_right[0], right_without_or)
+        p = Production(left_and_right[0], right_without_or)
+
+        return p
 
     def remove_direct_left_recursion(self) -> List:
         """
@@ -80,6 +82,21 @@ class Production:
         res[1].right.add(tuple(['\'$\'']))
         return res
 
+    def set_first(self):
+        """
+        获得一个产生式的First集
+        """
+
+        for r in self.right:  # 遍历产生式的每个候选
+            self.first[r] = r[0]
+
+    def check_first(self) -> bool:
+        """
+        检查一个产生式的候选 first集是否相交
+        """
+
+        return len(set(self.first.values())) != len(self.first.keys())
+
 
 class Grammar:
     def __init__(self, s: str = 'Program'):
@@ -87,9 +104,11 @@ class Grammar:
         :param s: 开始符号
         """
         self.productions: Dict[str, Set[Tuple[str]]] = dict()
-        self.terminals: Set[str] = set()
-        self.non_terminals: Set[str] = set()
+        self.terminals: Set[str] = set()  # 终结符
+        self.non_terminals: Set[str] = set()  # 非终结符
         self.s = s
+        self.first: Dict[str, Dict[Tuple[str], str]] = dict()
+        self.follow = dict()
 
     def __str__(self):
         res = ''
@@ -125,10 +144,10 @@ class Grammar:
                 else:
                     self.non_terminals.add(str_r)
 
-    def get_first(self) -> dict:  # TODO 获得一个文法的first集
+    def set_first(self):  # TODO 获得一个文法的first集
         pass
 
-    def get_follow(self) -> dict:  # TODO 获得一个文法的follow集
+    def set_follow(self):  # TODO 获得一个文法的follow集
         pass
 
     def init_by_lines(self, lines: List[str]) -> None:

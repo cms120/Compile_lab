@@ -8,27 +8,6 @@ from src.syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
 from src.util import read_file
 
 
-# 根据文法来分析token list
-
-
-def check_left_recursion(g: Grammar) -> bool:  # 检查一个文法是否有左递归
-    pass
-
-
-def check_first(g: Grammar) -> bool:  # 检查一个文法的first集
-    first_dict = g.get_first()
-    pass
-
-
-def check_follow(g: Grammar) -> bool:  # 检查一个文法的follow集
-    follow_dict = g.get_follow()
-    pass
-
-
-def check_if_ll_one(g: Grammar) -> bool:  # 检查一个文法是否是ll(1)
-    return check_follow(g) and check_first(g) and check_left_recursion(g)
-
-
 def analysis() -> SyntaxTree:  # c--的语法分析
     return analysis_without_back(get_grammar_c_minus(),
                                  la.analysis())
@@ -133,7 +112,6 @@ def simplified(dic: dict):  # 化简 TODO
     return newdict
 
 
-
 # 间接左递归转直接左递归,返回修改后的listvaluenoOr，如：[[['a'],['S','a']],[['b'],['R','b']]](R的value转成的列表和Q的value组成的列表) -> [[['a'],['S','a']],[['b'],[['S','a','b'],['a','b']]]
 def DisDirectRecursionToDirect(listkey: list, listvaluenoOr: list):
     for i in range(len(listkey)):
@@ -188,7 +166,6 @@ def remove_recall(g: dict):  # TODO 消除回溯
         for k2 in range(len(llr[k1][1]) - 1):
             llr[k1][1][k2].pop()
 
-    # print(llr)
     num = 0
     g_r = {}
     while num == 0:
@@ -200,9 +177,6 @@ def remove_recall(g: dict):  # TODO 消除回溯
             for j in range(len(llr[i][1])):  # 同上遍历
                 a = llr[i][1][j][0]
                 dict1.setdefault(a, [])
-                # print (dict1)
-                # print(llr[i][1][j])
-                # print(llr[i][1][j][1:])
                 if llr[i][1][j][1:] != []:  # 某符号后有一个及以上符号，正常分开
                     dict1[llr[i][1][j][0]].append(llr[i][1][j][1:])
                     # print(dict1)
@@ -218,12 +192,10 @@ def remove_recall(g: dict):  # TODO 消除回溯
                     else:
                         newd1[llr[i][0]].append([fu])
 
-                    # print(newd1)
                 else:
                     newstr = str(llr[i][0]) + 's'  # 新建产生式左端为原产生式左端加s，即S变为S和Ss
                     newd1[llr[i][0]].append([fu] + [newstr])
                     newd1.setdefault(newstr, dict1[fu])
-                    # newd1[newstr].append(dict1[fu])
             for fu1 in newd1.keys():
                 nllr1.append([fu1, newd1[fu1]])  # 更新nllr1
         if nllr1 == llr:
@@ -232,7 +204,6 @@ def remove_recall(g: dict):  # TODO 消除回溯
             llr = copy.deepcopy(nllr1)
     for i in range(len(llr)):
         g_r.setdefault(llr[i][0], llr[i][1])
-    # print(g_r)
     listA = {}
     for l in g_r:
 
@@ -243,10 +214,8 @@ def remove_recall(g: dict):  # TODO 消除回溯
                 listA[l].append('|')
             for unit in listU:
                 listA[l].append(unit)
-    # print(listA[l])
-    return listA
 
-    pass
+    return listA
 
 
 def analysis_with_back(g: Grammar, tokens: list[Token]) -> SyntaxTree:  # 带有回溯的分析一个token list TODO 不能含有左递归

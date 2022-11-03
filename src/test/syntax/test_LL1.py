@@ -1,15 +1,15 @@
 import sys
+
 sys.path.append('D:/Complie/compile_lab')
-from src.syntax_bottom_up.syntax_bottom_up_analysis import grammar_text_to_dict,get_no_or_list,DisDirectRecursionToDirect,remove_direct_left_recursion,two_list_to_dict,simplified
+from src.syntax_bottom_up.syntax_bottom_up_analysis import grammar_text_to_dict, get_no_or_list, \
+    DisDirectRecursionToDirect, remove_direct_left_recursion, two_list_to_dict, simplified
 
-
-
-listvalueNoor= get_no_or_list(grammar_text_to_dict().values())
+listvalueNoor = get_no_or_list(grammar_text_to_dict().values())
 listkey = list(grammar_text_to_dict().keys())
 
-Direct_list_no_key = DisDirectRecursionToDirect(listkey,listvalueNoor)
+Direct_list_no_key = DisDirectRecursionToDirect(listkey, listvalueNoor)
 
-tuplee =remove_direct_left_recursion(listkey,Direct_list_no_key)
+tuplee = remove_direct_left_recursion(listkey, Direct_list_no_key)
 
 dictre = two_list_to_dict(tuplee[0], tuplee[1])
 

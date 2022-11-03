@@ -1,6 +1,6 @@
 import unittest
 
-from src.syntax.grammar import Grammar,get_grammar_c_minus
+from src.syntax.grammar import get_grammar_c_minus
 
 
 class GrammarTest(unittest.TestCase):

@@ -46,4 +46,3 @@ class LexicalUnit(Enum):
     @classmethod
     def check_val(cls, val: str) -> bool:  # 检查值是否存在
         return val in cls._value2member_map_.keys()
-

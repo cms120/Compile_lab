@@ -114,11 +114,12 @@ class Production:
         return res
 
     @staticmethod
-    def init_by_line(non_terminals: Set[str], line: str) -> List:
+    def init_by_line(line: str, non_terminals: Set[str]) -> List:
         """
         根据一行grammar得到若干production
 
         :param line: 1. Program -> compUnit;
+        :param non_terminals: 用于获得下一个非终结符
         :returns: (Program,(compUnit))
         """
         i = 0
@@ -276,7 +277,7 @@ class Grammar:
         ]
         """
         for line in lines:
-            ps = Production.init_by_line(line)
+            ps = Production.init_by_line(line, self.non_terminals)
             for p in ps:
                 self.add_production(p)
 

@@ -23,7 +23,7 @@ def check_set_if_exist(set1: set, items: set):
     return False
 
 
-def spilt_list(l: Tuple[str], ch: str = '|') -> List[Tuple[str]]:
+def split_list(l: Tuple[str], ch: str = '|') -> List[Tuple[str]]:
     """
     以ch来分割list ch不能出现在开始和结尾 可以用()改变优先级
     :param l: (eqExp, relExp, |, eqExp, (, '==', |, '!=', ), relExp)

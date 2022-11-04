@@ -94,7 +94,7 @@ class Production:
         if dont_have_regex_symbol(right):
             return Production(left, right)
 
-        productin_list = []
+        production_list = []
 
         new_right: Set[Tuple[str]] = set()  # right处理过的tuple的集合
         for t in right:  # 遍历当前处理过外部'|'的右部
@@ -103,13 +103,13 @@ class Production:
                 new_right.add(t)
             else:
                 new_tuple, p = get_new_tuple(t, non_terminals)  # 从要处理的tuple中得到new_tuple以及新生成的production
-                productin_list.append(p)
+                production_list.append(p)
                 new_right.add(new_tuple)
 
-        productin_list.append(Production(left, new_right))  # 将更新后的最初的的production加入到production_list中
+        production_list.append(Production(left, new_right))  # 将更新后的最初的的production加入到production_list中
 
         res = []  # 递归
-        for p in productin_list:
+        for p in production_list:
             res += Production.split_list_of_tuple(p.left, p.right, non_terminals)
         return res
 
@@ -208,7 +208,6 @@ class Production:
         res = [Production(self.left, set()), Production(new_non_terminal, set())]
         res[0].right.add(tuple([left_factor, new_non_terminal]))
 
-        res = [Production(self.left, set()), Production(new_left, set())]
         for r in self.right:
             if r[0] == left_factor:
                 res[1].right.add(r[1:])

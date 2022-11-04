@@ -20,38 +20,45 @@ def get_new_tuple(t: Tuple[str], non_terminals: Set[str]):  # 只能满足一个
     right_index = new_list.index(')')
     if new_list[right_index + 1] == '*':
         left = ''
-        new_list.pop(left_index)
-        new_list.pop(right_index)
-        new_list.pop(right_index + 1)
+        right = set()
+        temp_list = new_list[left_index:right_index + 1:1]
+
+        for s in new_list[left_index + 1:right_index:1]:  # 构造left
+            left += s
+        left = get_new_non_terminal(non_terminals, left)
+        for i in range(left_index, right_index + 2):  # 将原tuple要替换的内容pop
+            new_list.pop(i)
+        new_list.insert(left_index, left)
         new_tuple = tuple(new_list)
 
-        for s in list[left_index + 1:right_index:1]:
-            left += s
-        right = set()
-        right.add(tuple(left))
+        temp_list.append(left)
+        right.add(tuple(temp_list))
         right.add(tuple('$'))
 
     elif new_list[right_index + 1] == '?':
         left = ''
-        new_list.pop(left_index)
-        new_list.pop(right_index)
-        new_list.pop(right_index + 1)
+        right = set()
+        right.add(tuple(new_list[left_index + 1:right_index:1]))
+        right.add(tuple('$'))
+
+        for s in new_list[left_index + 1:right_index:1]:  # 构造left
+            left += s
+        left = get_new_non_terminal(non_terminals, left)
+        for i in range(left_index, right_index + 2):  # 将原tuple要替换的内容pop
+            new_list.pop(i)
+        new_list.insert(left_index, left)
         new_tuple = tuple(new_list)
 
-        for s in list[left_index + 1:right_index:1]:
-            left += s
-        right = set()
-        right.add(tuple(list[left_index + 1:right_index:1]))
-        right.add(tuple('$'))
     else:
         left = ''
-        new_list.pop(left_index)
-        new_list.pop(right_index)
-        new_tuple = tuple(new_list)
-
-        for s in list[left_index + 1:right_index:1]:
+        right = split_list(tuple(new_list[left_index + 1:right_index:1]))
+        for s in new_list[left_index + 1:right_index:1]:  # 构造left
             left += s
-        right = set(split_list(tuple(list[left_index + 1:right_index:1])))
+        left = get_new_non_terminal(non_terminals, left)
+        for i in range(left_index, right_index + 1):  # 将原tuple要替换的内容pop
+            new_list.pop(i)
+        new_list.insert(left_index, left)
+        new_tuple = tuple(new_list)
 
     p = Production(get_new_non_terminal(non_terminals, left), right)
     return new_tuple, p

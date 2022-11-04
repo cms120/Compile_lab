@@ -9,8 +9,10 @@ def get_new_non_terminal(non_terminals: Set[str], now: str) -> str:
     传入已有的非终结符 得到一个新的非终结符
     """
     res = now
+    if res.startswith("'"):
+        res = 'n' + res
     while res in non_terminals:
-        res += '\''
+        res += "'"
     return res
 
 
@@ -27,10 +29,9 @@ def get_new_tuple(t: Tuple[str], non_terminals: Set[str]):  # 只能满足一个
             left += s
         left = get_new_non_terminal(non_terminals, left)
         for i in range(left_index, right_index + 2):  # 将原tuple要替换的内容pop
-            new_list.pop(i)
+            new_list.pop(left_index)
         new_list.insert(left_index, left)
         new_tuple = tuple(new_list)
-
         temp_list.append(left)
         right.add(tuple(temp_list))
         right.add(tuple('$'))
@@ -45,7 +46,7 @@ def get_new_tuple(t: Tuple[str], non_terminals: Set[str]):  # 只能满足一个
             left += s
         left = get_new_non_terminal(non_terminals, left)
         for i in range(left_index, right_index + 2):  # 将原tuple要替换的内容pop
-            new_list.pop(i)
+            new_list.pop(left_index)
         new_list.insert(left_index, left)
         new_tuple = tuple(new_list)
 
@@ -56,7 +57,7 @@ def get_new_tuple(t: Tuple[str], non_terminals: Set[str]):  # 只能满足一个
             left += s
         left = get_new_non_terminal(non_terminals, left)
         for i in range(left_index, right_index + 1):  # 将原tuple要替换的内容pop
-            new_list.pop(i)
+            new_list.pop(left_index)
         new_list.insert(left_index, left)
         new_tuple = tuple(new_list)
 
@@ -99,7 +100,7 @@ class Production:
     def split_list_of_tuple(left: str, right: Set[Tuple[str]], non_terminals: Set[str]):
         # 判断结束递归调用
         if dont_have_regex_symbol(right):
-            return Production(left, right)
+            return [Production(left, right)]
 
         productin_list = []
 
@@ -148,7 +149,7 @@ class Production:
 
         res = Production.split_list_of_tuple(left_and_right[0], right_without_outSides_brackets_or, non_terminals)
 
-        return [res]
+        return res
 
     def remove_direct_left_recursion(self, non_terminals: Set[str]) -> List:
         """
@@ -174,7 +175,7 @@ class Production:
                 new_right = tuple(list(r) + [new_non_terminal])
                 res[0].right.add(new_right)
 
-        res[1].right.add(tuple(['\'$\'']))
+        res[1].right.add(tuple(['$']))
         return res
 
     def set_first(self):
@@ -215,7 +216,6 @@ class Production:
         res = [Production(self.left, set()), Production(new_non_terminal, set())]
         res[0].right.add(tuple([left_factor, new_non_terminal]))
 
-        res = [Production(self.left, set()), Production(new_left, set())]
         for r in self.right:
             if r[0] == left_factor:
                 res[1].right.add(r[1:])
@@ -266,10 +266,11 @@ class Grammar:
         self.non_terminals.add(p.left)
         for r in p.right:
             for str_r in r:
-                if str_r.startswith('\'') and str_r.endswith('\''):
+                if (str_r.startswith('\'') and str_r.endswith('\'') ) or str_r == '$':
                     self.terminals.add(str_r)
                 else:
                     self.non_terminals.add(str_r)
+        assert '$' not in self.non_terminals,p
 
     def set_first(self):  # TODO 获得一个文法的first集
         pass

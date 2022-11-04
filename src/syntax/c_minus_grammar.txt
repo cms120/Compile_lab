@@ -1,5 +1,5 @@
 1. Program -> compUnit;
-2. compUnit -> ( decl | funcDef ) * EOF;
+2. compUnit -> ( decl | funcDef ) * 'EOF';
 3. decl -> constDecl | varDecl;
 4. constDecl -> 'const' bType constDef ( ',' constDef ) * ';';
 5. bType -> 'int';
@@ -31,5 +31,5 @@
 31. lAndExp -> eqExp | lAndExp '&&' eqExp;
 32. lOrExp -> lAndExp | lOrExp '||' lAndExp;
 33. constExp -> addExp;
-34. IntConst -> [0-9]+;
-35. Ident -> [a-zA-Z_][a-zA-Z_0-9]*;
+34. IntConst -> 'int';
+35. Ident -> 'idn';

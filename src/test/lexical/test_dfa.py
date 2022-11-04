@@ -1,12 +1,11 @@
 import unittest
 
-from src.lexical.regex.regex import Regex
-from src.lexical.regex.rules import Rules
-
 from src.lexical.deterministic_finite_automation import fa_2_dfa, DFA, dfa_minimize, get_dfa_minimize_c_minus, \
     get_dfa_c_minus
 from src.lexical.finite_automation import FA
 from src.lexical.graph import graph_dfa_print, graph_fa_print
+from src.lexical.regex.regex import Regex
+from src.lexical.regex.rules import Rules
 from src.test.lexical.test_case import fa_s, dfa_s, re_s
 
 

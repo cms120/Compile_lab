@@ -1,6 +1,6 @@
 import unittest
 
-from src.syntax.grammar import Grammar
+from src.syntax.grammar import Grammar,get_grammar_c_minus
 from src.syntax_bottom_up.SBUA_shan import remove_left_recursion, remove_recall
 from src.util import read_file
 
@@ -8,8 +8,7 @@ from src.util import read_file
 class SUBATest(unittest.TestCase):
     def test_remove_left_recursion(self):
         self.assertTrue(True)
-        g = Grammar()
-        g.init_by_lines(read_file('src/syntax/c_minus_grammar.txt'))
+        g = get_grammar_c_minus()
         remove_left_recursion(g)
         print(g)
 

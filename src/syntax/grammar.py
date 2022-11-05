@@ -1,8 +1,9 @@
+import os.path
 import string
 from collections import deque
 from typing import Dict, Tuple, List, Set, Deque
 
-from src.util import read_file, split_list, tuple_str
+from src.util import read_file, split_list, tuple_str, write_file
 
 
 def is_terminal(ter: str) -> bool:
@@ -191,7 +192,7 @@ class Production:
         res: List[Tuple[str]] = []
         for r in self.right:  # 遍历产生式的每个候选
             self.first[r] = r[0]
-            if not is_terminal(r[0]) :  # 不是非终结符且不为空
+            if not is_terminal(r[0]):  # 不是非终结符且不为空
                 res.append(r)
         return res
 
@@ -249,9 +250,9 @@ class Grammar:
     def __str__(self):
         res = ''
         for left, right in self.productions.items():
-            res += left + ' -> '
+            res += left + ' ->'
             for r in right:
-                res += tuple_str(r) + ' '
+                res += ' ' + tuple_str(r)
             res += '\n'
         res += '\n'
 
@@ -275,11 +276,11 @@ class Grammar:
         self.non_terminals.add(p.left)
         for r in p.right:
             for str_r in r:
-                if is_terminal(str_r) :
+                if is_terminal(str_r):
                     self.terminals.add(str_r)
                 else:
                     self.non_terminals.add(str_r)
-        assert '$' not in self.non_terminals,p
+        assert '$' not in self.non_terminals, p
 
     def get_non_ter_first(self, non_ter: str) -> Set[str]:
         """
@@ -347,4 +348,5 @@ def get_grammar_c_minus() -> Grammar:
     g = Grammar()
     c_minus_grammar_file = 'src/syntax/c_minus_grammar.txt'
     g.init_by_lines(read_file(c_minus_grammar_file))
+    write_file(str(g), os.path.join('result/grammar', 'c_minus_grammar_without_regex.txt'))
     return g

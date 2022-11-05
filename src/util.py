@@ -13,6 +13,11 @@ def read_file(file_path: str) -> List[str]:
     return res
 
 
+def write_file(content: str, file_name: str) -> None:
+    with open(file_name, 'w') as f:
+        f.write(content)
+
+
 def check_set_if_exist(set1: set, items: set):
     """
     查看set1中是否含有至少一个item

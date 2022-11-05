@@ -6,6 +6,7 @@ from typing import Set, Dict, Deque, Tuple, List
 
 from src import util
 from src.lexical.finite_automation import FA, get_fa_c_minus
+from src.util import write_file
 
 
 class GetNewK:
@@ -229,7 +230,6 @@ def get_dfa_minimize_c_minus(if_read_file=False) -> DFA:
         output_hal.write(str_dfa)
         output_hal.close()
 
-        with open(os.path.join(lexical_result_path, "dfa.txt"), 'w+') as file:
-            file.write(str(dfa))
+        write_file(str(dfa), 'os.path.join(lexical_result_path, "dfa.txt")')
 
     return dfa

@@ -8,8 +8,8 @@ from src.util import read_file
 class SUBATest(unittest.TestCase):
     def test_remove_left_recursion(self):
         self.assertTrue(True)
-        g = Grammar('S')
-        g.init_by_lines(read_file('src/test/syntax_bottom_up/test_case/grammar1.txt'))
+        g = Grammar()
+        g.init_by_lines(read_file('src/syntax/c_minus_grammar.txt'))
         remove_left_recursion(g)
         print(g)
 

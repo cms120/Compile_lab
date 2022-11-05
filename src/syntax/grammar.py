@@ -9,8 +9,10 @@ def get_new_non_terminal(non_terminals: Set[str], now: str) -> str:
     传入已有的非终结符 得到一个新的非终结符
     """
     res = now
+    if res.startswith("'"):
+        res = 'n' + res
     while res in non_terminals:
-        res += '\''
+        res += "'"
     return res
 
 
@@ -20,38 +22,44 @@ def get_new_tuple(t: Tuple[str], non_terminals: Set[str]):  # 只能满足一个
     right_index = new_list.index(')')
     if new_list[right_index + 1] == '*':
         left = ''
-        new_list.pop(left_index)
-        new_list.pop(right_index)
-        new_list.pop(right_index + 1)
-        new_tuple = tuple(new_list)
-
-        for s in list[left_index + 1:right_index:1]:
-            left += s
         right = set()
-        right.add(tuple(left))
+        temp_list = new_list[left_index:right_index + 1:1]
+
+        for s in new_list[left_index + 1:right_index:1]:  # 构造left
+            left += s
+        left = get_new_non_terminal(non_terminals, left)
+        for i in range(left_index, right_index + 2):  # 将原tuple要替换的内容pop
+            new_list.pop(left_index)
+        new_list.insert(left_index, left)
+        new_tuple = tuple(new_list)
+        temp_list.append(left)
+        right.add(tuple(temp_list))
         right.add(tuple('$'))
 
     elif new_list[right_index + 1] == '?':
         left = ''
-        new_list.pop(left_index)
-        new_list.pop(right_index)
-        new_list.pop(right_index + 1)
+        right = set()
+        right.add(tuple(new_list[left_index + 1:right_index:1]))
+        right.add(tuple('$'))
+
+        for s in new_list[left_index + 1:right_index:1]:  # 构造left
+            left += s
+        left = get_new_non_terminal(non_terminals, left)
+        for i in range(left_index, right_index + 2):  # 将原tuple要替换的内容pop
+            new_list.pop(left_index)
+        new_list.insert(left_index, left)
         new_tuple = tuple(new_list)
 
-        for s in list[left_index + 1:right_index:1]:
-            left += s
-        right = set()
-        right.add(tuple(list[left_index + 1:right_index:1]))
-        right.add(tuple('$'))
     else:
         left = ''
-        new_list.pop(left_index)
-        new_list.pop(right_index)
-        new_tuple = tuple(new_list)
-
-        for s in list[left_index + 1:right_index:1]:
+        right = split_list(tuple(new_list[left_index + 1:right_index:1]))
+        for s in new_list[left_index + 1:right_index:1]:  # 构造left
             left += s
-        right = set(split_list(tuple(list[left_index + 1:right_index:1])))
+        left = get_new_non_terminal(non_terminals, left)
+        for i in range(left_index, right_index + 1):  # 将原tuple要替换的内容pop
+            new_list.pop(left_index)
+        new_list.insert(left_index, left)
+        new_tuple = tuple(new_list)
 
     p = Production(get_new_non_terminal(non_terminals, left), right)
     return new_tuple, p
@@ -92,7 +100,7 @@ class Production:
     def split_list_of_tuple(left: str, right: Set[Tuple[str]], non_terminals: Set[str]):
         # 判断结束递归调用
         if dont_have_regex_symbol(right):
-            return Production(left, right)
+            return [Production(left, right)]
 
         production_list = []
 
@@ -141,7 +149,7 @@ class Production:
 
         res = Production.split_list_of_tuple(left_and_right[0], right_without_outSides_brackets_or, non_terminals)
 
-        return [res]
+        return res
 
     def remove_direct_left_recursion(self, non_terminals: Set[str]) -> List:
         """
@@ -167,7 +175,7 @@ class Production:
                 new_right = tuple(list(r) + [new_non_terminal])
                 res[0].right.add(new_right)
 
-        res[1].right.add(tuple(['\'$\'']))
+        res[1].right.add(tuple(['$']))
         return res
 
     def set_first(self):
@@ -258,10 +266,11 @@ class Grammar:
         self.non_terminals.add(p.left)
         for r in p.right:
             for str_r in r:
-                if str_r.startswith('\'') and str_r.endswith('\''):
+                if (str_r.startswith('\'') and str_r.endswith('\'') ) or str_r == '$':
                     self.terminals.add(str_r)
                 else:
                     self.non_terminals.add(str_r)
+        assert '$' not in self.non_terminals,p
 
     def set_first(self):  # TODO 获得一个文法的first集
         pass

@@ -1,7 +1,12 @@
 import string
-from typing import Dict, Tuple, List, Set
+from collections import deque
+from typing import Dict, Tuple, List, Set, Deque
 
 from src.util import read_file, split_list, tuple_str
+
+
+def is_terminal(ter: str) -> bool:
+    return (ter.startswith("'") and ter.startswith("'")) or ter == '$'
 
 
 def get_new_non_terminal(non_terminals: Set[str], now: str) -> str:
@@ -178,13 +183,17 @@ class Production:
         res[1].right.add(tuple(['$']))
         return res
 
-    def set_first(self):
+    def set_first(self) -> List[Tuple[str]]:
         """
         获得一个产生式的First集
+        :returns: 是非终结符的产生式
         """
-        # TODO 没有处理非终结符
+        res: List[Tuple[str]] = []
         for r in self.right:  # 遍历产生式的每个候选
             self.first[r] = r[0]
+            if not is_terminal(r[0]) :  # 不是非终结符且不为空
+                res.append(r)
+        return res
 
     def check_first(self) -> bool:
         """
@@ -234,7 +243,7 @@ class Grammar:
         self.terminals: Set[str] = set()  # 终结符
         self.non_terminals: Set[str] = set()  # 非终结符
         self.s = s
-        self.first: Dict[str, Dict[Tuple[str], str]] = dict()
+        self.first: Dict[str, Dict[Tuple[str], Set[str]]] = dict()
         self.follow = dict()
 
     def __str__(self):
@@ -266,14 +275,55 @@ class Grammar:
         self.non_terminals.add(p.left)
         for r in p.right:
             for str_r in r:
-                if (str_r.startswith('\'') and str_r.endswith('\'') ) or str_r == '$':
+                if is_terminal(str_r) :
                     self.terminals.add(str_r)
                 else:
                     self.non_terminals.add(str_r)
         assert '$' not in self.non_terminals,p
 
-    def set_first(self):  # TODO 获得一个文法的first集
-        pass
+    def get_non_ter_first(self, non_ter: str) -> Set[str]:
+        """
+        获得一个非终结符的所有产生式first集
+        """
+        res: Set[str] = set()
+        for first in self.first[non_ter].values():
+            res |= first
+        return res
+
+    def set_first_single(self, non_ter: str, r: Tuple[str]):
+        if is_terminal(r[0]):
+            pass
+
+    def set_first(self):  # TODO
+        """
+        文法的first集
+        """
+
+        # 存储待处理的某个非终结符的某个产生式
+        live_first: Deque[Tuple[str, Tuple[str]]] = deque()
+
+        for item in self.productions.items():
+            p = Production(item[0], item[1])
+            for r in p.set_first():  # 还需要处理非终结符
+                live_first.append((item[0], r))
+            for r in p.right:
+                self.first[item[0]][r] = {p.first[r]}
+
+        while len(live_first) > 0:
+            p_now = live_first.pop()
+            p_new_first: Set[str] = set()  # 查询出该终结符 该产生式对应的first集
+            flag = True  # 该first集是否处理完
+
+            for ch in self.first[p_now[0]][p_now[1]]:  # 遍历first集
+                ch_first = self.get_non_ter_first(ch)
+
+                if '$' in ch_first:  # 有$ 那么把一切非 $ 符号加入 并且看下一个first集
+                    flag = False
+                    ch_first.remove('$')
+
+                    ch_first.add()
+
+                p_new_first |= self.get_non_ter_first(ch)  # 将ch的first集
 
     def set_follow(self):  # TODO 获得一个文法的follow集
         pass

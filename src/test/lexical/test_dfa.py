@@ -1,9 +1,10 @@
 import unittest
 
-from lexical.deterministic_finite_automation import fa_2_dfa, DFA, dfa_minimize, get_dfa_minimize_c_minus, \
+from resource.deterministic_finite_automation import fa_2_dfa, DFA, dfa_minimize, get_dfa_minimize_c_minus, \
     get_dfa_c_minus
-from lexical.finite_automation import FA
+
 from graph import graph_dfa_print, graph_fa_print
+from lexical.finite_automation import FA
 from lexical.regex.regex import Regex
 from lexical.regex.rules import Rules
 from test.lexical.test_case import fa_s, dfa_s, re_s

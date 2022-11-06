@@ -4,8 +4,8 @@ import random
 from collections import deque
 from typing import Set, Dict, Deque, Tuple, List
 
-from src import util
 from lexical.finite_automation import FA, get_fa_c_minus
+from src import util
 from util import write_file
 
 

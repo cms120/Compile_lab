@@ -19,6 +19,7 @@ def get_new_non_terminal(non_terminals: Set[str], now: str) -> str:
         res = 'n' + res
     while res in non_terminals:
         res += "'"
+    non_terminals.add(res)
     return res
 
 
@@ -33,6 +34,7 @@ def get_new_tuple(t: Tuple[str], non_terminals: Set[str]):  # 只能满足一个
 
         for s in new_list[left_index + 1:right_index:1]:  # 构造left
             left += s
+        left += '*'
         left = get_new_non_terminal(non_terminals, left)
         for i in range(left_index, right_index + 2):  # 将原tuple要替换的内容pop
             new_list.pop(left_index)
@@ -50,6 +52,7 @@ def get_new_tuple(t: Tuple[str], non_terminals: Set[str]):  # 只能满足一个
 
         for s in new_list[left_index + 1:right_index:1]:  # 构造left
             left += s
+        left += '?'
         left = get_new_non_terminal(non_terminals, left)
         for i in range(left_index, right_index + 2):  # 将原tuple要替换的内容pop
             new_list.pop(left_index)
@@ -67,7 +70,7 @@ def get_new_tuple(t: Tuple[str], non_terminals: Set[str]):  # 只能满足一个
         new_list.insert(left_index, left)
         new_tuple = tuple(new_list)
 
-    p = Production(get_new_non_terminal(non_terminals, left), right)
+    p = Production(left, right)
     return new_tuple, p
 
 

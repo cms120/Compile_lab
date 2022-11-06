@@ -283,7 +283,6 @@ class Grammar:
                     self.terminals.add(str_r)
                 else:
                     self.non_terminals.add(str_r)
-        assert '$' not in self.non_terminals, p
 
     def get_non_ter_first(self, non_ter: str) -> Set[str]:
         """

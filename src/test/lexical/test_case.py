@@ -1,4 +1,4 @@
-from src.lexical.regex.regex import _IDN, _INT, re_c_minus
+from lexical.regex.regex import _IDN, _INT, re_c_minus
 
 re_s = [
     _INT,

@@ -1,9 +1,9 @@
 import unittest
 
-from src.lexical.finite_automation import *
-from src.lexical.finite_automation import FA
-from src.lexical.regex.regex import Regex
-from src.test.lexical.test_case import fa_s, re_s
+from lexical.finite_automation import *
+from lexical.finite_automation import FA
+from lexical.regex.regex import Regex
+from test.lexical.test_case import fa_s, re_s
 
 
 class FATest(unittest.TestCase):

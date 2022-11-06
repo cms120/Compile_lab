@@ -1,8 +1,8 @@
 from typing import List
 
-from src.lexical.dfa_shan import DFA, get_dfa_minimize_c_minus
-from src.lexical.token import Token, LexicalUnit
-from src.util import read_file
+from lexical.dfa_shan import DFA, get_dfa_minimize_c_minus
+from lexical.token import Token, LexicalUnit
+from util import read_file
 
 
 def get_token_by_content(content: str) -> Token:

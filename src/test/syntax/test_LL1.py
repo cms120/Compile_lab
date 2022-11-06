@@ -1,7 +1,7 @@
 import sys
 
 sys.path.append('D:/Complie/compile_lab')
-from src.syntax_bottom_up.syntax_bottom_up_analysis import grammar_text_to_dict, get_no_or_list, \
+from syntax_bottom_up.syntax_bottom_up_analysis import grammar_text_to_dict, get_no_or_list, \
     DisDirectRecursionToDirect, remove_direct_left_recursion, two_list_to_dict, simplified
 
 listvalueNoor = get_no_or_list(grammar_text_to_dict().values())

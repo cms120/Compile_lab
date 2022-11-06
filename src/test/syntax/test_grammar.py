@@ -1,13 +1,13 @@
 import unittest
 
-from src.syntax.grammar import get_grammar_c_minus, Production
+from syntax.grammar import get_grammar_c_minus, Production
 
 
 class GrammarTest(unittest.TestCase):
-    def test_init_c_minus(self):
+    def test_get_grammar_c_minus(self):
         self.assertTrue(True)
 
-        print(get_grammar_c_minus())
+        get_grammar_c_minus()
 
     def test_init_by_line(self):
         self.assertTrue(True)

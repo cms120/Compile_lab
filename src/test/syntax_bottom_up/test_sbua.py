@@ -1,6 +1,6 @@
 import unittest
 
-from src.syntax_bottom_up.syntax_bottom_up_analysis import remove_recall
+from syntax_bottom_up.syntax_bottom_up_analysis import remove_recall
 
 
 class SBUATest(unittest.TestCase):

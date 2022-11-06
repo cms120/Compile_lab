@@ -1,7 +1,0 @@
-Program -> ( decl|funcDef 'EOF' )
-decl|funcDef -> ( $ decl|funcDef' )
-decl|funcDef' -> ( decl|funcDef decl|funcDef' ) ( $ )
-
-terminals: 'EOF' ',' '-' 'const' '*' 'int' '}' '!' '<=' '||' 'return' ';' ')' '<' '!=' '&&' $ '==' '>' '/' '=' '+' '(' '%' 'idn' 'void' '>=' '{'
-non_terminals: decl|funcDef' Program decl|funcDef
-s: Program

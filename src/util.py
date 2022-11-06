@@ -28,10 +28,10 @@ def check_set_if_exist(set1: set, items: set):
     return False
 
 
-def split_list(l: Tuple[str], ch: str = '|') -> List[Tuple[str]]:
+def split_list(tuple_e: Tuple[str], ch: str = '|') -> List[Tuple[str]]:
     """
     以ch来分割list ch不能出现在开始和结尾 可以用()改变优先级
-    :param l: (eqExp, relExp, |, eqExp, (, '==', |, '!=', ), relExp)
+    :param tuple_e: (eqExp, relExp, |, eqExp, (, '==', |, '!=', ), relExp)
     :param ch: |
 
     :returns: [(eaExp, relExp), (eqExp, (, '==', |, '!=' ), relExp)]
@@ -39,22 +39,22 @@ def split_list(l: Tuple[str], ch: str = '|') -> List[Tuple[str]]:
     indexes = []  # ch 的索引
     res: List[Tuple[str]] = []
     l_par = 0
-    for i in range(len(l)):
-        if l[i] == ch:
+    for i in range(len(tuple_e)):
+        if tuple_e[i] == ch:
             if l_par == 0:  # 不在括号中
                 indexes.append(i)
-        if l[i] == '(':
+        if tuple_e[i] == '(':
             l_par += 1
 
-        if l[i] == ')':
+        if tuple_e[i] == ')':
             l_par -= 1
     if len(indexes) == 0:
-        res = [l]
+        res = [tuple_e]
     else:
-        res.append(l[:indexes[0]])
+        res.append(tuple_e[:indexes[0]])
         for i in range(len(indexes) - 1):
-            res.append(l[indexes[i] + 1:indexes[i + 1]])
-        res.append(l[indexes[-1] + 1:])
+            res.append(tuple_e[indexes[i] + 1:indexes[i + 1]])
+        res.append(tuple_e[indexes[-1] + 1:])
 
     return res
 
@@ -62,5 +62,6 @@ def split_list(l: Tuple[str], ch: str = '|') -> List[Tuple[str]]:
 def tuple_str(t: Tuple[str]) -> str:
     res = '( '
     for s in t:
-        res += s + ' '
-    return res + ')'
+        res += s + ' , '
+
+    return res[:-3] + ' )'

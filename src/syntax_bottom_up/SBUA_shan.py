@@ -2,10 +2,10 @@ import os
 from collections import deque
 from typing import List, Set, Tuple, Deque
 
-from src.lexical.token import Token
-from src.syntax.grammar import Grammar, Production
-from src.syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
-from src.util import write_file
+from lexical.token import Token
+from syntax.grammar import Grammar, Production
+from syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
+from util import write_file
 
 
 def remove_recall(g: Grammar):
@@ -17,7 +17,6 @@ def remove_recall(g: Grammar):
         p = Production(non_ter, g.productions[non_ter])
         for p_new in p.remove_recall(g.non_terminals):
             g.add_production(p_new)
-    write_file(str(g), os.path.join('result/grammar', 'c_minus_grammar_without_recall.txt'))
 
 
 def remove_left_recursion_simple(g: Grammar):
@@ -86,7 +85,6 @@ def remove_left_recursion(g: Grammar):
         remove_direct_left_recursion_single(g, non_terminals[i])
 
     remove_left_recursion_simple(g)
-    write_file(str(g), os.path.join('result/grammar', 'c_minus_grammar_without_left_recursion.txt'))
 
 
 def analysis_without_back(g: Grammar, tokens: list[Token]) -> SyntaxTree:  # TODO

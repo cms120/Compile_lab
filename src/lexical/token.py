@@ -1,5 +1,5 @@
-from src.c_mimus import c_minus_keyword, c_minus_op
-from src.lexical.lexical_unit import LexicalUnit
+from c_mimus import c_minus_keyword, c_minus_op
+from lexical.lexical_unit import LexicalUnit
 
 
 class Token:

@@ -3,7 +3,7 @@ import string
 from collections import deque
 from typing import Dict, Tuple, List, Set, Deque
 
-from src.util import read_file, split_list, tuple_str, write_file
+from util import read_file, split_list, tuple_str, write_file
 
 
 def is_terminal(ter: str) -> bool:
@@ -85,7 +85,7 @@ class Production:
     def __init__(self, left: str, right: Set[Tuple[str]]):
         self.left = left
         self.right = right
-        self.first: Dict[tuple[str], str] = dict()
+        self.first: Dict[tuple[str], str] = dict()  # 用于消除回溯
 
     def __str__(self):
         res = self.left + '-> '
@@ -153,9 +153,9 @@ class Production:
         right_with_or = left_and_right[1].split(' ')  # 分割字符串得到右边部分
         assert len(right_with_or) >= 1, 'error in right_group: ' + line
 
-        right_without_outSides_brackets_or = set(split_list(tuple(right_with_or)))
+        right_without_out_sides_brackets_or = set(split_list(tuple(right_with_or)))
 
-        res = Production.split_list_of_tuple(left_and_right[0], right_without_outSides_brackets_or, non_terminals)
+        res = Production.split_list_of_tuple(left_and_right[0], right_without_out_sides_brackets_or, non_terminals)
 
         return res
 
@@ -186,17 +186,15 @@ class Production:
         res[1].right.add(tuple(['$']))
         return res
 
-    def set_first(self) -> List[Tuple[str]]:
+    def set_first(self):
         """
         获得一个产生式的First集
         :returns: 是非终结符的产生式
         """
-        res: List[Tuple[str]] = []
+        # TODO 未处理非终结符
         for r in self.right:  # 遍历产生式的每个候选
+            assert len(r) > 0, self
             self.first[r] = r[0]
-            if not is_terminal(r[0]):  # 不是非终结符且不为空
-                res.append(r)
-        return res
 
     def check_first(self) -> bool:
         """
@@ -230,7 +228,10 @@ class Production:
 
         for r in self.right:
             if r[0] == left_factor:
-                res[1].right.add(r[1:])
+                if len(r) == 1:  # 提取左因子后为空 即该产生式右侧只有一个左因子
+                    res[1].right.add(tuple(['$']))
+                else:
+                    res[1].right.add(r[1:])
             else:
                 res[0].right.add(r)
 
@@ -348,7 +349,6 @@ def get_grammar_c_minus() -> Grammar:
     构造c--的语法
     """
     g = Grammar()
-    c_minus_grammar_file = 'src/syntax/c_minus_grammar.txt'
-    g.init_by_lines(read_file(c_minus_grammar_file))
-    write_file(str(g), os.path.join('result/grammar', 'c_minus_grammar_without_regex.txt'))
+    grammar_file = 'src/syntax/c_minus_grammar.txt'
+    g.init_by_lines(read_file(grammar_file))
     return g

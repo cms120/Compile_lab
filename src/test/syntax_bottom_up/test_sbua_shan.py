@@ -1,23 +1,39 @@
+import os
 import unittest
 
-from src.syntax.grammar import Grammar,get_grammar_c_minus
-from src.syntax_bottom_up.SBUA_shan import remove_left_recursion, remove_recall
-from src.util import read_file
+from graph import graph_grammar
+from syntax.grammar import get_grammar_c_minus
+from syntax_bottom_up.SBUA_shan import remove_left_recursion, remove_recall
+from util import write_file
 
 
 class SUBATest(unittest.TestCase):
+
+    def test_get_grammar_c_minus(self):
+        self.assertTrue(True)
+        g = get_grammar_c_minus()
+
+        file_name = 'g_without_regex'
+        graph_grammar(g, file_name)
+        write_file(str(g), os.path.join('result/grammar', file_name + 'txt'))
+
     def test_remove_left_recursion(self):
         self.assertTrue(True)
         g = get_grammar_c_minus()
         remove_left_recursion(g)
-        print(g)
+
+        file_name = 'g_without_left_recursion'
+        graph_grammar(g, file_name)
+        write_file(str(g), os.path.join('result/grammar', file_name + '.txt'))
 
     def test_remove_recall(self):
         self.assertTrue(True)
-        g = Grammar('S')
-        g.init_by_lines(read_file('src/test/syntax_bottom_up/test_case/grammar3.txt'))
+        g = get_grammar_c_minus()
         remove_left_recursion(g)
-        print(g)
-
         remove_recall(g)
-        print(g)
+
+        file_name = 'g_without_recall'
+        graph_grammar(g, file_name)
+        write_file(str(g), os.path.join('result/grammar', file_name + '.txt'))
+
+

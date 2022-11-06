@@ -1,0 +1,26 @@
+int	<KE, >
+a	<IDN,a>
+=	<OP, >
+3	<INT,3>
+;	<SE, >
+int	<KE, >
+b	<IDN,b>
+=	<OP, >
+5	<INT,5>
+;	<SE, >
+int	<KE, >
+main	<KE, >
+(	<SE, >
+)	<SE, >
+{	<SE, >
+int	<KE, >
+a	<IDN,a>
+=	<OP, >
+5	<INT,5>
+;	<SE, >
+return	<KE, >
+a	<IDN,a>
++	<OP, >
+b	<IDN,b>
+;	<SE, >
+}	<SE, >

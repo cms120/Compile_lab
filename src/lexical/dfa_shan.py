@@ -5,8 +5,8 @@ from collections import deque
 from typing import Set, Dict, Deque, Tuple, List
 
 from src import util
-from src.lexical.finite_automation import FA, get_fa_c_minus
-from src.util import write_file
+from lexical.finite_automation import FA, get_fa_c_minus
+from util import write_file
 
 
 class GetNewK:

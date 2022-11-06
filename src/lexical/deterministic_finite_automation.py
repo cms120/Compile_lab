@@ -3,7 +3,7 @@ import string
 from copy import deepcopy
 from typing import List, Set
 
-from src.lexical.finite_automation import FA, get_fa_c_minus
+from lexical.finite_automation import FA, get_fa_c_minus
 
 
 class DFA(FA):

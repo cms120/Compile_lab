@@ -1,11 +1,11 @@
 import copy
 import string
 
-import src.lexical.lexical_analysis as la
-from src.lexical.token import Token
-from src.syntax.grammar import Grammar, get_grammar_c_minus
-from src.syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
-from src.util import read_file
+import lexical.lexical_analysis as la
+from lexical.token import Token
+from syntax.grammar import Grammar, get_grammar_c_minus
+from syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
+from util import read_file
 
 
 def analysis() -> SyntaxTree:  # c--的语法分析

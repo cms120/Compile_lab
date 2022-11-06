@@ -1,3 +1,4 @@
+import os.path
 import string
 from collections import deque
 from copy import deepcopy
@@ -272,7 +273,7 @@ class Grammar:
         self.__non_terminals: Set[str] = set()  # 非终结符
         self.__s = s
         self.__first: Dict[str, Dict[Tuple[str], Set[str]]] = dict()
-        self.__follow = dict()
+        self.__follow: Dict[str, Set[str]] = dict()
 
     def __str__(self):
         res = ''
@@ -379,8 +380,33 @@ class Grammar:
 
                 p_new_first |= self.get_non_ter_first(ch)  # 将ch的first集
 
+    def init_follow(self):  # 初始化follow集
+        for non_terminal in self.non_terminals:
+            self.follow[non_terminal] = set()
+        self.follow[self.s].add('#')
+
+    def is_any_follow_grow(self):
+        flag = False
+        for left in self.productions.keys():
+            rights = self.productions.get(left)  # rights:Set[tuple[str]]
+            for right in rights:  # 遍历每一条规则
+                for i in range(len(right) - 1):
+                    if right[i] in self.non_terminals:
+                        self.follow[right[i]] += self.first[right[i]]
+                        flag = True
+                if right[-1] in self.non_terminals:
+                    self.follow[right[-1]] += self.follow[left]
+                    flag = True
+                if right[-1] in self.non_terminals and '$' in self.first[right[-1]] and len(right) > 1 and right[
+                    -2] in self.non_terminals:
+                    self.follow[right[-2]] += self.follow[left]
+                    flag = True
+        return flag
+
     def set_follow(self):  # TODO 获得一个文法的follow集
-        pass
+        self.init_follow()
+        while self.is_any_follow_grow:
+            continue
 
     def init_by_lines(self, lines: List[str]) -> None:
         """

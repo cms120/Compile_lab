@@ -33,12 +33,12 @@ def graph_dfa_print(dfa: DFA, file_name='DFA'):
 
 def graph_grammar(g: Grammar, file_name='grammar'):
     graph = Digraph(comment='graph_grammar')
-    for prod in g.productions.items():
+    for prod in g.get_prods().items():
         for val in prod[1]:
             graph.edge(prod[0], util.tuple_str(val)[2:-2])  # 去除结尾和开头的括号
 
-    graph.node(g.s, color='red')
-    for ter in g.terminals:
+    graph.node(g.get_s(), color='red')
+    for ter in g.get_terminals():
         graph.node(ter, shape='doublecircle')
 
     graph.render(os.path.join('result/grammar', file_name + '.gv'), view=True)

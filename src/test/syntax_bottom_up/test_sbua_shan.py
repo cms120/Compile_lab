@@ -15,7 +15,7 @@ class SUBATest(unittest.TestCase):
 
         file_name = 'g_without_regex'
         graph_grammar(g, file_name)
-        write_file(str(g), os.path.join('result/grammar', file_name + 'txt'))
+        write_file(str(g), os.path.join('result/grammar', file_name + '.txt'))
 
     def test_remove_left_recursion(self):
         self.assertTrue(True)
@@ -31,7 +31,7 @@ class SUBATest(unittest.TestCase):
         g = get_grammar_c_minus()
         file_name = 'g_without_regex'
         graph_grammar(g, file_name)
-        write_file(str(g), os.path.join('result/grammar', file_name + 'txt'))
+        write_file(str(g), os.path.join('result/grammar', file_name + '.txt'))
 
         remove_left_recursion(g)
         file_name = 'g_without_left_recursion'

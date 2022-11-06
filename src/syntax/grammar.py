@@ -1,9 +1,10 @@
-import os.path
 import string
 from collections import deque
+from copy import deepcopy
 from typing import Dict, Tuple, List, Set, Deque
 
-from util import read_file, split_list, tuple_str, write_file
+import util
+from util import read_file, split_list, tuple_str
 
 
 def is_terminal(ter: str) -> bool:
@@ -82,25 +83,44 @@ def dont_have_regex_symbol(right):  # 判断是否有必要继续递归
 
 
 class Production:
-    def __init__(self, left: str, right: Set[Tuple[str]]):
-        self.left = left
-        self.right = right
-        self.first: Dict[tuple[str], str] = dict()  # 用于消除回溯
+    def __init__(self, left: str, right=None):
+        if right is None:
+            right = set()
+
+        self.__left = left
+        self.__right: Set[Tuple[str]] = set()
+        self.add_right(right)
+        self.__first: Dict[tuple[str], str] = dict()  # 用于消除回溯
 
     def __str__(self):
-        res = self.left + '-> '
+        res = self.__left + '-> '
 
-        for r in self.right:
+        for r in self.get_right():
             res += tuple_str(r) + ' '
         res += '\n'
         return res
+
+    def add_r(self, r: Tuple[str]) -> None:
+        if len(r) > 1:
+            assert '$' not in r, str(self) + '\nr: ' + util.tuple_str(r)
+        self.__right.add(r)
+
+    def get_left(self) -> str:
+        return deepcopy(self.__left)
+
+    def add_right(self, right: Set[Tuple[str]]) -> None:
+        for r in right:
+            self.add_r(r)
+
+    def get_right(self) -> Set[Tuple[str]]:
+        return deepcopy(self.__right)
 
     def if_direct_left_recursion(self) -> bool:
         """
         检查一条产生式是否有直接左递归
         """
-        for r in self.right:
-            if r[0] == self.left:
+        for r in self.__right:
+            if r[0] == self.__left:
                 return True
         return False
 
@@ -126,7 +146,7 @@ class Production:
 
         res = []  # 递归
         for p in production_list:
-            res += Production.split_list_of_tuple(p.left, p.right, non_terminals)
+            res += Production.split_list_of_tuple(p.__left, p.__right, non_terminals)
         return res
 
     @staticmethod
@@ -169,21 +189,25 @@ class Production:
         P' -> a1P' | a2P'
         :returns: 新的两个产生式
 
-
         """
-        res: List[Production] = [Production(self.left, set()), Production(self.left + '\'', set())]
+        new_non_terminal = get_new_non_terminal(non_terminals, self.__left)
 
-        for r in self.right:
-            new_non_terminal = get_new_non_terminal(non_terminals, self.left)
-            if r[0] == self.left:  # 以P起始
-                new_right = tuple(list(r[1:]) + [new_non_terminal])
+        res: List[Production] = [Production(self.__left),
+                                 Production(new_non_terminal)]
 
-                res[1].right.add(new_right)
+        for r in self.__right:
+            if r[0] == self.__left:  # 以P起始
+                assert len(r) > 1, self  # 以P起始 那么后面必定还有值 不会 P->P
+                new_r: List[str] = list(r[1:]) + [new_non_terminal]
+                res[1].add_r(tuple(new_r))
             else:
-                new_right = tuple(list(r) + [new_non_terminal])
-                res[0].right.add(new_right)
+                new_r: List[str] = []
+                if r != '$':
+                    new_r += r
+                new_r.append(new_non_terminal)
+                res[0].add_r(tuple(new_r))
 
-        res[1].right.add(tuple(['$']))
+        res[1].add_r(tuple(['$']))
         return res
 
     def set_first(self):
@@ -192,16 +216,16 @@ class Production:
         :returns: 是非终结符的产生式
         """
         # TODO 未处理非终结符
-        for r in self.right:  # 遍历产生式的每个候选
+        for r in self.__right:  # 遍历产生式的每个候选
             assert len(r) > 0, self
-            self.first[r] = r[0]
+            self.__first[r] = r[0]
 
     def check_first(self) -> bool:
         """
         检查一个产生式的候选 first集是否相交
         """
 
-        return len(set(self.first.values())) != len(self.first.keys())
+        return len(set(self.__first.values())) != len(self.__first.keys())
 
     def remove_recall(self, non_terminals: Set[str]) -> List:
         """
@@ -215,25 +239,25 @@ class Production:
 
         left_factor = ''  # 相同左因子
         ch_set: Set[str] = set()
-        for ch in self.first.values():  # 遍历values 查找左因子
+        for ch in self.__first.values():  # 遍历values 查找左因子
             if ch in ch_set:
                 left_factor = ch
                 break
             else:
                 ch_set.add(ch)
 
-        new_non_terminal = get_new_non_terminal(non_terminals, self.left)
-        res = [Production(self.left, set()), Production(new_non_terminal, set())]
-        res[0].right.add(tuple([left_factor, new_non_terminal]))
+        new_non_terminal = get_new_non_terminal(non_terminals, self.__left)
+        res = [Production(self.__left), Production(new_non_terminal)]
+        res[0].add_r(tuple([left_factor, new_non_terminal]))
 
-        for r in self.right:
+        for r in self.get_right():
             if r[0] == left_factor:
                 if len(r) == 1:  # 提取左因子后为空 即该产生式右侧只有一个左因子
-                    res[1].right.add(tuple(['$']))
+                    res[1].add_r(tuple(['$']))
                 else:
-                    res[1].right.add(r[1:])
+                    res[1].add_r(r[1:])
             else:
-                res[0].right.add(r)
+                res[0].add_r(r)
 
         return res[0].remove_recall(non_terminals) + res[1].remove_recall(non_terminals)  # 递归调用消除所有递归
 
@@ -243,16 +267,16 @@ class Grammar:
         """
         :param s: 开始符号
         """
-        self.productions: Dict[str, Set[Tuple[str]]] = dict()
-        self.terminals: Set[str] = set()  # 终结符
-        self.non_terminals: Set[str] = set()  # 非终结符
-        self.s = s
-        self.first: Dict[str, Dict[Tuple[str], Set[str]]] = dict()
-        self.follow = dict()
+        self.__prods: Dict[str, Set[Tuple[str]]] = dict()
+        self.__terminals: Set[str] = set()  # 终结符
+        self.__non_terminals: Set[str] = set()  # 非终结符
+        self.__s = s
+        self.__first: Dict[str, Dict[Tuple[str], Set[str]]] = dict()
+        self.__follow = dict()
 
     def __str__(self):
         res = ''
-        for left, right in self.productions.items():
+        for left, right in self.__prods.items():
             res += left + ' ->'
             for r in right:
                 res += ' ' + tuple_str(r)
@@ -260,38 +284,65 @@ class Grammar:
         res += '\n'
 
         res += 'terminals:'
-        for t in self.terminals:
+        for t in self.__terminals:
             res += ' ' + t
         res += '\nnon_terminals:'
-        for nt in self.non_terminals:
+        for nt in self.__non_terminals:
             res += ' ' + nt
         res += '\n'
 
-        res += 's: ' + self.s + '\n'
+        res += 's: ' + self.__s + '\n'
         return res
 
-    def add_production(self, p: Production) -> None:
+    def add_prod(self, p: Production) -> None:
         """
         添加产生式
         """
-        self.productions[p.left] = p.right
+        self.__prods[p.get_left()] = p.get_right()
 
-        self.non_terminals.add(p.left)
-        for r in p.right:
+        self.__non_terminals.add(p.get_left())
+        for r in p.get_right():
+            if len(r) > 1:
+                assert '$' not in r, r  # 此时不能含有$
             for str_r in r:
                 if is_terminal(str_r):
-                    self.terminals.add(str_r)
+                    self.__terminals.add(str_r)
                 else:
-                    self.non_terminals.add(str_r)
+                    self.__non_terminals.add(str_r)
+
+    def add_prods(self, ps: List[Production]) -> None:
+        for p in ps:
+            self.add_prod(p)
+
+    def del_prods(self, non_ter_s: Set[str]) -> None:
+        """
+        删除非终结符作为左侧的产生式 同时删除non_terminals
+        :param non_ter_s: 若干非终结符
+        """
+        for non_ter in non_ter_s:
+            del self.__prods[non_ter]
+            self.__non_terminals.remove(non_ter)
 
     def get_non_ter_first(self, non_ter: str) -> Set[str]:
         """
         获得一个非终结符的所有产生式first集
         """
         res: Set[str] = set()
-        for first in self.first[non_ter].values():
+        for first in self.__first[non_ter].values():
             res |= first
         return res
+
+    def get_prods(self) -> Dict[str, Set[Tuple[str]]]:
+        return deepcopy(self.__prods)
+
+    def get_non_terminals(self) -> Set[str]:
+        return self.__non_terminals
+
+    def get_terminals(self) -> Set[str]:
+        return self.__terminals
+
+    def get_s(self) -> str:
+        return self.__s
 
     def set_first_single(self, non_ter: str, r: Tuple[str]):
         if is_terminal(r[0]):
@@ -305,19 +356,19 @@ class Grammar:
         # 存储待处理的某个非终结符的某个产生式
         live_first: Deque[Tuple[str, Tuple[str]]] = deque()
 
-        for item in self.productions.items():
+        for item in self.__prods.items():
             p = Production(item[0], item[1])
             for r in p.set_first():  # 还需要处理非终结符
                 live_first.append((item[0], r))
-            for r in p.right:
-                self.first[item[0]][r] = {p.first[r]}
+            for r in p.__right:
+                self.__first[item[0]][r] = {p.__first[r]}
 
         while len(live_first) > 0:
             p_now = live_first.pop()
             p_new_first: Set[str] = set()  # 查询出该终结符 该产生式对应的first集
             flag = True  # 该first集是否处理完
 
-            for ch in self.first[p_now[0]][p_now[1]]:  # 遍历first集
+            for ch in self.__first[p_now[0]][p_now[1]]:  # 遍历first集
                 ch_first = self.get_non_ter_first(ch)
 
                 if '$' in ch_first:  # 有$ 那么把一切非 $ 符号加入 并且看下一个first集
@@ -338,9 +389,8 @@ class Grammar:
         ]
         """
         for line in lines:
-            ps = Production.init_by_line(line, self.non_terminals)
-            for p in ps:
-                self.add_production(p)
+            ps = Production.init_by_line(line, self.__non_terminals)
+            self.add_prods(ps)
 
 
 def get_grammar_c_minus() -> Grammar:

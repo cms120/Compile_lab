@@ -19,7 +19,6 @@ def get_new_non_terminal(non_terminals: Set[str], now: str) -> str:
         res = 'n' + res
     while res in non_terminals:
         res += "'"
-    non_terminals.add(res)
     return res
 
 

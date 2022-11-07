@@ -2,11 +2,12 @@ from collections import deque
 from typing import List, Deque
 
 from lexical.token import Token
-from syntax.grammar import Grammar, Production
+from syntax.grammar import Grammar, get_grammar_c_minus
+from syntax.production import Production
 from syntax.syntax_tree import SyntaxTree, SyntaxTreeNode
 
 
-def remove_recall(g: Grammar):
+def remove_recall(g: Grammar) -> Grammar:
     """
     消除一个文法的回溯 通过不断地提取左因子
     """
@@ -14,6 +15,7 @@ def remove_recall(g: Grammar):
     for non_ter in non_ter_list:
         p = Production(non_ter, g.get_prods()[non_ter])
         g.add_prods(p.remove_recall(g.get_non_terminals()))
+    return g
 
 
 def remove_left_recursion_simple(g: Grammar):
@@ -74,7 +76,7 @@ def remove_left_recursion_single(g: Grammar, p_i: str, p_j: str):
     g.add_prod(p)
 
 
-def remove_left_recursion(g: Grammar):
+def remove_left_recursion(g: Grammar) -> Grammar:
     """
     消除左递归
     """
@@ -87,11 +89,20 @@ def remove_left_recursion(g: Grammar):
         remove_direct_left_recursion_single(g, non_terminals[i])
 
     remove_left_recursion_simple(g)
+    return g
 
 
-def analysis_without_back(g: Grammar, tokens: list[Token]) -> SyntaxTree:  # TODO
-    remove_left_recursion(g)
-    remove_recall(g)
+def get_grammar_c_minus_without_left_recursion() -> Grammar:
+    return remove_left_recursion(get_grammar_c_minus())
+
+
+def get_grammar_c_minus_without_recall() -> Grammar:
+    return remove_recall(get_grammar_c_minus_without_left_recursion())
+
+
+def analysis_without_back(tokens: list[Token]) -> SyntaxTree:  # TODO
+    g = get_grammar_c_minus_without_recall()
+    g.set_first()
 
     tree = SyntaxTree(SyntaxTreeNode(g.get_s()))
 

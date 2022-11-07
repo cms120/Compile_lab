@@ -17,3 +17,6 @@ class GrammarTest(unittest.TestCase):
 
     def test_remove_recall(self):
         pass
+
+    def test_set_first(self):
+        self.assertTrue(True)

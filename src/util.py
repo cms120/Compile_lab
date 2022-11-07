@@ -59,9 +59,17 @@ def split_list(tuple_e: Tuple[str], ch: str = '|') -> List[Tuple[str]]:
     return res
 
 
-def tuple_str(t: Tuple[str]) -> str:
+def tuple_str(t: tuple) -> str:
     res = '( '
     for s in t:
-        res += s + ' , '
+        res += str(s) + ' , '
 
     return res[:-3] + ' )'
+
+
+def set_str(set_t: set) -> str:
+    res = '{ '
+    for s in set_t:
+        res += str(s) + ' , '
+
+    return res[:-3] + ' }'

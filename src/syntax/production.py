@@ -170,12 +170,11 @@ class Production:
         return res
 
     @staticmethod
-    def init_by_line(line: str, non_terminals: Set[str]) -> List:
+    def init_by_line(line: str):
         """
         根据一行grammar得到若干production
 
         :param line: 1. Program -> compUnit;
-        :param non_terminals: 用于获得下一个非终结符
         :returns: (Program,(compUnit))
         """
         i = 0
@@ -193,11 +192,7 @@ class Production:
         right_with_or = left_and_right[1].split(' ')  # 分割字符串得到右边部分
         assert len(right_with_or) >= 1, 'error in right_group: ' + line
 
-        right_without_out_sides_brackets_or = set(split_list(tuple(right_with_or)))
-
-        res = Production.split_list_of_tuple(left_and_right[0], right_without_out_sides_brackets_or, non_terminals)
-
-        return res
+        return Production(left_and_right[0], set(split_list(tuple(right_with_or))))
 
     def remove_direct_left_recursion(self, non_terminals: Set[str]) -> List:
         """

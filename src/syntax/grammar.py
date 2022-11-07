@@ -7,7 +7,7 @@ from util import read_file, tuple_str, set_str
 
 
 class Grammar:
-    def __init__(self, s: str = 'Program'):
+    def __init__(self, s: str = 'program'):
         """
         :param s: 开始符号
         """
@@ -82,6 +82,22 @@ class Grammar:
             return {r[0]}
         else:
             return self.__first.get(r, set())
+
+    def get_chs_first(self, chs: Tuple[str]) -> Set[str]:
+        """
+        获得任意符号串的first集
+        """
+        res: Set[str] = set()
+        for ch in chs:
+            ch_first = self.get_ch_first(ch)
+            assert len(ch_first) > 0, ch + ' ' + tuple_str(chs)
+            res |= ch_first
+            res.discard('$')  # 可能含有 $
+            if '$' not in ch_first:  # 如果不含 $ 那么可以退出循环 否则继续向后
+                return res
+        res.add('$')  # 所有符号都含有 $ 那么可以加进first集
+
+        return res
 
     def __set_r_first(self, r: Tuple[str]) -> bool:
         """
@@ -194,8 +210,8 @@ class Grammar:
         ]
         """
         for line in lines:
-            ps = Production.init_by_line(line, self.__non_terminals)
-            self.add_prods(ps)
+            p = Production.init_by_line(line)
+            self.add_prod(p)
 
 
 def get_grammar_c_minus() -> Grammar:
@@ -203,6 +219,6 @@ def get_grammar_c_minus() -> Grammar:
     构造c--的语法
     """
     g = Grammar()
-    grammar_file = 'src/syntax/c_minus_grammar.txt'
+    grammar_file = 'resource/更改文件/grammar2.txt'
     g.init_by_lines(read_file(grammar_file))
     return g

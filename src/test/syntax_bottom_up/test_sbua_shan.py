@@ -35,8 +35,8 @@ class SUBATest(unittest.TestCase):
 
     def test_first(self):
         self.assertTrue(True)
-        g = get_grammar_c_minus_without_recall()
-        write_file(str(g), os.path.join('result/grammar', 'g_without_recall' + '.txt'))
+        g = get_grammar_c_minus_without_left_recursion()
+        write_file(str(g), os.path.join('result/grammar', 'g_without_left_recursion' + '.txt'))
 
         g.set_first()
         write_file(str(g), os.path.join('result/grammar', 'g_without_recall_with_first' + '.txt'))

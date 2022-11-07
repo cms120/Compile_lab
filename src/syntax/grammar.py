@@ -187,15 +187,18 @@ class Grammar:
             for right in rights:  # 遍历每一条规则
                 for i in range(len(right) - 1):
                     if right[i] in self.__non_terminals:
-                        self.__follow[right[i]] += self.__first[right[i]]
+                        self.__follow[right[i]] += self.get_chs_first(right[i + 1:len(right):1])
                         flag = True
+
                 if right[-1] in self.__non_terminals:
                     self.__follow[right[-1]] += self.__follow[left]
                     flag = True
-                if right[-1] in self.__non_terminals and '$' in self.__first[right[-1]] and len(right) > 1 and right[
-                    -2] in self.__non_terminals:
-                    self.__follow[right[-2]] += self.__follow[left]
-                    flag = True
+
+                for i in range(len(right) - 1, 0, -1):
+                    if '$' in self.get_chs_first(right[i:len(right):1]) and \
+                            right[i - 1] in self.__non_terminals:
+                        self.__follow[right[i - 1]] += self.__follow[left]
+                        flag = True
         return flag
 
     def set_follow(self):  # TODO 获得一个文法的follow集

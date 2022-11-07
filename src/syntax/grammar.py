@@ -144,20 +144,17 @@ class Grammar:
             if not self.__set_r_first(r_now):
                 r_live.appendleft(r_now)
 
-    def check_first(self) -> bool:
+    def check_first(self) -> None:
         """
         LL1判断first是否相交
         """
         for left, right in self.__prods.items():
-            r_first_set: Set[str] = set()
-            r_first_set.add('¥')  # 人命币符号肯定不存在
+            r_first_set: Set[str] = {'¥'}  # 人命币符号肯定不存在
+
             for r in right:
                 r_first = self.get_r_first(r)
-                if len(r_first_set & r_first) != 0:  # 有交集出错
-                    return False
-                else:
-                    r_first_set |= r_first
-        return True
+                assert len(r_first_set & r_first) == 0  # 无交集
+                r_first_set |= r_first
 
     def init_follow(self):  # 初始化follow集
         for non_terminal in self.__non_terminals:
@@ -186,10 +183,27 @@ class Grammar:
                         flag = True
         return flag
 
+    def check_follow(self):
+        """
+        检查follow集
+        """
+        for non_ter in self.__non_terminals:
+            first_set = self.get_ch_first(non_ter)
+            if '$' in first_set:  # 如果first集中有epsilon
+                follow_set = self.get_ch_follow(non_ter)
+                assert len(follow_set & first_set) == 0  # 每个非终结符
+
+    def check_ll1(self):
+        self.check_first()
+        self.check_first()
+
     def set_follow(self):  # TODO 获得一个文法的follow集
         self.init_follow()
         while self.is_any_follow_grow:
             continue
+
+    def get_ch_follow(self, ch: str) -> Set[str]:
+        return self.__follow[ch]
 
     def init_by_lines(self, lines: List[str]) -> None:
         """

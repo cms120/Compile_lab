@@ -3,8 +3,8 @@ from enum import unique, Enum
 
 @unique  # val值应该不相同
 class LexicalUnit(Enum):
-    regex_int_const = '[0-9]+'  # 整形常数 TODO
-    regex_ident = '[a-zA-Z_][a-zA-Z_0-9]*'  # 标识符 TODO
+    INT = 'INT'  # 整形常数
+    IDN = 'IDN'  # 标识符
     # 终结符
 
     # 运算符
@@ -22,8 +22,6 @@ class LexicalUnit(Enum):
     _less_or_equal = '<='
     _more_or_equal = '>='
     _not_equal = '!='
-    _and = '&&'
-    _or = '||'
 
     # 界符
     _comma = ','
@@ -37,7 +35,6 @@ class LexicalUnit(Enum):
     _void = 'void'
     _int = 'int'
     _return = 'return'
-    _main = 'main'
 
     @classmethod
     def check_key(cls, key: str) -> bool:  # 检查key是否存在

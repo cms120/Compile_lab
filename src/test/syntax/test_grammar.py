@@ -21,7 +21,7 @@ class GrammarTest(unittest.TestCase):
         self.assertTrue(True)
         g = get_grammar_c_minus()
         g.set_first()
-        # g.set_follow()
+        g.set_follow()
 
         file_name = 'grammar_c_minus_shan'
         graph_grammar(g, file_name)

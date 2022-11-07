@@ -1,8 +1,8 @@
 from typing import List
 
 from lexical.dfa_shan import DFA, get_dfa_minimize_c_minus
-from lexical.token import Token, LexicalUnit
-from util import read_file
+from lexical.token import Token, LexicalUnit, tokens_to_str
+from util import read_file, write_file
 
 
 def get_token_by_content(content: str) -> Token:
@@ -77,21 +77,9 @@ def get_token_list_by_line_dfa(dfa: DFA, line: str) -> List[Token]:
     return res
 
 
-def res_output(res: List[Token], file_name: str = 'result/lexical/LA_tokens.txt') -> None:
-    """
-    将分析结果格式化输出到文件中
-
-    :param res: LA分析结果
-    :param file_name: 输出路径
-    """
-    f = open(file_name, 'w')
-    for token in res:
-        f.write(token.format_str() + '\n')
-    f.close()
-
-
-def analysis(file_path='src/test/lexical/test.sy', is_read_file=True) -> list[Token]:  # 根据c--的dfa分析文件获得token list
+def analysis(file_path='resource/test.sy', is_read_file=True) -> list[Token]:  # 根据c--的dfa分析文件获得token list
     assert file_path.endswith(".sy"), 'file should end with .sy  ' + file_path
-    res = get_token_list_by_content_dfa(get_dfa_minimize_c_minus(is_read_file), read_file(file_path))
-    res_output(res)
-    return res
+    tokens = get_token_list_by_content_dfa(get_dfa_minimize_c_minus(is_read_file), read_file(file_path))
+    write_file(tokens_to_str(tokens), 'result/lexical/LA_tokens.txt')
+
+    return tokens

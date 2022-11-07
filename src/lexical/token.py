@@ -1,21 +1,30 @@
+from collections import deque
+from typing import List, Deque
+
 from c_mimus import c_minus_keyword, c_minus_op
 from lexical.lexical_unit import LexicalUnit
 
 
 class Token:
-    def __init__(self, words_unit: LexicalUnit, val=''):
-        self.words = words_unit
+    def __init__(self, words: LexicalUnit, val=''):
+        self.words = words
         self.val = val
 
     def __str__(self):
-        if self.words == LexicalUnit.regex_ident:
+        if self.words == LexicalUnit.IDN:
             return 'IDN: ' + self.val
-        elif self.words == LexicalUnit.regex_int_const:
+        elif self.words == LexicalUnit.INT:
             return 'INT: ' + self.val
         else:
             return self.words.value
 
-    def format_str(self):  # TODO
+    def get_val(self) -> str:
+        if self.words == LexicalUnit.IDN or self.words == LexicalUnit.INT:
+            return self.val
+        else:
+            return self.words.val
+
+    def format_str(self) -> str:
         """
         格式化输出token
         """
@@ -32,3 +41,22 @@ class Token:
             else:
                 res += 'SE, >'
             return res
+
+
+def tokens_to_str(tokens: List[Token]) -> str:
+    res = ''
+    for token in tokens:
+        res += token.format_str() + '\n'
+    return res
+
+
+def tokens_to_deque(tokens: List[Token]) -> Deque[str]:
+    """
+    将tokens翻转为stack
+    """
+    res: Deque[str] = deque()
+    for token in tokens:
+        res.append("'" + token.get_val() + "'")
+
+    res.reverse()
+    return res

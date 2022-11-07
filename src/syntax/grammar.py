@@ -52,20 +52,8 @@ class Grammar:
         for p in ps:
             self.add_prod(p)
 
-    def del_prods(self, non_ter_s: Set[str]) -> None:
-        """
-        删除非终结符作为左侧的产生式 同时删除non_terminals
-        :param non_ter_s: 若干非终结符
-        """
-        for non_ter in non_ter_s:
-            del self.__prods[non_ter]
-            self.__non_terminals.remove(non_ter)
-
     def get_prods(self) -> Dict[str, Set[Tuple[str]]]:
         return deepcopy(self.__prods)
-
-    def get_non_terminals(self) -> Set[str]:
-        return self.__non_terminals
 
     def get_terminals(self) -> Set[str]:
         return self.__terminals
@@ -115,7 +103,8 @@ class Grammar:
                 r_first |= ch_first
                 r_first.discard('$')  # 可能含有 $
                 if '$' not in ch_first:  # 如果不含 $ 那么可以退出循环 否则继续向后
-                    break
+                    self.__first[r] = r_first
+                    return True
         r_first.add('$')  # 所有符号都含有 $ 那么可以加进first集
         self.__first[r] = r_first
         return True
@@ -131,10 +120,6 @@ class Grammar:
         else:
             res: Set[str] = set()
             for r in self.__prods[ch]:  # 遍历产生式候选
-                while ch in r:  # 该产生式候选中含有自己 将自己删去 防止死循环
-                    r_list = list(r)
-                    r_list.remove(ch)
-                    r = tuple(r_list)
 
                 r_first = self.get_r_first(r)
                 if len(r_first) == 0:  # 该产生式候选的first还未求出
@@ -175,7 +160,7 @@ class Grammar:
         return True
 
     def init_follow(self):  # 初始化follow集
-        for non_terminal in self.get_non_terminals():
+        for non_terminal in self.__non_terminals:
             self.__follow[non_terminal] = set()
         self.__follow[self.get_s()].add('#')
 

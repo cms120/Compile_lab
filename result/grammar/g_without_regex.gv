@@ -1,0 +1,121 @@
+// graph_grammar
+digraph {
+	Program -> compUnit
+	"decl|funcDef" -> decl
+	"decl|funcDef" -> funcDef
+	"decl|funcDef*" -> "decl|funcDef , decl|funcDef*"
+	"decl|funcDef*" -> "$"
+	compUnit -> "decl|funcDef* , 'EOF'"
+	decl -> varDecl
+	decl -> constDecl
+	"n','constDef" -> "',' , constDef"
+	"n','constDef*" -> "n','constDef , n','constDef*"
+	"n','constDef*" -> "$"
+	constDecl -> "'const' , bType , constDef , n','constDef* , ';'"
+	bType -> "'int'"
+	constDef -> "Ident , '=' , constInitVal"
+	constInitVal -> constExp
+	"n','varDef" -> "',' , varDef"
+	"n','varDef*" -> "n','varDef , n','varDef*"
+	"n','varDef*" -> "$"
+	varDecl -> "bType , varDef , n','varDef* , ';'"
+	varDef -> Ident
+	varDef -> "Ident , '=' , initVal"
+	initVal -> exp
+	"funcFParams?" -> funcFParams
+	"funcFParams?" -> "$"
+	funcDef -> "funcType , Ident , '(' , funcFParams? , ')' , block"
+	funcType -> "'void'"
+	funcType -> "'int'"
+	"n','funcFParam" -> "',' , funcFParam"
+	"n','funcFParam*" -> "n','funcFParam , n','funcFParam*"
+	"n','funcFParam*" -> "$"
+	funcFParams -> "funcFParam , n','funcFParam*"
+	funcFParam -> "bType , Ident"
+	blockItem -> decl
+	blockItem -> stmt
+	"blockItem*" -> "blockItem , blockItem*"
+	"blockItem*" -> "$"
+	block -> "'{' , blockItem* , '}'"
+	"exp?" -> exp
+	"exp?" -> "$"
+	stmt -> "'return' , exp? , ';'"
+	stmt -> "lVal , '=' , exp , ';'"
+	stmt -> block
+	stmt -> "exp? , ';'"
+	exp -> addExp
+	cond -> lOrExp
+	lVal -> Ident
+	primaryExp -> "'(' , exp , ')'"
+	primaryExp -> number
+	primaryExp -> lVal
+	number -> IntConst
+	"funcRParams?" -> funcRParams
+	"funcRParams?" -> "$"
+	unaryExp -> "unaryOp , unaryExp"
+	unaryExp -> primaryExp
+	unaryExp -> "Ident , '(' , funcRParams? , ')'"
+	unaryOp -> "'-'"
+	unaryOp -> "'+'"
+	unaryOp -> "'!'"
+	"n','funcRParam" -> "',' , funcRParam"
+	"n','funcRParam*" -> "n','funcRParam , n','funcRParam*"
+	"n','funcRParam*" -> "$"
+	funcRParams -> "funcRParam , n','funcRParam*"
+	funcRParam -> exp
+	"n'*'|'/'|'%'" -> "'%'"
+	"n'*'|'/'|'%'" -> "'*'"
+	"n'*'|'/'|'%'" -> "'/'"
+	mulExp -> "mulExp , n'*'|'/'|'%' , unaryExp"
+	mulExp -> unaryExp
+	"n'+'|'-'" -> "'-'"
+	"n'+'|'-'" -> "'+'"
+	addExp -> "addExp , n'+'|'-' , mulExp"
+	addExp -> mulExp
+	"n'<'|'>'|'<='|'>='" -> "'>'"
+	"n'<'|'>'|'<='|'>='" -> "'<='"
+	"n'<'|'>'|'<='|'>='" -> "'<'"
+	"n'<'|'>'|'<='|'>='" -> "'>='"
+	relExp -> "relExp , n'<'|'>'|'<='|'>=' , addExp"
+	relExp -> addExp
+	"n'=='|'!='" -> "'=='"
+	"n'=='|'!='" -> "'!='"
+	eqExp -> relExp
+	eqExp -> "eqExp , n'=='|'!=' , relExp"
+	lAndExp -> "lAndExp , '&&' , eqExp"
+	lAndExp -> eqExp
+	lOrExp -> lAndExp
+	lOrExp -> "lOrExp , '||' , lAndExp"
+	constExp -> addExp
+	IntConst -> "'int'"
+	Ident -> "'idn'"
+	Program [color=red]
+	"'!'" [shape=doublecircle]
+	"'>'" [shape=doublecircle]
+	"'%'" [shape=doublecircle]
+	"'return'" [shape=doublecircle]
+	"'<'" [shape=doublecircle]
+	"'{'" [shape=doublecircle]
+	"'=='" [shape=doublecircle]
+	"'}'" [shape=doublecircle]
+	"$" [shape=doublecircle]
+	"'void'" [shape=doublecircle]
+	"'const'" [shape=doublecircle]
+	"'>='" [shape=doublecircle]
+	"'-'" [shape=doublecircle]
+	"')'" [shape=doublecircle]
+	"'/'" [shape=doublecircle]
+	"'||'" [shape=doublecircle]
+	"'EOF'" [shape=doublecircle]
+	"'('" [shape=doublecircle]
+	"'+'" [shape=doublecircle]
+	"'idn'" [shape=doublecircle]
+	"'&&'" [shape=doublecircle]
+	"'!='" [shape=doublecircle]
+	"'*'" [shape=doublecircle]
+	"'int'" [shape=doublecircle]
+	"'<='" [shape=doublecircle]
+	"';'" [shape=doublecircle]
+	"','" [shape=doublecircle]
+	"'='" [shape=doublecircle]
+}

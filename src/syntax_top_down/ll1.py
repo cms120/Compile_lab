@@ -30,8 +30,6 @@ def states_str(states: List[Tuple[Tuple[str]]]) -> str:
 
 def analysis(tokens: Deque[str]) -> List[Tuple[Tuple[str]]]:
     g = get_grammar_c_minus()
-    g.set_first()
-    g.set_follow()
     g.check_ll1()
 
     states: List[Tuple[Tuple[str]]] = list()
@@ -48,15 +46,17 @@ def analysis(tokens: Deque[str]) -> List[Tuple[Tuple[str]]]:
         tokens.append(a)  # a未匹配成功
         assert not is_terminal(non_ter)  # 不能匹配那么不能是非终结符
 
-        now_first = g.get_ch_first(non_ter)
-        if a in now_first:  # a属于其中一个候选首符集
-            for r in prods.get(a):
+        non_ter_first = g.get_ch_first(non_ter)
+        if a in non_ter_first:  # a属于其中一个候选首符集
+            for r in prods.get(non_ter):  # 遍历产生式 找到匹配的产生式
                 if a in g.get_r_first(r):
-                    non_ter_s.append(r)
+                    r_list = list(r)
+                    r_list.reverse()
+                    non_ter_s.extend(r_list)  # 将产生式依次压入进栈
                     break
         else:  # a不属于任意一个候选首符集 让 $ 自动匹配now
             now_follow = g.get_ch_follow(non_ter)
-            assert '$' in now_first and a in now_follow, non_ter_s + a  # 否则是语法错误
+            assert '$' in non_ter_first and a in now_follow, non_ter_s + a  # 否则是语法错误
 
     write_file(states_str(states), 'result/syntax/LL1_states.txt')
     write_file(states_format_str(states), 'result/syntax/LL1_analysis.txt')

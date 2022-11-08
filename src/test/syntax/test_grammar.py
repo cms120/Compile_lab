@@ -13,16 +13,9 @@ class GrammarTest(unittest.TestCase):
         for p in Production.init_by_line("4. constDecl -> 'const' bType constDef ( ',' constDef ) * ';';"):
             print(p)
 
-    def test_remove_recall(self):
-        pass
-
     def test_get_grammar_c_minus(self):
         self.assertTrue(True)
         g = get_grammar_c_minus()
-        g.set_first()
-        g.set_follow()
-        g.check_first()
+        g.check_ll1()
 
-        file_name = 'result/grammar/grammar_c_minus'
-        graph_grammar(g, file_name)
-        write_file(str(g), file_name + '.txt')
+        graph_grammar(g, 'result/grammar/grammar_c_minus')

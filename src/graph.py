@@ -1,5 +1,3 @@
-import os.path
-
 from graphviz import Digraph
 
 import util
@@ -19,7 +17,7 @@ def graph_fa_print(fa: FA, file_name='FA'):  # 画NFA的图像
     for z in fa.z:
         g.node(z, shape='doublecircle')  # 结束节点双层
 
-    g.render( file_name + '.gv', view=True)
+    g.render(file_name + '.gv', view=True)
 
 
 def graph_dfa_print(dfa: DFA, file_name='DFA'):
@@ -41,4 +39,4 @@ def graph_grammar(g: Grammar, file_name='grammar'):
     for ter in g.get_terminals():
         graph.node(ter, shape='doublecircle')
 
-    graph.render(os.path.join('result/grammar', file_name + '.gv'), view=True)
+    graph.render((file_name + '.gv'), view=True)

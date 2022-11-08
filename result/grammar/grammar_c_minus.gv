@@ -1,0 +1,105 @@
+// graph_grammar
+digraph {
+	program -> compUnit
+	compUnit -> "decl , compUnit"
+	compUnit -> "funcDef , compUnit"
+	compUnit -> "$"
+	decl -> constDecl
+	decl -> varDecl
+	constDecl -> "'const' , bType , constDef , argConst , ';'"
+	argConst -> "',' , constDef , argConst"
+	argConst -> "$"
+	constDef -> "'IDN' , '=' , constInitVal"
+	constInitVal -> constExp
+	varDecl -> "bType , varDef , argVarDecl , ';'"
+	argVarDecl -> "',' , varDef , argVarDecl"
+	argVarDecl -> "$"
+	varDef -> "'IDN' , argVarDef"
+	argVarDef -> "'=' , initVal"
+	argVarDef -> "$"
+	initVal -> exp
+	bType -> "'int'"
+	funcDef -> "funcType , 'IDN' , '(' , funcFParams , ')' , block"
+	funcType -> "'void'"
+	funcFParams -> "funcFParam , argFunctionF"
+	funcFParams -> "$"
+	argFunctionF -> "',' , funcFParam , argFunctionF"
+	argFunctionF -> "$"
+	funcFParam -> "bType , 'IDN'"
+	block -> "'{' , blockItem , '}'"
+	blockItem -> "stmt , blockItem"
+	blockItem -> "decl , blockItem"
+	blockItem -> "$"
+	stmt -> "exp , ';'"
+	stmt -> block
+	stmt -> "';'"
+	stmt -> "'return' , argExp , ';'"
+	argExp -> exp
+	argExp -> "$"
+	exp -> assignExp
+	lVal -> "'IDN'"
+	primaryExp -> number
+	primaryExp -> "'(' , exp , ')'"
+	number -> "'INT'"
+	unaryOp -> "'+'"
+	unaryOp -> "'!'"
+	unaryOp -> "'-'"
+	unaryExp -> primaryExp
+	callFunc -> "'(' , funcRParams , ')'"
+	callFunc -> "$"
+	funcRParams -> "funcRParam , argFunctionR"
+	funcRParams -> "$"
+	argFunctionR -> "',' , funcRParam , argFunctionR"
+	argFunctionR -> "$"
+	funcRParam -> exp
+	mulExp -> "unaryExp , mulExpAtom"
+	mulExpAtom -> "'*' , unaryExp , mulExpAtom"
+	mulExpAtom -> "'%' , unaryExp , mulExpAtom"
+	mulExpAtom -> "'/' , unaryExp , mulExpAtom"
+	mulExpAtom -> "$"
+	addExp -> "mulExp , addExpAtom"
+	addExpAtom -> "'+' , mulExp , addExpAtom"
+	addExpAtom -> "'-' , mulExp , addExpAtom"
+	addExpAtom -> "$"
+	relExp -> "addExp , relExpAtom"
+	relExpAtom -> "$"
+	relExpAtom -> "'<=' , addExp , relExpAtom"
+	relExpAtom -> "'>' , addExp , relExpAtom"
+	relExpAtom -> "'>=' , addExp , relExpAtom"
+	relExpAtom -> "'<' , addExp , relExpAtom"
+	eqExp -> "relExp , eqExpAtom"
+	eqExpAtom -> "'==' , relExp , eqExpAtom"
+	eqExpAtom -> "'!=' , relExp , eqExpAtom"
+	eqExpAtom -> "$"
+	assignExp -> "eqExp , assignExpAtom"
+	assignExpAtom -> "'=' , eqExp , assignExpAtom"
+	assignExpAtom -> "$"
+	constExp -> assignExp
+	program [color=red]
+	"','" [shape=doublecircle]
+	"'return'" [shape=doublecircle]
+	"'!'" [shape=doublecircle]
+	"';'" [shape=doublecircle]
+	"'+'" [shape=doublecircle]
+	"'%'" [shape=doublecircle]
+	"'('" [shape=doublecircle]
+	"$" [shape=doublecircle]
+	"'>='" [shape=doublecircle]
+	"'const'" [shape=doublecircle]
+	"'{'" [shape=doublecircle]
+	"')'" [shape=doublecircle]
+	"'!='" [shape=doublecircle]
+	"'<'" [shape=doublecircle]
+	"'=='" [shape=doublecircle]
+	"'}'" [shape=doublecircle]
+	"'>'" [shape=doublecircle]
+	"'int'" [shape=doublecircle]
+	"'='" [shape=doublecircle]
+	"'void'" [shape=doublecircle]
+	"'INT'" [shape=doublecircle]
+	"'-'" [shape=doublecircle]
+	"'<='" [shape=doublecircle]
+	"'IDN'" [shape=doublecircle]
+	"'/'" [shape=doublecircle]
+	"'*'" [shape=doublecircle]
+}

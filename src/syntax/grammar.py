@@ -161,7 +161,7 @@ class Grammar:
             self.__follow[non_terminal] = set()
         self.__follow[self.get_s()].add('#')
 
-    def is_any_follow_grow(self):
+    def is_any_follow_grow(self) -> bool:
         flag = False
         prods = self.get_prods()
         for left in prods.keys():
@@ -169,18 +169,21 @@ class Grammar:
             for right in rights:  # 遍历每一条规则
                 for i in range(len(right) - 1):
                     if right[i] in self.__non_terminals:
-                        self.__follow[right[i]] += self.get_chs_first(right[i + 1:len(right):1])
-                        flag = True
+                        before_len = len(self.__follow[right[i]])
+                        self.__follow[right[i]].update(self.get_chs_first(right[i + 1:len(right):1]))
+                        flag = (len(self.__follow[right[i]]) != before_len)
 
                 if right[-1] in self.__non_terminals:
-                    self.__follow[right[-1]] += self.__follow[left]
-                    flag = True
+                    before_len = len(self.__follow[right[-1]])
+                    self.__follow[right[-1]].update(self.__follow[left])
+                    flag = (len(self.__follow[right[-1]]) != before_len)
 
                 for i in range(len(right) - 1, 0, -1):
                     if '$' in self.get_chs_first(right[i:len(right):1]) and \
                             right[i - 1] in self.__non_terminals:
-                        self.__follow[right[i - 1]] += self.__follow[left]
-                        flag = True
+                        before_len = len(self.__follow[right[i - 1]])
+                        self.__follow[right[i - 1]].update(self.__follow[left])
+                        flag = (len(self.__follow[right[i - 1]]) != before_len)
         return flag
 
     def check_follow(self):
@@ -199,7 +202,7 @@ class Grammar:
 
     def set_follow(self):
         self.init_follow()
-        while self.is_any_follow_grow:
+        while self.is_any_follow_grow():
             continue
 
     def get_ch_follow(self, ch: str) -> Set[str]:

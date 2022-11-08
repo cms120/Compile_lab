@@ -1,6 +1,5 @@
 import unittest
 
-
 from lexical.fa import FA, get_fa_c_minus
 from lexical.regex.regex import Regex
 from lexical.regex.rules import Rules

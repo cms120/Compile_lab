@@ -3,8 +3,8 @@ import os.path
 from graphviz import Digraph
 
 import util
-from lexical.dfa_shan import DFA
-from lexical.finite_automation import FA
+from lexical.dfa import DFA
+from lexical.fa import FA
 from syntax.grammar import Grammar
 
 
@@ -19,7 +19,7 @@ def graph_fa_print(fa: FA, file_name='FA'):  # 画NFA的图像
     for z in fa.z:
         g.node(z, shape='doublecircle')  # 结束节点双层
 
-    g.render(os.path.join('result/lexical', file_name + '.gv'), view=True)
+    g.render( file_name + '.gv', view=True)
 
 
 def graph_dfa_print(dfa: DFA, file_name='DFA'):

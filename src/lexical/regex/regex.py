@@ -55,12 +55,7 @@ _IDN = '(' + ascii_lowercase + '|' + ascii_uppercase + '|_)' \
                                                        '.' \
                                                        '(' + ascii_lowercase + '|' + ascii_uppercase + '|' + \
        digits + '|_)*'
-_FP = '(' + _INT + '|0).' \
-                   '\\.' \
-                   '.(' + digits + ')*'  # TODO 不用支持
 
-# STR只支持了c--中字符以及部分必要字符
-_STR = ascii_lowercase + '|' + ascii_uppercase + '|' + digits + '+|-|\\*|/|%|=|>|<|!|&|:|;|{|}|\\(|\\)|,| |\n|\t'
 
 re_c_minus = _INT + '|' + \
              _IDN + '|' + \

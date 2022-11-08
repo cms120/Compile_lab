@@ -4,7 +4,7 @@ import random
 from collections import deque
 from typing import Set, Dict, Deque, Tuple, List
 
-from lexical.finite_automation import FA, get_fa_c_minus
+from lexical.fa import FA, get_fa_c_minus
 from src import util
 from util import write_file
 
@@ -207,8 +207,13 @@ def dfa_minimize(dfa: DFA) -> DFA:  # DFA最小化
     return DFA(m_dfa_k, m_dfa_letters, m_dfa_f, m_dfa_s, m_dfa_z)
 
 
-def get_dfa_c_minus() -> DFA:  # 获得 c-- 确定化的DFA
-    return fa_2_dfa(get_fa_c_minus())
+def get_dfa_c_minus() -> DFA:
+    """
+    获得确定化的c--dfa
+    """
+    dfa = fa_2_dfa(get_fa_c_minus())
+    write_file(str(dfa), 'result/lexical/dfa_not_min/dfa_c_minus_not_min.txt')
+    return dfa
 
 
 def get_dfa_minimize_c_minus(if_read_file=False) -> DFA:
@@ -217,19 +222,19 @@ def get_dfa_minimize_c_minus(if_read_file=False) -> DFA:
 
     :param if_read_file: 是否从文件中读入 c--的dfa
     """
-    lexical_result_path = os.path.join('result', 'lexical')
+    lexical_result_path = 'result/lexical/dfa'
     dfa: DFA
     if if_read_file:
-        with open(os.path.join(lexical_result_path, "dfa.pkl"), 'rb') as file:
+        with open(os.path.join(lexical_result_path, "dfa_c_minus.pkl"), 'rb') as file:
             dfa = pickle.loads(file.read())
 
     else:
         dfa = dfa_minimize(fa_2_dfa(get_fa_c_minus()))
-        output_hal = open(os.path.join(lexical_result_path, "dfa.pkl"), 'wb')
+        output_hal = open(os.path.join(lexical_result_path, "dfa_c_minus.pkl"), 'wb')
         str_dfa = pickle.dumps(dfa)
         output_hal.write(str_dfa)
         output_hal.close()
 
-        write_file(str(dfa), 'os.path.join(lexical_result_path, "dfa.txt")')
+        write_file(str(dfa), os.path.join(lexical_result_path, "dfa_c_minus.txt"))
 
     return dfa

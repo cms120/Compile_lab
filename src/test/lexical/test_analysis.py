@@ -1,16 +1,14 @@
 import unittest
 
-from lexical.dfa_shan import get_dfa_minimize_c_minus
+from lexical.dfa import get_dfa_minimize_c_minus
 from lexical.lexical_analysis import analysis, get_token_list_by_line_dfa
 
 
 class LATest(unittest.TestCase):
 
-    def testAnalysis(self):
+    def test_analysis(self):
         self.assertTrue(True)
-        res = analysis('src/test/lexical/sy_s/03_var_defn.sy')
-        for i in res:
-            print(i)
+        res = analysis('resource/change_file/源文件/03_var_defn.sy')
 
     def test_get_token_list_by_line_dfa(self):
         self.assertTrue(True)

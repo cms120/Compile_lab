@@ -1,9 +1,9 @@
 import unittest
 
 from graph import graph_dfa_print, graph_fa_print
-from lexical.dfa_shan import fa_2_dfa, DFA, get_dfa_minimize_c_minus, \
+from lexical.dfa import fa_2_dfa, DFA, get_dfa_minimize_c_minus, \
     get_dfa_c_minus, dfa_minimize
-from lexical.finite_automation import FA
+from lexical.fa import FA
 from lexical.regex.regex import Regex
 from lexical.regex.rules import Rules
 from test.lexical.test_case import fa_s, dfa_s_shan, re_s
@@ -40,32 +40,29 @@ class DFAShanTest(unittest.TestCase):
 
     def test_dfa_minimize2(self):
         self.assertTrue(True)
-        re_postfix = Regex.get_re_postfix(re_s[0])
+        re_postfix = Regex.get_re_postfix(re_s[1])
         rules = Rules.init_by_re_postfix(re_postfix)
 
         fa = FA.init_by_rules(rules)
-        print(fa)
-        graph_fa_print(fa, 'INT_fa')
+        # graph_fa_print(fa, 'result/lexical/fa/fa_IDN')
 
         dfa = fa_2_dfa(fa)
-        print(dfa)
-        graph_dfa_print(dfa, 'INT_dfa')
+        # graph_dfa_print(dfa, 'result/lexical/dfa_not_min/dfa_IDN_not_min')
 
         dfa = dfa_minimize(dfa)
-        print(dfa_minimize(dfa))
-        graph_dfa_print(dfa, 'INT_dfa_min')
+        graph_dfa_print(dfa, 'result/lexical/dfa/dfa_IDN')
 
     def test_get_dfa_c_minus(self):
         self.assertTrue(True)
         dfa = get_dfa_c_minus()
-        print(dfa)
-        graph_dfa_print(dfa)
+
+        # 画图消耗资源过多
+        graph_dfa_print(dfa, 'result/lexical/dfa_not_min/dfa_c_minus_not_min')
 
     def test_get_dfa_minimize_c_minus(self):
         self.assertTrue(True)
         dfa = get_dfa_minimize_c_minus()
-        print(dfa)
-        graph_dfa_print(dfa)
+        graph_dfa_print(dfa, 'result/lexical/dfa/dfa_c_minus')
 
 
 if __name__ == '__main__':

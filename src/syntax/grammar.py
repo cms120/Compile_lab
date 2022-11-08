@@ -221,6 +221,6 @@ def get_grammar_c_minus() -> Grammar:
     构造c--的语法
     """
     g = Grammar()
-    grammar_file = 'resource/更改文件/grammar2.txt'
+    grammar_file = 'resource/change_file/grammar2.txt'
     g.init_by_lines(read_file(grammar_file))
     return g

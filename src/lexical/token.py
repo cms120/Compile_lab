@@ -28,9 +28,9 @@ class Token:
         """
         格式化输出token
         """
-        if self.words == LexicalUnit.regex_ident:
+        if self.words == LexicalUnit.IDN:
             return self.val + '\t<IDN,' + self.val + '>'
-        elif self.words == LexicalUnit.regex_int_const:
+        elif self.words == LexicalUnit.INT:
             return self.val + '\t<INT,' + self.val + '>'
         else:
             res = self.words.value + '\t<'

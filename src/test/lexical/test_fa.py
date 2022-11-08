@@ -1,8 +1,9 @@
 import unittest
 
-from lexical.finite_automation import *
-from lexical.finite_automation import FA
+
+from lexical.fa import FA, get_fa_c_minus
 from lexical.regex.regex import Regex
+from lexical.regex.rules import Rules
 from test.lexical.test_case import fa_s, re_s
 
 
@@ -25,7 +26,7 @@ class FATest(unittest.TestCase):
             re_postfix = Regex.get_re_postfix(re)
             print(re_postfix)
             rules = Rules.init_by_re_postfix(re_postfix)
-            # print(rules)
+
             fa = FA.init_by_rules(rules)
             print(fa)
 

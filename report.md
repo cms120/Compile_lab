@@ -17,7 +17,10 @@
 ##### IDN
 
 ```python
-_IDN = '(' + ascii_lowercase + '|' + ascii_uppercase + '|_).(' + ascii_lowercase + '|' + ascii_uppercase + '|' + digits
+_IDN = '(' + ascii_lowercase + '|' + ascii_uppercase + '|_)' \
+                                                       '.' \
+                                                       '(' + ascii_lowercase + '|' + ascii_uppercase + '|' + 
+       digits + '|_)*'
 ```
 
 ##### INT
@@ -41,48 +44,39 @@ _INT = '(' + digits_without_zero + ').(' + digits + ')*|0'
 '<.=|' + \
 '>.=|' + \
 '!.=|' + \
-'&.&|' + \
-'\\|.\\||' + \
 ':|' + \
 '\\(|' + \
 '\\)|' + \
 '{|' + \
 '}|' + \
 ';|' + \
-','
+',' 
 ```
 
 #### 2 将regex转换为re_postfix 
 
-###### 正则表达式转为后缀表达式以便于后续Rules的构造以及FA的生成
-
-
+正则表达式转为后缀表达式以便于后续Rules的构造以及FA的生成
 
 在处理正则表达式时，对于正则表达式的关键字（运算符）需要特别注意，除此之外，由于  ||  类似需要匹配的正则式的出现需要借助\\转义字符来处理冲突
 
+```python
+'*': ,  # 闭包
+'.': ,  # 连接
+'|': ,  # 或
+'(': ,  # 左括号
+')':    # 右括号
+\\ :    # 转义字符处理与运算符的冲突
 ```
-		  '*': ,  # 闭包
-           '.': ,  # 连接
-           '|': ,  # 或
-           '(': ,  # 左括号
-           ')':    # 右括号
-           \\ :    # 转义字符处理与运算符的冲突
-```
 
+##### 核心思想：
 
-
-     核心思想：1 循环开始：
-    
-      			1.1:如果是字符，加入postfix
-    
-      			1.2：如果是运算符，如果堆栈为空，直接入stack
-      				1.2.1： 	如果该字符是左括号时，直接放入堆栈
-    
-    				1.2.2：	如果该字符是右括号时，一直输出栈顶元素，直到遇见左括号为止break:
-     				
-     				1.2.3：	如果是非（）运算符那么遍历stack元素 一直输出优先级>=当前符号的 当遇到其他字符时（如左括号）或堆栈空时break
-     				
-     		  2，循环结束，输出堆栈中剩余运算符
+1. 循环开始：
+   1. 如果是字符，加入postfix
+   2. 如果是运算符，如果堆栈为空，直接入stack
+      1. 如果该字符是左括号时，直接放入堆栈
+      2. 如果该字符是右括号时，一直输出栈顶元素，直到遇见左括号为止break:
+      3. 如果是非（）运算符那么遍历stack元素 一直输出优先级>=当前符号的 当遇到其他字符时（如左括号）或堆栈空时break
+2. 循环结束，输出堆栈中剩余运算符    
 
 
 ```python
@@ -121,160 +115,152 @@ def get_re_postfix(re: str) -> str:  # 得到后缀表达式 a.b -> ab.
     return res
 ```
 
-#### 3 根据re_postfix构造Rules TODO
+#### 3 根据re_postfix构造Rules
 
-1. [参考1](https://blog.csdn.net/m0_52293362/article/details/126368664?ops_request_misc=%257B%2522request%255Fid%2522%253A%2522166575589816782417024237%2522%252C%2522scm%2522%253A%252220140713.130102334.pc%255Fall.%2522%257D&request_id=166575589816782417024237&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~first_rank_ecpm_v1~rank_v31_ecpm-7-126368664-null-null.142^v56^control,201^v3^control&utm_term=%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%9E%84%E9%80%A0nfa&spm=1018.2226.3001.4187)
+State的数据结构
 
-2. [参考2](https://blog.csdn.net/tch3430493902/article/details/102489344?spm=1001.2101.3001.6650.7&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-7-102489344-blog-102981220.t0_edu_mix&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-7-102489344-blog-102981220.t0_edu_mix&utm_relevant_index=14)
+```python
+def __init__(self, is_end: bool):
+    self.is_end = is_end
+    self.flag = State.get_flag()  # 状态转换图 标号
+    self.transitions = {}
+    self.epsilonTransitions = []
+    State.__STATE_ALL.add(self)
+    State.flag_plus()
+```
 
-   State的数据结构
+Rules的数据结构
 
-   ```python
-   def __init__(self, is_end: bool):
-       self.is_end = is_end
-       self.flag = State.get_flag()  # 状态转换图 标号
-       self.transitions = {}
-       self.epsilonTransitions = []
-       State.__STATE_ALL.add(self)
-       State.flag_plus()
-   ```
+```python
+def __init__(self, start: State, end: State):
+    self.start = start
+    self.end = end
+```
 
-   Rules的数据结构
+给状态添加转换
 
-   ```python
-   def __init__(self, start: State, end: State):
-       self.start = start
-       self.end = end
-   ```
+```python
+@staticmethod
+def __epsilon_transition(pre: State, nxt: State):  # 创建 epsilon transition
+    pre.epsilonTransitions.append(nxt)
 
-   给状态添加转换
+@staticmethod
+def __letter_transition(pre_state: State, next_state: State, letter: str):  # 创建 普通 transition
+    pre_state.transitions[letter] = next_state
+```
 
-   ```python
-   @staticmethod
-   def __epsilon_transition(pre: State, nxt: State):  # 创建 epsilon transition
-       pre.epsilonTransitions.append(nxt)
-   
-   @staticmethod
-   def __letter_transition(pre_state: State, next_state: State, letter: str):  # 创建 普通 transition
-       pre_state.transitions[letter] = next_state
-   ```
+创建两种基础Rules:
 
-   创建两种基础Rules:
+```python
+@staticmethod
+def __epsilon_rules() -> tuple[State, State]:  # 创建 epsilon 规则
+    start = State(False)
+    end = State(True)
+    Rules.__epsilon_transition(start, end)
 
-   ```python
-   @staticmethod
-   def __epsilon_rules() -> tuple[State, State]:  # 创建 epsilon 规则
-       start = State(False)
-       end = State(True)
-       Rules.__epsilon_transition(start, end)
-   
-       return start, end
-   
-   @staticmethod
-   def __letter_rules(letter) -> tuple[State, State]:  # 创建普通规则
-       start = State(False)
-       end = State(True)
-       Rules.__letter_transition(start, end, letter)
-   
-       return start, end
-   
-       @staticmethod
-       def get_epsilon_rules():
-           start, end = Rules.__epsilon_rules()
-           return Rules(start, end)
-   
-       @staticmethod
-       def get_single_letters_rules(letter):
-           start, end = Rules.__letter_rules(letter)
-           return Rules(start, end)
-   ```
+    return start, end
 
-   |  *  . 三种运算符对应的Rules
+@staticmethod
+def __letter_rules(letter) -> tuple[State, State]:  # 创建普通规则
+    start = State(False)
+    end = State(True)
+    Rules.__letter_transition(start, end, letter)
 
-   ```python
-   @staticmethod
-   def get_concat_rules(pre_rules, next_rules):
-       Rules.__epsilon_transition(pre_rules.end, next_rules.start)
-       pre_rules.end.is_end = False
-   
-       return Rules(pre_rules.start, next_rules.end)
-   
-   @staticmethod
-   def get_union_rules(pre_rules, next_rules):
-   
-       start = State(False)
-       Rules.__epsilon_transition(start, pre_rules.start)
-       Rules.__epsilon_transition(start, next_rules.start)
-   
-       end = State(True)
-       Rules.__epsilon_transition(pre_rules.end, end)
-       pre_rules.end.is_end = False
-       Rules.__epsilon_transition(next_rules.end, end)
-       next_rules.end.is_end = False
-   
-       return Rules(start, end)
-   
-   @staticmethod
-   def closure(rules):
-       start = State(False)
-       end = State(True)
-   
-       Rules.__epsilon_transition(start, end)
-       Rules.__epsilon_transition(start, rules.start)
-   
-       Rules.__epsilon_transition(rules.end, end)
-       Rules.__epsilon_transition(rules.end, rules.start)
-   
-       rules.end.is_end = False
-   
-       return Rules(start, end)
-   ```
+    return start, end
 
-   ###### 从后缀表达式中获取Rules
+    @staticmethod
+    def get_epsilon_rules():
+        start, end = Rules.__epsilon_rules()
+        return Rules(start, end)
 
-   核心思想：创建一个栈（stack)，并从左往右以此读取pofix.
+    @staticmethod
+    def get_single_letters_rules(letter):
+        start, end = Rules.__letter_rules(letter)
+        return Rules(start, end)
+```
 
-   ​	1.若读取的是字符，创建字符Rules,压入栈中
+|  *  . 三种运算符对应的Rules
 
-   ​	2.若读取的是操作符，弹出栈中内容，创建操作符Rules,再压入栈
+```python
+@staticmethod
+def get_concat_rules(pre_rules, next_rules):
+    Rules.__epsilon_transition(pre_rules.end, next_rules.start)
+    pre_rules.end.is_end = False
 
-   
+    return Rules(pre_rules.start, next_rules.end)
 
-   ```python
-   @staticmethod
-       def init_by_re_postfix(re_postfix):
-           State.reset()
-           if re_postfix == '':
-               return Rules.get_epsilon_rules()  # fa 的转换函数
-           stack = deque()
-           it = iter(range(len(re_postfix)))
-           for i in it:
-               if re_postfix[i] == '.':
-                   assert len(stack) >= 2, 'stack: ' + str(stack)
-                   rules_nxt = stack.pop()
-                   rules_pre = stack.pop()
-                   new_rules = Rules.get_concat_rules(rules_pre, rules_nxt)
-                   stack.append(new_rules)
-               elif re_postfix[i] == '|':
-                   rules_nxt = stack.pop()
-                   rules_pre = stack.pop()
-                   new_rules = Rules.get_union_rules(rules_pre, rules_nxt)
-                   stack.append(new_rules)
-               elif re_postfix[i] == '*':
-                   rules = stack.pop()
-                   new_rules = Rules.closure(rules)
-                   stack.append(new_rules)
-               elif re_postfix[i] == '\\':
-                   rules = Rules.get_single_letters_rules(re_postfix[i + 1])
-                   stack.append(rules)
-                   next(it)
-               else:
-                   rules = Rules.get_single_letters_rules(re_postfix[i])
-                   stack.append(rules)
-           return stack.pop()
-   ```
+@staticmethod
+def get_union_rules(pre_rules, next_rules):
 
+    start = State(False)
+    Rules.__epsilon_transition(start, pre_rules.start)
+    Rules.__epsilon_transition(start, next_rules.start)
 
+    end = State(True)
+    Rules.__epsilon_transition(pre_rules.end, end)
+    pre_rules.end.is_end = False
+    Rules.__epsilon_transition(next_rules.end, end)
+    next_rules.end.is_end = False
+
+    return Rules(start, end)
+
+@staticmethod
+def closure(rules):
+    start = State(False)
+    end = State(True)
+
+    Rules.__epsilon_transition(start, end)
+    Rules.__epsilon_transition(start, rules.start)
+
+    Rules.__epsilon_transition(rules.end, end)
+    Rules.__epsilon_transition(rules.end, rules.start)
+
+    rules.end.is_end = False
+
+    return Rules(start, end)
+```
+
+###### 从后缀表达式中获取Rules
+
+核心思想：创建一个栈（stack)，并从左往右以此读取pofix.
+
+​	1.若读取的是字符，创建字符Rules,压入栈中
+
+​	2.若读取的是操作符，弹出栈中内容，创建操作符Rules,再压入栈
+
+```python
+@staticmethod
+    def init_by_re_postfix(re_postfix):
+        State.reset()
+        if re_postfix == '':
+            return Rules.get_epsilon_rules()  # fa 的转换函数
+        stack = deque()
+        it = iter(range(len(re_postfix)))
+        for i in it:
+            if re_postfix[i] == '.':
+                assert len(stack) >= 2, 'stack: ' + str(stack)
+                rules_nxt = stack.pop()
+                rules_pre = stack.pop()
+                new_rules = Rules.get_concat_rules(rules_pre, rules_nxt)
+                stack.append(new_rules)
+            elif re_postfix[i] == '|':
+                rules_nxt = stack.pop()
+                rules_pre = stack.pop()
+                new_rules = Rules.get_union_rules(rules_pre, rules_nxt)
+                stack.append(new_rules)
+            elif re_postfix[i] == '*':
+                rules = stack.pop()
+                new_rules = Rules.closure(rules)
+                stack.append(new_rules)
+            elif re_postfix[i] == '\\':
+                rules = Rules.get_single_letters_rules(re_postfix[i + 1])
+                stack.append(rules)
+                next(it)
+            else:
+                rules = Rules.get_single_letters_rules(re_postfix[i])
+                stack.append(rules)
+        return stack.pop()
+```
 
 #### 4 根据Rules构造FA
 

@@ -3,10 +3,7 @@ from typing import Dict, Set, Deque
 
 from lexical.regex.rules import Rules, get_rules_c_minus
 from lexical.regex.state import State
-
-
-def print_rules(rules):
-    print(rules.start.flag, rules.end.flag)
+from util import write_file
 
 
 class FA:
@@ -95,4 +92,6 @@ class FA:
 
 
 def get_fa_c_minus() -> FA:  # 获得c--的fa
-    return FA.init_by_rules(get_rules_c_minus())
+    fa = FA.init_by_rules(get_rules_c_minus())
+    write_file(str(fa), 'result/lexical/fa/fa_c_minus.txt')
+    return fa

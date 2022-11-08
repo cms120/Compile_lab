@@ -1,3 +1,3 @@
-from lexical.lexical_analysis import analysis
+from lexical.analysis import analysis
 
 analysis()

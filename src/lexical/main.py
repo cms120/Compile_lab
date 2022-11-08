@@ -1,3 +1,3 @@
-from lexical.analysis import analysis
+from lexical.lexical_analysis import analysis
 
-analysis()
+analysis('resource/change_file/源文件/03_var_defn.sy')

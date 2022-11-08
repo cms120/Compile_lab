@@ -56,7 +56,6 @@ _IDN = '(' + ascii_lowercase + '|' + ascii_uppercase + '|_)' \
                                                        '(' + ascii_lowercase + '|' + ascii_uppercase + '|' + \
        digits + '|_)*'
 
-
 re_c_minus = _INT + '|' + \
              _IDN + '|' + \
              '+|' + \

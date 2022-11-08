@@ -10,19 +10,19 @@ class Token:
         self.words = words
         self.val = val
 
-    def __str__(self):
+    def __str__(self) -> str:
         if self.words == LexicalUnit.IDN:
             return 'IDN: ' + self.val
         elif self.words == LexicalUnit.INT:
             return 'INT: ' + self.val
         else:
-            return self.words.value
+            return str(self.words.value)
 
     def get_val(self) -> str:
         if self.words == LexicalUnit.IDN or self.words == LexicalUnit.INT:
             return self.val
         else:
-            return self.words.val
+            return str(self.words.value)
 
     def format_str(self) -> str:
         """
@@ -35,7 +35,7 @@ class Token:
         else:
             res = self.words.value + '\t<'
             if self.words.value in c_minus_keyword:
-                res += 'KE, >'
+                res += 'KW, >'
             elif self.words.value in c_minus_op:
                 res += 'OP, >'
             else:

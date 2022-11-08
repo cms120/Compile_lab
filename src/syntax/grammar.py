@@ -3,7 +3,7 @@ from copy import deepcopy
 from typing import Dict, Tuple, List, Set, Deque
 
 from syntax.production import Production, is_terminal
-from util import read_file, tuple_str, set_str
+from util import read_file, tuple_str, set_str, write_file
 
 
 class Grammar:
@@ -31,11 +31,11 @@ class Grammar:
         res += 'non_terminals: ' + set_str(self.__non_terminals) + '\n'
         res += 's: ' + self.__s + '\n'
 
-        res += 'first:\n'
+        res += '\nfirst:\n'
         for i in self.__first.items():
             res += tuple_str(i[0]) + ' : ' + set_str(i[1]) + '\n'
 
-        res += 'follow:\n'
+        res += '\nfollow:\n'
         for i in self.__follow.items():
             res += i[0] + ' : ' + set_str(i[1]) + '\n'
         return res
@@ -194,11 +194,11 @@ class Grammar:
             first_set = self.get_ch_first(non_ter)
             if '$' in first_set:  # 如果first集中有epsilon
                 follow_set = self.get_ch_follow(non_ter)
-                assert len(follow_set & first_set) == 0  # 每个非终结符
+                assert len(follow_set & first_set) == 0, non_ter  # 每个非终结符
 
     def check_ll1(self):
         self.check_first()
-        self.check_first()
+        self.check_follow()
 
     def set_follow(self):
         self.init_follow()
@@ -218,6 +218,9 @@ class Grammar:
             p = Production.init_by_line(line)
             self.add_prod(p)
 
+        self.set_first()
+        self.set_follow()
+
 
 def get_grammar_c_minus() -> Grammar:
     """
@@ -226,4 +229,5 @@ def get_grammar_c_minus() -> Grammar:
     g = Grammar()
     grammar_file = 'resource/change_file/grammar2.txt'
     g.init_by_lines(read_file(grammar_file))
+    write_file(str(g), 'result/grammar/grammar_c_minus.txt')
     return g

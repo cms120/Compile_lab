@@ -170,7 +170,9 @@ class Grammar:
                 for i in range(len(right) - 1):
                     if right[i] in self.__non_terminals:
                         before_len = len(self.__follow[right[i]])
-                        self.__follow[right[i]].update(self.get_chs_first(right[i + 1:len(right):1]))
+                        set_without_eps = self.get_chs_first(right[i + 1:len(right):1])
+                        set_without_eps.discard('$')
+                        self.__follow[right[i]].update(set_without_eps)
                         flag = (len(self.__follow[right[i]]) != before_len)
 
                 if right[-1] in self.__non_terminals:

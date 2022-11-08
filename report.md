@@ -318,23 +318,23 @@ rules与fa的f（转换函数）极为相似，因此构造较为简单
 
 <div STYLE="page-break-after: always;"></div>
 
-<img src="report.assets/fa.svg" style="zoom: 16%">
+<img src="report.assets/fa_INT.svg" style="zoom: 16%">
 
 <div STYLE="page-break-after: always;"></div>
 
 ###### DFA
 
-![dfa](report.assets/dfa.svg)
+![dfa](report.assets/dfa_INT_not_min.svg)
 
 #### 6 将DFA最小化 TODO
 
 ###### 最小化前
 
-![dfa](report.assets/dfa.svg)
+![dfa](report.assets/dfa_INT_not_min.svg)
 
 ###### 最小化后
 
-![dfa_min](report.assets/dfa_min.svg)
+![dfa_min](report.assets/dfa_INT.svg)
 
 最小化的主要步骤：
 
@@ -462,6 +462,26 @@ def get_token_list_by_line_dfa(dfa: DFA, line: str) -> List[Token]:
 
 [待测代码中的单词符号] [TAB] <[单词符号种别],[单词符号内容]>
 
+```python
+def format_str(self) -> str:
+    """
+    格式化输出token
+    """
+    if self.__unit == LexicalUnit.IDN:
+        return self.__val + '\t<IDN,' + self.__val + '>'
+    elif self.__unit == LexicalUnit.INT:
+        return self.__val + '\t<INT,' + self.__val + '>'
+    else:
+        res = self.__unit.value + '\t<'
+        if self.__unit.value in c_minus_keyword:
+            res += 'KW, >'
+        elif self.__unit.value in c_minus_op:
+            res += 'OP, >'
+        else:
+            res += 'SE, >'
+        return res
+```
+
 ### 附录1 graph
 
 调用了graphviz库，将dfa方便的可视化，便于调试程序以及看到结果
@@ -490,28 +510,108 @@ def graph_dfa_print(dfa: DFA):  # 画NFA的图像
 
 ## syntax LL1
 
-（2）语法分析器的算法描述，创建的分析表（预测分析表、LR 分析表等），输出格式说明，源程序编译步骤。
+2 语法分析器的算法描述，创建的分析表（预测分析表、LR 分析表等），输出格式说明，源程序编译步骤。
 
-1. 手动构造c--文法
-    - ![image-20221020200324493](README.assets/image-20221020200324493.png)
-2. 根据token串将其理解为各类语法单位：短语、子句、程序段、程序。输出语法树
+### grammar结构
 
-#### LL(1) 每一步只向前查看一个符号
+```python
+self.__prods: Dict[str, Set[Tuple[str]]] = dict() # 产生式 左侧与右侧
+  self.__terminals: Set[str] = set()  # 终结符
+    self.__non_terminals: Set[str] = set()  # 非终结符
+      self.__s = s # 起始符号
+      self.__first: Dict[Tuple[str], Set[str]] = dict()
+        self.__follow: Dict[str, Set[str]] = dict()
+```
 
-##### 消除左递归
+### 得到文法的first集
 
-1. 消除一个文法的左递归
-2. 消除一个产生式直接左递归
+遍历所有产生式候选，如果以终结符起始，那么first集便是非终结符；如果以非终结符起始，那么观察其产生式候选的first集是否求出，如果未求出，那么先跳过。将可以求出的求出后，在不断求未求出的，如此循环，可以求出所有first集
 
-1. 消除回溯、提取左因子
-    - 反复提取所有非终结符左因子，使得一个文法的所有非终结符的所有候选首符集两两不相交
+```python
+def set_first(self):
+    """
+    文法的first集
+    """
+    r_live: Deque[Tuple[str]] = deque()  # 待设置first的符号串
+    for left, right in self.get_prods().items():
+        for r in right:  # 遍历产生式候选
+            if not is_terminal(r[0]):
+                if not self.__set_r_first(r):
+                    r_live.append(r)
+
+    while len(r_live) > 0:  # 循环求first集
+        r_now = r_live.pop()
+        if not self.__set_r_first(r_now):
+            r_live.appendleft(r_now)
+```
+
+### 得到文法的follow集
+
+### 分析tokens
+
+- 在循环中，先将符号栈和tokens的状态保存，在取出一个符号和token
+  1. 如果匹配，那么进入下个循环。
+  2. 不匹配，现将token压回tokens，观察token是否属于符号的first集，
+     1. 属于，将符合的产生式候选压入符号栈
+     2. 不属于，看$是否在first集中并且token在follow集中
+        1. 在，那么什么也不做，让符号匹配$
+        2. 不在，程序出错
+
+```python
+def analysis(tokens: Deque[Token]) -> List[Tuple[Tuple[str]]]:
+    g = get_grammar_c_minus()
+    g.check_ll1()
+
+    states: List[Tuple[Tuple[str]]] = list()
+    prods = g.get_prods()
+    non_ter_s: Deque[str] = deque([g.get_s()])
+
+    while len(tokens) > 0:
+        states.append(tuple([tuple(non_ter_s), tuple(tokens_val(tokens))]))  # 将符号栈和输入栈存储
+        token: Token = tokens.popleft()  # 当前输入符号
+        non_ter: str = non_ter_s.pop()
+        if token.get_unit_val() == non_ter:  # 匹配成功
+            continue
+
+        tokens.appendleft(token)  # a未匹配成功
+        assert not is_terminal(non_ter), non_ter  # 不能匹配那么不能是终结符
+
+        now_first = g.get_ch_first(non_ter)
+        if token.get_unit_val() in now_first:  # a属于其中一个候选首符集
+            analysis_reduction(prods.get(non_ter), token.get_unit_val(), g, non_ter_s)
+
+        else:  # a不属于任意一个候选首符集 让 $ 自动匹配now
+            now_follow = g.get_ch_follow(non_ter)
+            assert '$' in now_first and token.get_unit_val() in now_follow, str(
+                non_ter_s) + ' token: ' + token.get_val()  # 否则是语法错误
+
+    write_file(states_str(states), 'result/syntax/LL1_states.txt')
+    write_file(states_format_str(states), 'result/syntax/LL1_analysis.txt')
+    return states
+```
+
+### 格式化输出
+
+```python
+def states_format_str(states: List[Tuple[Tuple[str]]]) -> str:
+    res = ''
+    index = 1
+    for state in states:
+        non_ter = state[0][-1]
+        token_val = state[1][0][1:-1]
+
+        line = str(index) + '\t'
+        if non_ter == "'EOF'":
+            line += 'EOF#EOF\taccept'
+        elif is_terminal(non_ter):
+            line += token_val + '#' + token_val + '\tmove'
+        else:
+            line += non_ter + '#' + token_val + '\treduction'
+
+        res += line + '\n'
+        index += 1
+    return res
+```
 
 
-LL(1)分析条件：
-
-1. 一个文法不含左递归
-2. 所有非终结符的所有候选首符集两两不相交
-3. 对于每个非终结符A，若某个候选首符集包含$\epsilon$，那么他的First与Follow集交集为空
-
-前两点可以通过算法解决，最后一点c--不一定符合，如果c--不符合，还需要回溯机制
 

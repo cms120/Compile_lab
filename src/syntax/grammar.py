@@ -11,10 +11,10 @@ class Grammar:
         """
         :param s: 开始符号
         """
-        self.__prods: Dict[str, Set[Tuple[str]]] = dict()
+        self.__prods: Dict[str, Set[Tuple[str]]] = dict() # 产生式 左侧与右侧
         self.__terminals: Set[str] = set()  # 终结符
         self.__non_terminals: Set[str] = set()  # 非终结符
-        self.__s = s
+        self.__s = s # 起始符号
         self.__first: Dict[Tuple[str], Set[str]] = dict()
         self.__follow: Dict[str, Set[str]] = dict()
 

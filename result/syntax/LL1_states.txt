@@ -1,0 +1,411 @@
+non_terminals:	( program )
+input: ( 'int' , 'a' , '=' , '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit )
+input: ( 'int' , 'a' , '=' , '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , decl )
+input: ( 'int' , 'a' , '=' , '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , varDecl )
+input: ( 'int' , 'a' , '=' , '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , varDef , bType )
+input: ( 'int' , 'a' , '=' , '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , varDef , 'int' )
+input: ( 'int' , 'a' , '=' , '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , varDef )
+input: ( 'a' , '=' , '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , argVarDef , 'IDN' )
+input: ( 'a' , '=' , '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , argVarDef )
+input: ( '=' , '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , initVal , '=' )
+input: ( '=' , '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , initVal )
+input: ( '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , exp )
+input: ( '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExp )
+input: ( '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExp )
+input: ( '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExp )
+input: ( '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExp )
+input: ( '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExp )
+input: ( '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , unaryExp )
+input: ( '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , primaryExp )
+input: ( '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , number )
+input: ( '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , 'INT' )
+input: ( '3' , ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom )
+input: ( ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom )
+input: ( ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom )
+input: ( ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom )
+input: ( ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom )
+input: ( ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl )
+input: ( ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , varDef , ',' )
+input: ( ',' , 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , varDef )
+input: ( 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , argVarDef , 'IDN' )
+input: ( 'b' , '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , argVarDef )
+input: ( '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , initVal , '=' )
+input: ( '=' , '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , initVal )
+input: ( '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , exp )
+input: ( '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExp )
+input: ( '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExp )
+input: ( '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExp )
+input: ( '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExp )
+input: ( '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExp )
+input: ( '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , unaryExp )
+input: ( '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , primaryExp )
+input: ( '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , number )
+input: ( '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , 'INT' )
+input: ( '1' , ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom )
+input: ( ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom )
+input: ( ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom )
+input: ( ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom )
+input: ( ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom )
+input: ( ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl )
+input: ( ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , varDef , ',' )
+input: ( ',' , 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , varDef )
+input: ( 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , argVarDef , 'IDN' )
+input: ( 'c' , '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , argVarDef )
+input: ( '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , initVal , '=' )
+input: ( '=' , '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , initVal )
+input: ( '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , exp )
+input: ( '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExp )
+input: ( '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExp )
+input: ( '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExp )
+input: ( '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExp )
+input: ( '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExp )
+input: ( '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , unaryExp )
+input: ( '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , primaryExp )
+input: ( '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , number )
+input: ( '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , 'INT' )
+input: ( '3' , ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom )
+input: ( ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom )
+input: ( ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom )
+input: ( ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom , eqExpAtom )
+input: ( ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl , assignExpAtom )
+input: ( ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' , argVarDecl )
+input: ( ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , ';' )
+input: ( ';' , 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit )
+input: ( 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , funcDef )
+input: ( 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , block , ')' , funcFParams , '(' , 'IDN' , funcType )
+input: ( 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , block , ')' , funcFParams , '(' , 'IDN' , 'void' )
+input: ( 'void' , 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , block , ')' , funcFParams , '(' , 'IDN' )
+input: ( 'func' , '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , block , ')' , funcFParams , '(' )
+input: ( '(' , ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , block , ')' , funcFParams )
+input: ( ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , block , ')' )
+input: ( ')' , '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , block )
+input: ( '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , '{' )
+input: ( '{' , 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem )
+input: ( 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , decl )
+input: ( 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , varDecl )
+input: ( 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , varDef , bType )
+input: ( 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , varDef , 'int' )
+input: ( 'int' , 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , varDef )
+input: ( 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , argVarDef , 'IDN' )
+input: ( 'a' , '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , argVarDef )
+input: ( '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , initVal , '=' )
+input: ( '=' , '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , initVal )
+input: ( '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , exp )
+input: ( '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExp )
+input: ( '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExp )
+input: ( '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExp )
+input: ( '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExp )
+input: ( '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExp )
+input: ( '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , unaryExp )
+input: ( '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , primaryExp )
+input: ( '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , number )
+input: ( '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , 'INT' )
+input: ( '5' , ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom )
+input: ( ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom )
+input: ( ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExpAtom , relExpAtom )
+input: ( ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom , eqExpAtom )
+input: ( ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl , assignExpAtom )
+input: ( ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argVarDecl )
+input: ( ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' )
+input: ( ';' , 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem )
+input: ( 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , stmt )
+input: ( 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argExp , 'return' )
+input: ( 'return' , 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , argExp )
+input: ( 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , exp )
+input: ( 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExp )
+input: ( 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExp )
+input: ( 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExp )
+input: ( 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExp )
+input: ( 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExp )
+input: ( 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , unaryExp )
+input: ( 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , callFunc , 'IDN' )
+input: ( 'a' , '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , callFunc )
+input: ( '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom )
+input: ( '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom )
+input: ( '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExp , '+' )
+input: ( '+' , 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExp )
+input: ( 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , unaryExp )
+input: ( 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , callFunc , 'IDN' )
+input: ( 'b' , ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom , callFunc )
+input: ( ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom , mulExpAtom )
+input: ( ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom , addExpAtom )
+input: ( ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom , relExpAtom )
+input: ( ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom , eqExpAtom )
+input: ( ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' , assignExpAtom )
+input: ( ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem , ';' )
+input: ( ';' , '}' )
+
+non_terminals:	( compUnit , '}' , blockItem )
+input: ( '}' )
+
+non_terminals:	( compUnit , '}' )
+input: ( '}' )
+

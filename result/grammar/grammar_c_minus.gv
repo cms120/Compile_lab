@@ -1,9 +1,9 @@
 // graph_grammar
 digraph {
 	program -> compUnit
+	compUnit -> "decl , compUnit"
 	compUnit -> "funcDef , compUnit"
 	compUnit -> "$"
-	compUnit -> "decl , compUnit"
 	decl -> varDecl
 	decl -> constDecl
 	constDecl -> "'const' , bType , constDef , argConst , ';'"
@@ -21,87 +21,87 @@ digraph {
 	bType -> "'int'"
 	funcDef -> "funcType , 'IDN' , '(' , funcFParams , ')' , block"
 	funcType -> "'void'"
-	funcFParams -> "$"
 	funcFParams -> "funcFParam , argFunctionF"
+	funcFParams -> "$"
 	argFunctionF -> "$"
 	argFunctionF -> "',' , funcFParam , argFunctionF"
 	funcFParam -> "bType , 'IDN'"
 	block -> "'{' , blockItem , '}'"
-	blockItem -> "$"
-	blockItem -> "decl , blockItem"
 	blockItem -> "stmt , blockItem"
+	blockItem -> "decl , blockItem"
+	blockItem -> "$"
 	stmt -> "'return' , argExp , ';'"
-	stmt -> "';'"
 	stmt -> "exp , ';'"
+	stmt -> "';'"
 	stmt -> block
-	argExp -> exp
 	argExp -> "$"
+	argExp -> exp
 	exp -> assignExp
 	lVal -> "'IDN'"
-	primaryExp -> number
 	primaryExp -> "'(' , exp , ')'"
+	primaryExp -> number
 	number -> "'INT'"
-	unaryOp -> "'!'"
-	unaryOp -> "'+'"
 	unaryOp -> "'-'"
+	unaryOp -> "'+'"
+	unaryOp -> "'!'"
+	unaryExp -> primaryExp
 	unaryExp -> "'IDN' , callFunc"
 	unaryExp -> "unaryOp , unaryExp"
-	unaryExp -> primaryExp
 	callFunc -> "$"
 	callFunc -> "'(' , funcRParams , ')'"
-	funcRParams -> "funcRParam , argFunctionR"
 	funcRParams -> "$"
-	argFunctionR -> "$"
+	funcRParams -> "funcRParam , argFunctionR"
 	argFunctionR -> "',' , funcRParam , argFunctionR"
+	argFunctionR -> "$"
 	funcRParam -> exp
 	mulExp -> "unaryExp , mulExpAtom"
+	mulExpAtom -> "'%' , unaryExp , mulExpAtom"
 	mulExpAtom -> "$"
 	mulExpAtom -> "'*' , unaryExp , mulExpAtom"
-	mulExpAtom -> "'%' , unaryExp , mulExpAtom"
 	mulExpAtom -> "'/' , unaryExp , mulExpAtom"
 	addExp -> "mulExp , addExpAtom"
-	addExpAtom -> "'+' , mulExp , addExpAtom"
 	addExpAtom -> "$"
+	addExpAtom -> "'+' , mulExp , addExpAtom"
 	addExpAtom -> "'-' , mulExp , addExpAtom"
 	relExp -> "addExp , relExpAtom"
-	relExpAtom -> "'<' , addExp , relExpAtom"
-	relExpAtom -> "'<=' , addExp , relExpAtom"
-	relExpAtom -> "'>' , addExp , relExpAtom"
-	relExpAtom -> "$"
 	relExpAtom -> "'>=' , addExp , relExpAtom"
+	relExpAtom -> "'>' , addExp , relExpAtom"
+	relExpAtom -> "'<' , addExp , relExpAtom"
+	relExpAtom -> "$"
+	relExpAtom -> "'<=' , addExp , relExpAtom"
 	eqExp -> "relExp , eqExpAtom"
-	eqExpAtom -> "'!=' , relExp , eqExpAtom"
-	eqExpAtom -> "$"
 	eqExpAtom -> "'==' , relExp , eqExpAtom"
+	eqExpAtom -> "$"
+	eqExpAtom -> "'!=' , relExp , eqExpAtom"
 	assignExp -> "eqExp , assignExpAtom"
-	assignExpAtom -> "'=' , eqExp , assignExpAtom"
 	assignExpAtom -> "$"
+	assignExpAtom -> "'=' , eqExp , assignExpAtom"
 	constExp -> assignExp
 	program [color=red]
-	"'!='" [shape=doublecircle]
-	"'}'" [shape=doublecircle]
-	"'<'" [shape=doublecircle]
-	"'='" [shape=doublecircle]
-	"'-'" [shape=doublecircle]
-	"'<='" [shape=doublecircle]
-	"$" [shape=doublecircle]
-	"')'" [shape=doublecircle]
-	"'{'" [shape=doublecircle]
-	"'void'" [shape=doublecircle]
-	"'*'" [shape=doublecircle]
-	"'=='" [shape=doublecircle]
 	"'const'" [shape=doublecircle]
-	"'/'" [shape=doublecircle]
-	"'IDN'" [shape=doublecircle]
-	"'+'" [shape=doublecircle]
-	"'!'" [shape=doublecircle]
-	"'%'" [shape=doublecircle]
-	"'('" [shape=doublecircle]
 	"'int'" [shape=doublecircle]
-	"'>'" [shape=doublecircle]
-	"';'" [shape=doublecircle]
-	"'>='" [shape=doublecircle]
-	"'INT'" [shape=doublecircle]
-	"','" [shape=doublecircle]
+	"'IDN'" [shape=doublecircle]
 	"'return'" [shape=doublecircle]
+	"'<='" [shape=doublecircle]
+	"'!='" [shape=doublecircle]
+	"'/'" [shape=doublecircle]
+	"'=='" [shape=doublecircle]
+	"'='" [shape=doublecircle]
+	"'!'" [shape=doublecircle]
+	"'<'" [shape=doublecircle]
+	"','" [shape=doublecircle]
+	"'INT'" [shape=doublecircle]
+	"'>'" [shape=doublecircle]
+	"'-'" [shape=doublecircle]
+	"'>='" [shape=doublecircle]
+	"'{'" [shape=doublecircle]
+	"$" [shape=doublecircle]
+	"'%'" [shape=doublecircle]
+	"'*'" [shape=doublecircle]
+	"'('" [shape=doublecircle]
+	"'}'" [shape=doublecircle]
+	"'void'" [shape=doublecircle]
+	"';'" [shape=doublecircle]
+	"'+'" [shape=doublecircle]
+	"')'" [shape=doublecircle]
 }

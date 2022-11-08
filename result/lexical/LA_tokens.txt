@@ -1,16 +1,29 @@
 int	<KW, >
 a	<IDN,a>
+=	<OP, >
+3	<INT,3>
+,	<SE, >
+b	<IDN,b>
+=	<OP, >
+1	<INT,1>
+,	<SE, >
+c	<IDN,c>
+=	<OP, >
+3	<INT,3>
 ;	<SE, >
 void	<KW, >
 func	<IDN,func>
 (	<SE, >
 )	<SE, >
 {	<SE, >
+int	<KW, >
 a	<IDN,a>
 =	<OP, >
-10	<INT,10>
+5	<INT,5>
 ;	<SE, >
 return	<KW, >
-0	<INT,0>
+a	<IDN,a>
++	<OP, >
+b	<IDN,b>
 ;	<SE, >
 }	<SE, >

@@ -11,21 +11,26 @@ def states_format_str(states: List[Tuple[Tuple[str]]]) -> str:
     res = ''
     index = 1
     for state in states:
-        line = str(index) + '\t' + state[0][-1] + '#' + state[1][-1] + '\t'
-        if state[1][-1] == "'EOF'":
-            line += 'accept'
-        elif is_terminal(state[1][-1]):
-            line += 'move'
+        non_ter = state[0][-1]
+        token_val = state[1][0][1:-1]
+
+        line = str(index) + '\t'
+        if non_ter == "'EOF'":
+            line += 'EOF#EOF\taccept'
+        elif is_terminal(non_ter):
+            line += token_val + '#' + token_val + '\tmove'
         else:
-            line += 'reduction'
+            line += non_ter + '#' + token_val + '\treduction'
+
         res += line + '\n'
+        index += 1
     return res
 
 
 def states_str(states: List[Tuple[Tuple[str]]]) -> str:
     res = ''
     for state in states:
-        res += 'non_terminals:\t' + tuple_str(state[0]) + '\tinput: ' + tuple_str(state[1]) + '\n'
+        res += 'non_terminals:\t' + tuple_str(state[0]) + '\ninput: ' + tuple_str(state[1]) + '\n\n'
     return res
 
 

@@ -1,10 +1,7 @@
-import lexical.lexical_analysis as la
-import syntax_top_down.ll1 as ll
-from lexical.token import tokens_to_deque
-from util import write_file
+from collections import deque
 
-res_file = 'result/syntax/analysis.txt'
-tokens = la.analysis('resource/change_file/源文件/01_var_defn.sy')
-states = ll.analysis(tokens)
+from lexical import lexical_analysis
+from syntax_top_down import ll1
 
-
+tokens = lexical_analysis.analysis('resource/change_file/源文件/04_var_defn.sy')
+ll1.analysis(deque(tokens))

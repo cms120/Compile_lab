@@ -3,7 +3,7 @@ from typing import Deque, Tuple, List
 
 from syntax.grammar import get_grammar_c_minus
 from syntax.production import is_terminal
-from util import write_file
+from util import write_file, tuple_str
 
 
 def states_format_str(states: List[Tuple[Tuple[str]]]) -> str:
@@ -21,15 +21,18 @@ def states_format_str(states: List[Tuple[Tuple[str]]]) -> str:
     return res
 
 
-def state_str(states: List[Tuple[Tuple[str]]]) -> str:
-    pass
+def states_str(states: List[Tuple[Tuple[str]]]) -> str:
+    res = ''
+    for state in states:
+        res += 'non_terminals:\t' + tuple_str(state[0]) + '\tinput: ' + tuple_str(state[1]) + '\n'
+    return res
 
 
-def analysis(tokens: Deque[str]) -> List[Tuple[Tuple[str]]]:  # TODO
+def analysis(tokens: Deque[str]) -> List[Tuple[Tuple[str]]]:
     g = get_grammar_c_minus()
     g.set_first()
-
-    # g.check_ll1()
+    g.set_follow()
+    g.check_ll1()
 
     states: List[Tuple[Tuple[str]]] = list()
     prods = g.get_prods()
@@ -55,6 +58,6 @@ def analysis(tokens: Deque[str]) -> List[Tuple[Tuple[str]]]:  # TODO
             now_follow = g.get_ch_follow(non_ter)
             assert '$' in now_first and a in now_follow, non_ter_s + a  # 否则是语法错误
 
-    # TODO
-    write_file(states_format_str(states), 'src/syntax/LL1_analysis.txt')
+    write_file(states_str(states), 'result/syntax/LL1_states.txt')
+    write_file(states_format_str(states), 'result/syntax/LL1_analysis.txt')
     return states

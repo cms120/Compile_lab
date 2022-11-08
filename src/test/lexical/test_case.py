@@ -89,9 +89,4 @@ dfa_s_shan = [
     ]
 ]  # 用来测试最小化
 
-grammars = (
-    ('S', 'aAcBe'),
-    ('A', 'b'),
-    ('A', 'Ab'),
-    ('B', 'd')
-)  # TODO 移到 syntax目录下
+

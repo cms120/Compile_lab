@@ -1,4 +1,3 @@
-import os
 import unittest
 
 from graph import graph_grammar
@@ -22,7 +21,8 @@ class GrammarTest(unittest.TestCase):
         g = get_grammar_c_minus()
         g.set_first()
         g.set_follow()
+        g.check_first()
 
-        file_name = 'grammar_c_minus_shan'
+        file_name = 'result/grammar/grammar_c_minus'
         graph_grammar(g, file_name)
-        write_file(str(g), os.path.join('result/grammar', file_name + '.txt'))
+        write_file(str(g), file_name + '.txt')

@@ -197,7 +197,7 @@ class Grammar:
         self.check_first()
         self.check_first()
 
-    def set_follow(self):  # TODO 获得一个文法的follow集
+    def set_follow(self):
         self.init_follow()
         while self.is_any_follow_grow:
             continue

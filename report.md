@@ -592,6 +592,8 @@ def analysis(tokens: Deque[Token]) -> List[Tuple[Tuple[str]]]:
 
 ### 格式化输出
 
+[序号] [TAB] [栈顶符号]#[面临输入符号] [TAB] [执行动作] 
+
 ```python
 def states_format_str(states: List[Tuple[Tuple[str]]]) -> str:
     res = ''

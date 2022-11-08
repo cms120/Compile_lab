@@ -173,19 +173,19 @@ class Grammar:
                         set_without_eps = self.get_chs_first(right[i + 1:len(right):1])
                         set_without_eps.discard('$')
                         self.__follow[right[i]].update(set_without_eps)
-                        flag = (len(self.__follow[right[i]]) != before_len)
+                        flag = flag or (len(self.__follow[right[i]]) != before_len)
 
                 if right[-1] in self.__non_terminals:
                     before_len = len(self.__follow[right[-1]])
                     self.__follow[right[-1]].update(self.__follow[left])
-                    flag = (len(self.__follow[right[-1]]) != before_len)
+                    flag = flag or (len(self.__follow[right[-1]]) != before_len)
 
                 for i in range(len(right) - 1, 0, -1):
                     if '$' in self.get_chs_first(right[i:len(right):1]) and \
                             right[i - 1] in self.__non_terminals:
                         before_len = len(self.__follow[right[i - 1]])
                         self.__follow[right[i - 1]].update(self.__follow[left])
-                        flag = (len(self.__follow[right[i - 1]]) != before_len)
+                        flag = flag or (len(self.__follow[right[i - 1]]) != before_len)
         return flag
 
     def check_follow(self):

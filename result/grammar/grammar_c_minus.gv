@@ -1,39 +1,39 @@
 // graph_grammar
 digraph {
 	program -> compUnit
-	compUnit -> "decl , compUnit"
 	compUnit -> "funcDef , compUnit"
 	compUnit -> "$"
-	decl -> constDecl
+	compUnit -> "decl , compUnit"
 	decl -> varDecl
+	decl -> constDecl
 	constDecl -> "'const' , bType , constDef , argConst , ';'"
 	argConst -> "',' , constDef , argConst"
 	argConst -> "$"
 	constDef -> "'IDN' , '=' , constInitVal"
 	constInitVal -> constExp
 	varDecl -> "bType , varDef , argVarDecl , ';'"
-	argVarDecl -> "',' , varDef , argVarDecl"
 	argVarDecl -> "$"
+	argVarDecl -> "',' , varDef , argVarDecl"
 	varDef -> "'IDN' , argVarDef"
-	argVarDef -> "'=' , initVal"
 	argVarDef -> "$"
+	argVarDef -> "'=' , initVal"
 	initVal -> exp
 	bType -> "'int'"
 	funcDef -> "funcType , 'IDN' , '(' , funcFParams , ')' , block"
 	funcType -> "'void'"
-	funcFParams -> "funcFParam , argFunctionF"
 	funcFParams -> "$"
-	argFunctionF -> "',' , funcFParam , argFunctionF"
+	funcFParams -> "funcFParam , argFunctionF"
 	argFunctionF -> "$"
+	argFunctionF -> "',' , funcFParam , argFunctionF"
 	funcFParam -> "bType , 'IDN'"
 	block -> "'{' , blockItem , '}'"
-	blockItem -> "stmt , blockItem"
-	blockItem -> "decl , blockItem"
 	blockItem -> "$"
+	blockItem -> "decl , blockItem"
+	blockItem -> "stmt , blockItem"
+	stmt -> "'return' , argExp , ';'"
+	stmt -> "';'"
 	stmt -> "exp , ';'"
 	stmt -> block
-	stmt -> "';'"
-	stmt -> "'return' , argExp , ';'"
 	argExp -> exp
 	argExp -> "$"
 	exp -> assignExp
@@ -41,65 +41,67 @@ digraph {
 	primaryExp -> number
 	primaryExp -> "'(' , exp , ')'"
 	number -> "'INT'"
-	unaryOp -> "'+'"
 	unaryOp -> "'!'"
+	unaryOp -> "'+'"
 	unaryOp -> "'-'"
+	unaryExp -> "'IDN' , callFunc"
+	unaryExp -> "unaryOp , unaryExp"
 	unaryExp -> primaryExp
-	callFunc -> "'(' , funcRParams , ')'"
 	callFunc -> "$"
+	callFunc -> "'(' , funcRParams , ')'"
 	funcRParams -> "funcRParam , argFunctionR"
 	funcRParams -> "$"
-	argFunctionR -> "',' , funcRParam , argFunctionR"
 	argFunctionR -> "$"
+	argFunctionR -> "',' , funcRParam , argFunctionR"
 	funcRParam -> exp
 	mulExp -> "unaryExp , mulExpAtom"
+	mulExpAtom -> "$"
 	mulExpAtom -> "'*' , unaryExp , mulExpAtom"
 	mulExpAtom -> "'%' , unaryExp , mulExpAtom"
 	mulExpAtom -> "'/' , unaryExp , mulExpAtom"
-	mulExpAtom -> "$"
 	addExp -> "mulExp , addExpAtom"
 	addExpAtom -> "'+' , mulExp , addExpAtom"
-	addExpAtom -> "'-' , mulExp , addExpAtom"
 	addExpAtom -> "$"
+	addExpAtom -> "'-' , mulExp , addExpAtom"
 	relExp -> "addExp , relExpAtom"
-	relExpAtom -> "$"
+	relExpAtom -> "'<' , addExp , relExpAtom"
 	relExpAtom -> "'<=' , addExp , relExpAtom"
 	relExpAtom -> "'>' , addExp , relExpAtom"
+	relExpAtom -> "$"
 	relExpAtom -> "'>=' , addExp , relExpAtom"
-	relExpAtom -> "'<' , addExp , relExpAtom"
 	eqExp -> "relExp , eqExpAtom"
-	eqExpAtom -> "'==' , relExp , eqExpAtom"
 	eqExpAtom -> "'!=' , relExp , eqExpAtom"
 	eqExpAtom -> "$"
+	eqExpAtom -> "'==' , relExp , eqExpAtom"
 	assignExp -> "eqExp , assignExpAtom"
 	assignExpAtom -> "'=' , eqExp , assignExpAtom"
 	assignExpAtom -> "$"
 	constExp -> assignExp
 	program [color=red]
-	"','" [shape=doublecircle]
-	"'return'" [shape=doublecircle]
-	"'!'" [shape=doublecircle]
-	"';'" [shape=doublecircle]
-	"'+'" [shape=doublecircle]
-	"'%'" [shape=doublecircle]
-	"'('" [shape=doublecircle]
-	"$" [shape=doublecircle]
-	"'>='" [shape=doublecircle]
-	"'const'" [shape=doublecircle]
-	"'{'" [shape=doublecircle]
-	"')'" [shape=doublecircle]
 	"'!='" [shape=doublecircle]
-	"'<'" [shape=doublecircle]
-	"'=='" [shape=doublecircle]
 	"'}'" [shape=doublecircle]
-	"'>'" [shape=doublecircle]
-	"'int'" [shape=doublecircle]
+	"'<'" [shape=doublecircle]
 	"'='" [shape=doublecircle]
-	"'void'" [shape=doublecircle]
-	"'INT'" [shape=doublecircle]
 	"'-'" [shape=doublecircle]
 	"'<='" [shape=doublecircle]
-	"'IDN'" [shape=doublecircle]
-	"'/'" [shape=doublecircle]
+	"$" [shape=doublecircle]
+	"')'" [shape=doublecircle]
+	"'{'" [shape=doublecircle]
+	"'void'" [shape=doublecircle]
 	"'*'" [shape=doublecircle]
+	"'=='" [shape=doublecircle]
+	"'const'" [shape=doublecircle]
+	"'/'" [shape=doublecircle]
+	"'IDN'" [shape=doublecircle]
+	"'+'" [shape=doublecircle]
+	"'!'" [shape=doublecircle]
+	"'%'" [shape=doublecircle]
+	"'('" [shape=doublecircle]
+	"'int'" [shape=doublecircle]
+	"'>'" [shape=doublecircle]
+	"';'" [shape=doublecircle]
+	"'>='" [shape=doublecircle]
+	"'INT'" [shape=doublecircle]
+	"','" [shape=doublecircle]
+	"'return'" [shape=doublecircle]
 }

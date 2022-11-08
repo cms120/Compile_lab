@@ -10,8 +10,8 @@ class GrammarTest(unittest.TestCase):
     def test_init_by_line(self):
         self.assertTrue(True)
 
-        for p in Production.init_by_line("4. constDecl -> 'const' bType constDef ( ',' constDef ) * ';';"):
-            print(p)
+        p= Production.init_by_line("4. constDecl -> 'const' bType constDef ( ',' constDef ) * ';';")
+        print(p)
 
     def test_get_grammar_c_minus(self):
         self.assertTrue(True)

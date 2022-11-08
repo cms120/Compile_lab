@@ -1,8 +1,8 @@
 program -> ( compUnit )
-compUnit -> ( decl , compUnit ) ( $ ) ( funcDef , compUnit )
+compUnit -> ( funcDef , compUnit ) ( $ ) ( decl , compUnit )
 decl -> ( varDecl ) ( constDecl )
 constDecl -> ( 'const' , bType , constDef , argConst , ';' )
-argConst -> ( $ ) ( ',' , constDef , argConst )
+argConst -> ( ',' , constDef , argConst ) ( $ )
 constDef -> ( 'IDN' , '=' , constInitVal )
 constInitVal -> ( constExp )
 varDecl -> ( bType , varDef , argVarDecl , ';' )
@@ -14,36 +14,36 @@ bType -> ( 'int' )
 funcDef -> ( funcType , 'IDN' , '(' , funcFParams , ')' , block )
 funcType -> ( 'void' )
 funcFParams -> ( $ ) ( funcFParam , argFunctionF )
-argFunctionF -> ( ',' , funcFParam , argFunctionF ) ( $ )
+argFunctionF -> ( $ ) ( ',' , funcFParam , argFunctionF )
 funcFParam -> ( bType , 'IDN' )
 block -> ( '{' , blockItem , '}' )
-blockItem -> ( stmt , blockItem ) ( decl , blockItem ) ( $ )
-stmt -> ( block ) ( ';' ) ( exp , ';' ) ( 'return' , argExp , ';' )
-argExp -> ( $ ) ( exp )
+blockItem -> ( $ ) ( decl , blockItem ) ( stmt , blockItem )
+stmt -> ( 'return' , argExp , ';' ) ( ';' ) ( exp , ';' ) ( block )
+argExp -> ( exp ) ( $ )
 exp -> ( assignExp )
 lVal -> ( 'IDN' )
 primaryExp -> ( number ) ( '(' , exp , ')' )
 number -> ( 'INT' )
-unaryOp -> ( '!' ) ( '-' ) ( '+' )
-unaryExp -> ( primaryExp )
-callFunc -> ( '(' , funcRParams , ')' ) ( $ )
-funcRParams -> ( $ ) ( funcRParam , argFunctionR )
+unaryOp -> ( '!' ) ( '+' ) ( '-' )
+unaryExp -> ( 'IDN' , callFunc ) ( unaryOp , unaryExp ) ( primaryExp )
+callFunc -> ( $ ) ( '(' , funcRParams , ')' )
+funcRParams -> ( funcRParam , argFunctionR ) ( $ )
 argFunctionR -> ( $ ) ( ',' , funcRParam , argFunctionR )
 funcRParam -> ( exp )
 mulExp -> ( unaryExp , mulExpAtom )
-mulExpAtom -> ( '/' , unaryExp , mulExpAtom ) ( $ ) ( '%' , unaryExp , mulExpAtom ) ( '*' , unaryExp , mulExpAtom )
+mulExpAtom -> ( $ ) ( '*' , unaryExp , mulExpAtom ) ( '%' , unaryExp , mulExpAtom ) ( '/' , unaryExp , mulExpAtom )
 addExp -> ( mulExp , addExpAtom )
-addExpAtom -> ( $ ) ( '+' , mulExp , addExpAtom ) ( '-' , mulExp , addExpAtom )
+addExpAtom -> ( '+' , mulExp , addExpAtom ) ( $ ) ( '-' , mulExp , addExpAtom )
 relExp -> ( addExp , relExpAtom )
-relExpAtom -> ( '<' , addExp , relExpAtom ) ( $ ) ( '>=' , addExp , relExpAtom ) ( '>' , addExp , relExpAtom ) ( '<=' , addExp , relExpAtom )
+relExpAtom -> ( '<' , addExp , relExpAtom ) ( '<=' , addExp , relExpAtom ) ( '>' , addExp , relExpAtom ) ( $ ) ( '>=' , addExp , relExpAtom )
 eqExp -> ( relExp , eqExpAtom )
-eqExpAtom -> ( '==' , relExp , eqExpAtom ) ( '!=' , relExp , eqExpAtom ) ( $ )
+eqExpAtom -> ( '!=' , relExp , eqExpAtom ) ( $ ) ( '==' , relExp , eqExpAtom )
 assignExp -> ( eqExp , assignExpAtom )
 assignExpAtom -> ( '=' , eqExp , assignExpAtom ) ( $ )
 constExp -> ( assignExp )
 
-terminals: { 'IDN' , 'return' , '+' , 'int' , '==' , '!=' , 'const' , '>=' , 'INT' , ',' , '(' , '=' , '%' , '<' , '/' , '>' , 'void' , '{' , '}' , $ , '!' , '*' , '<=' , ')' , ';' , '-' }
-non_terminals: { initVal , argFunctionR , argFunctionF , mulExpAtom , eqExpAtom , funcFParams , program , bType , relExpAtom , exp , compUnit , argExp , funcType , unaryOp , funcFParam , block , unaryExp , constInitVal , constDef , addExpAtom , argVarDecl , constDecl , constExp , eqExp , callFunc , assignExpAtom , number , funcDef , blockItem , lVal , argConst , addExp , funcRParam , stmt , decl , varDef , relExp , funcRParams , argVarDef , primaryExp , assignExp , varDecl , mulExp }
+terminals: { '!=' , '}' , '<' , '=' , '-' , '<=' , $ , ')' , '{' , 'void' , '*' , '==' , 'const' , '/' , 'IDN' , '+' , '!' , '%' , '(' , 'int' , '>' , ';' , '>=' , 'INT' , ',' , 'return' }
+non_terminals: { unaryOp , lVal , exp , mulExp , funcDef , argFunctionR , mulExpAtom , decl , constExp , block , constDecl , compUnit , relExp , funcRParams , varDef , eqExpAtom , unaryExp , funcFParam , stmt , bType , constDef , constInitVal , argVarDef , funcType , assignExp , initVal , blockItem , varDecl , funcRParam , addExp , argExp , assignExpAtom , argFunctionF , relExpAtom , funcFParams , number , addExpAtom , argConst , eqExp , argVarDecl , callFunc , primaryExp , program }
 s: program
 
 first:
@@ -53,66 +53,67 @@ first:
 ( bType , 'IDN' ) : { 'int' }
 ( block ) : { '{' }
 ( number ) : { 'INT' }
-( primaryExp ) : { 'INT' , '(' }
-( unaryExp , mulExpAtom ) : { 'INT' , '(' }
-( mulExp , addExpAtom ) : { 'INT' , '(' }
-( addExp , relExpAtom ) : { 'INT' , '(' }
-( relExp , eqExpAtom ) : { 'INT' , '(' }
-( eqExp , assignExpAtom ) : { 'INT' , '(' }
-( assignExp ) : { 'INT' , '(' }
-( exp ) : { 'INT' , '(' }
-( funcRParam , argFunctionR ) : { 'INT' , '(' }
-( exp , ';' ) : { 'INT' , '(' }
-( stmt , blockItem ) : { 'return' , '(' , ';' , '{' , 'INT' }
+( unaryOp , unaryExp ) : { '-' , '+' , '!' }
+( primaryExp ) : { '(' , 'INT' }
+( unaryExp , mulExpAtom ) : { '(' , '-' , 'IDN' , '+' , '!' , 'INT' }
+( mulExp , addExpAtom ) : { '(' , '-' , 'IDN' , '+' , '!' , 'INT' }
+( addExp , relExpAtom ) : { '(' , '-' , 'IDN' , '+' , '!' , 'INT' }
+( relExp , eqExpAtom ) : { '(' , '-' , 'IDN' , '+' , '!' , 'INT' }
+( eqExp , assignExpAtom ) : { '(' , '-' , 'IDN' , '+' , '!' , 'INT' }
+( assignExp ) : { '(' , '-' , 'IDN' , '+' , '!' , 'INT' }
+( exp ) : { '(' , '-' , 'IDN' , '+' , '!' , 'INT' }
+( funcRParam , argFunctionR ) : { '(' , '-' , 'IDN' , '+' , '!' , 'INT' }
+( exp , ';' ) : { '(' , '-' , 'IDN' , '+' , '!' , 'INT' }
+( stmt , blockItem ) : { '-' , 'IDN' , '+' , '!' , '{' , '(' , ';' , 'INT' , 'return' }
 ( funcFParam , argFunctionF ) : { 'int' }
-( constExp ) : { 'INT' , '(' }
+( constExp ) : { '(' , '-' , 'IDN' , '+' , '!' , 'INT' }
 ( varDecl ) : { 'int' }
+( decl , compUnit ) : { 'int' , 'const' }
 ( funcDef , compUnit ) : { 'void' }
-( decl , compUnit ) : { 'const' , 'int' }
-( compUnit ) : { 'void' , 'int' , $ , 'const' }
-( decl , blockItem ) : { 'const' , 'int' }
+( compUnit ) : { $ , 'void' , 'int' , 'const' }
+( decl , blockItem ) : { 'int' , 'const' }
 
 follow:
-initVal : { ',' , ';' , $ }
-argFunctionR : { ')' }
-argFunctionF : { ')' }
-mulExpAtom : { }
-eqExpAtom : { }
-funcFParams : { ')' }
-program : { # }
-bType : { 'IDN' }
-relExpAtom : { }
-exp : { ')' , ';' , ',' , $ }
-compUnit : { # }
-argExp : { ';' }
-funcType : { 'IDN' }
-unaryOp : { }
-funcFParam : { ')' , ',' , $ }
-block : { 'return' , 'void' , 'int' , '{' , '}' , $ , 'const' , ';' , 'INT' , # , '(' }
-unaryExp : { '/' , '*' , $ , '%' }
-constInitVal : { ',' , ';' , $ }
-constDef : { ',' , ';' , $ }
-addExpAtom : { }
-argVarDecl : { ';' }
-constDecl : { 'const' , 'void' , 'int' , # , $ }
-constExp : { ',' , ';' , $ }
-eqExp : { $ , ';' , ',' , '=' }
-callFunc : { }
-assignExpAtom : { ',' , ';' , $ }
-number : { }
-funcDef : { 'const' , 'void' , 'int' , # , $ }
-blockItem : { '}' }
+unaryOp : { '(' , '-' , 'IDN' , '+' , '!' , 'INT' }
 lVal : { }
-argConst : { ';' }
-addExp : { '<' , '<=' , $ , '>=' , '>' }
-funcRParam : { ')' , ',' , $ }
-stmt : { 'return' , 'int' , '{' , '}' , $ , 'const' , ';' , 'INT' , '(' }
-decl : { 'return' , 'void' , 'int' , '{' , '}' , $ , 'const' , ';' , 'INT' , # , '(' }
-varDef : { ',' , ';' , $ }
-relExp : { '==' , '!=' , $ }
+exp : { ';' , ',' , ')' }
+mulExp : { '-' , '+' }
+funcDef : { # , 'void' , 'int' , 'const' }
+argFunctionR : { ')' }
+mulExpAtom : { }
+decl : { '}' , '-' , 'IDN' , '+' , '!' , # , '{' , 'void' , '(' , 'int' , ';' , 'INT' , 'const' , 'return' }
+constExp : { ',' , ';' }
+block : { '}' , '-' , '{' , 'void' , 'const' , 'IDN' , '+' , '!' , # , '(' , 'int' , ';' , 'INT' , 'return' }
+constDecl : { # , 'void' , 'int' , 'const' }
+compUnit : { # }
+relExp : { '!=' , '==' }
 funcRParams : { ')' }
-argVarDef : { ',' , ';' , $ }
+varDef : { ',' , ';' }
+eqExpAtom : { }
+unaryExp : { '/' , '*' , '%' }
+funcFParam : { ',' , ')' }
+stmt : { '}' , '-' , 'IDN' , '+' , '!' , '{' , '(' , 'int' , ';' , 'INT' , 'const' , 'return' }
+bType : { 'IDN' }
+constDef : { ',' , ';' }
+constInitVal : { ',' , ';' }
+argVarDef : { ',' , ';' }
+funcType : { 'IDN' }
+assignExp : { ',' , ';' }
+initVal : { ',' , ';' }
+blockItem : { '}' }
+varDecl : { # , 'void' , 'int' , 'const' }
+funcRParam : { ',' , ')' }
+addExp : { '<' , '<=' , '>' , '>=' }
+argExp : { ';' }
+assignExpAtom : { ',' , ';' }
+argFunctionF : { ')' }
+relExpAtom : { }
+funcFParams : { ')' }
+number : { }
+addExpAtom : { }
+argConst : { ';' }
+eqExp : { '=' , ';' , ',' }
+argVarDecl : { ';' }
+callFunc : { }
 primaryExp : { }
-assignExp : { ';' , ',' , $ }
-varDecl : { 'const' , 'void' , 'int' , # , $ }
-mulExp : { '+' , '-' , $ }
+program : { # }

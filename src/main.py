@@ -5,6 +5,6 @@ from util import write_file
 
 res_file = 'result/syntax/analysis.txt'
 tokens = la.analysis('resource/change_file/源文件/01_var_defn.sy')
-states = ll.analysis(tokens_to_deque(tokens))
+states = ll.analysis(tokens)
 
 

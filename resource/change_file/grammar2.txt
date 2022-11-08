@@ -25,9 +25,8 @@ lVal -> 'IDN'
 primaryExp -> '(' exp ')' | number
 number -> 'INT'
 unaryOp -> '+' | '-' | '!'
-unaryExp -> unaryOp unaryExp | 'IDN' callFunc
+unaryExp -> unaryOp unaryExp | 'IDN' callFunc | primaryExp
 callFunc -> '(' funcRParams ')' | $
-unaryExp -> primaryExp
 funcRParams -> funcRParam argFunctionR | $
 argFunctionR -> ',' funcRParam argFunctionR | $
 funcRParam -> exp

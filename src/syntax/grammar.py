@@ -218,6 +218,7 @@ class Grammar:
         """
         for line in lines:
             p = Production.init_by_line(line)
+            assert p.get_left() not in self.__prods
             self.add_prod(p)
 
         self.set_first()

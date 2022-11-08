@@ -1,7 +1,7 @@
 from typing import List
 
 from lexical.dfa import DFA, get_dfa_minimize_c_minus
-from lexical.token import Token, LexicalUnit, tokens_to_str
+from lexical.token import Token, LexicalUnit, tokens_to_format_str
 from util import read_file, write_file
 
 
@@ -81,6 +81,6 @@ def analysis(file_path='resource/test.sy', is_read_file=True) -> list[Token]:  #
     assert file_path.endswith(".sy"), 'file should end with .sy  ' + file_path
 
     tokens = get_token_list_by_content_dfa(get_dfa_minimize_c_minus(is_read_file), read_file(file_path))
-    write_file(tokens_to_str(tokens), 'result/lexical/LA_tokens.txt')
+    write_file(tokens_to_format_str(tokens), 'result/lexical/LA_tokens.txt')
 
     return tokens

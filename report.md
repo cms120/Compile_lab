@@ -547,6 +547,39 @@ def set_first(self):
 
 ### 得到文法的follow集
 
+不断遍历所有的产生式候选，若产生式符合相应的规则，将对应的终结符follow集进行更新，直至此次遍历中没有终结符follow集被更新
+
+规则如下：
+
+```python
+def is_any_follow_grow(self) -> bool:
+    flag = False
+    prods = self.get_prods()
+    for left in prods.keys():
+        rights = prods.get(left)  # rights:Set[tuple[str]]
+        for right in rights:  # 遍历每一条规则
+            for i in range(len(right) - 1):  # 直接吸取 A-> aBb Follow(B).update First(b) 
+                if right[i] in self.__non_terminals:
+                    before_len = len(self.__follow[right[i]])
+                    set_without_eps = self.get_chs_first(right[i + 1:len(right):1])
+                    set_without_eps.discard('$')
+                    self.__follow[right[i]].update(set_without_eps)
+                    flag = flag or (len(self.__follow[right[i]]) != before_len)
+
+            if right[-1] in self.__non_terminals:  # A->aB Follow(B) .update Follow(A)
+                before_len = len(self.__follow[right[-1]])
+                self.__follow[right[-1]].update(self.__follow[left])
+                flag = flag or (len(self.__follow[right[-1]]) != before_len)
+
+            for i in range(len(right) - 1, 0, -1): # A->aBb 如果 $ in First(b) then Follow(B) .update Follow(A)
+                if '$' in self.get_chs_first(right[i:len(right):1]) and \
+                        right[i - 1] in self.__non_terminals:
+                    before_len = len(self.__follow[right[i - 1]])
+                    self.__follow[right[i - 1]].update(self.__follow[left])
+                    flag = flag or (len(self.__follow[right[i - 1]]) != before_len)
+    return flag
+```
+
 ### 分析tokens
 
 - 在循环中，先将符号栈和tokens的状态保存，在取出一个符号和token

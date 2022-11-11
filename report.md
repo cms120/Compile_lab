@@ -1,7 +1,3 @@
-
-
-
-
 # Compile_lab_report
 
 对项目的开发过程进行详细的描述
@@ -692,6 +688,17 @@ def states_format_str(states: List[Tuple[Tuple[str]]]) -> str:
         index += 1
     return res
 ```
+
+## 遇到的问题
+
+### dfa过大
+
+问题：dfa节点，转换函数过多，调试困难
+解决办法：导入graphviz库，将dfa绘制出，可视化的来观察正误
+
+### 队友之间不易配合
+
+先一起讨论出框架，由一个人构建出来，其他成员在已有的框架上完成部分算法
 
 
 
